@@ -1,0 +1,48 @@
+SKIN STEALER - MINECRAFT 1.20.1 FORGE MOD (DEFINITIVE EXPANSION)
+==================================================================
+Escape the Backrooms atmosferini en üst düzey korku sesleri ve mekanikleriyle yaşatan eksiksiz sürüm!
+
+GÜNCELLENEN VE YENİ EKLENEN HER ŞEY:
+1. SEVİYE 94 (MOTION) - 71 BLOKLUK DEVA SAHNE & 2 KATLI BÜYÜK BANLİYÖ EVLERİ:
+   - Seviye 94 haritası 29 bloktan tam 71 bloğa çıkarıldı!
+   - 14 blokluk ferah tavan yüksekliği, dalgalı yeşil banliyö tepeleri ve kıvrılan asfalt yol.
+   - 3x3'lük küçük kutular yerine 7x7 tabanlı, 2 katlı, kırma çatılı, verandalı, parlayan pencereli ve pürüzsüz kuvars köşe sütunlu 10 adet devasa banliyö oyuncak evi tepelere yerleştirildi!
+
+2. EKSİKSİZ TÜRKÇE EŞYA VE VARLIK İSİMLERİ:
+   - Tüm eşya isimleri temiz ve saf Türkçeye uyarlandı:
+     • Deri Hırsızı Çağırma Yumurtası
+     • Badem Suyu
+     • Sancı Sıvısı
+     • Meyve Suyu
+     • El Feneri
+     • Yırtık Günlük Sayfası
+     • Yarık Cevheri
+     • Yarık Kristali
+     • Yarık Kılıcı
+
+3. KOD HATALARI VE GELİŞTİRMELER (BUG FIXES):
+   - Oyuncu öldüğünde kabus sayacı ve seviye ilerlemesinin kaybolması düzeltildi (PlayerEvent.Clone entegrasyonu).
+   - Mikrofon onay ekranının her oyuna girişte tekrar açılması sorunu çözüldü (VoiceConfig kalıcılığı).
+   - Sahte sohbet taklidindeki 1.25 saniye (25 tick) yazma gecikmesi varlık içi sayaç ile kesinleştirildi.
+   - El feneri yere atıldığında ışık bloğunun havada asılı kalması engellendi.
+   - Ses havuzundaki çoklu iş parçacığı (threading) listeleme çakışmaları onarıldı.
+   - Çoklu oyuncu uyku kabuslarında arenaların üst üste binmesi engellendi (120 blok aralık).
+
+4. DOĞAL VE REAKTİF SOHBET SİSTEMİ:
+   - Resmi Türkçe Minecraft ölüm mesajlarıyla birebir uyumlu sahte ölüm mesajları.
+   - Kılık değiştirmişken oyuncu gibi imlasız, hızlı sohbet mesajları ("geliyom bekleyin", "madendeyim elmas buldum gelin").
+   - "sa", "selam", "merhaba", "nerdesin", "noldu" gibi mesajlara 1.25 saniye gecikmeyle gerçekçi yanıtlar.
+
+5. AKIL SAĞLIĞI & SMILER:
+   - %10'da Smiler silüeti ve kulak çınlaması (Tinnitus).
+   - %0'da ekranın dört yanında parazitli Smilerlar ve 30 saniye içinde delilikten ölüm riski.
+   - Badem Suyu ile akıl sağlığını toparlama ve karanlığı silme.
+
+6. GERÇEK DİNAMİK EL FENERİ:
+   - Raycast ile baktığınız noktaya 18 bloğa kadar gerçek bir spot ışığı (Blocks.LIGHT Seviye 15).
+
+NASIL DERLENİR (JAR OLUŞTURMA):
+1. Komut satırında:
+   - Windows için: .\gradlew.bat build
+   - Linux/Mac için: ./gradlew build
+2. "build/libs" klasöründe "skinstealer-1.0.0.jar" dosyanız hazır olacaktır!

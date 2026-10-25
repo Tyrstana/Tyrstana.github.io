@@ -1,0 +1,3192 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERIA // Liquid Glass Hub — Sıkıntı Giderici Evren</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'float-slow': 'floatSlow 7s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s linear infinite',
+                    },
+                    keyframes: {
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+                            '50%': { opacity: '1', transform: 'scale(1.04)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent-1: #00f2fe;
+            --accent-2: #4facfe;
+            --accent-3: #a855f7;
+            --glass-bg: rgba(15, 23, 42, 0.45);
+            --glass-card: rgba(255, 255, 255, 0.06);
+            --glass-card-hover: rgba(255, 255, 255, 0.11);
+            --glass-border: rgba(255, 255, 255, 0.16);
+            --glass-highlight: rgba(255, 255, 255, 0.32);
+            --glow-shadow: rgba(0, 242, 254, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        *::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        *::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+        }
+        *::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            background-color: #040711;
+            color: #f8fafc;
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+            selection-background-color: var(--accent-1);
+        }
+
+        /* Dynamic Liquid Background Canvas */
+        #liquid-bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Ambient Noise Texture Overlay */
+        .liquid-noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 20%, transparent 0%, rgba(3, 6, 17, 0.72) 100%);
+        }
+
+        /* Master Liquid Glass Surface */
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
+            backdrop-filter: blur(26px) saturate(190%);
+            -webkit-backdrop-filter: blur(26px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.45),
+                inset 0 1px 1px 0 var(--glass-highlight),
+                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Interactive Liquid Glass Card */
+        .liquid-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.025) 100%);
+            backdrop-filter: blur(22px) saturate(180%);
+            -webkit-backdrop-filter: blur(22px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 
+                0 12px 32px -4px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        background 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .liquid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.12),
+                transparent
+            );
+            transform: skewX(-25deg);
+            transition: left 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+
+        .liquid-card:hover::before {
+            left: 150%;
+        }
+
+        .liquid-card:hover {
+            transform: translateY(-5px) scale(1.008);
+            border-color: var(--glass-highlight);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.04) 100%);
+            box-shadow: 
+                0 20px 45px -8px rgba(0, 0, 0, 0.55),
+                0 0 28px -4px var(--glow-shadow),
+                inset 0 1px 2px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        /* Liquid Buttons */
+        .liquid-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.04) 100%);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.25),
+                inset 0 1px 1px rgba(255, 255, 255, 0.35);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .liquid-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.45);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.35),
+                0 0 20px var(--glow-shadow),
+                inset 0 1px 2px rgba(255, 255, 255, 0.55);
+        }
+
+        .liquid-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .liquid-btn-primary {
+            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 50%, var(--accent-3) 100%);
+            background-size: 200% 200%;
+            color: #030712;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 8px 25px var(--glow-shadow),
+                inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .liquid-btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            background-position: 100% 50%;
+            box-shadow: 
+                0 12px 32px var(--glow-shadow),
+                0 0 35px var(--accent-1),
+                inset 0 1px 3px rgba(255, 255, 255, 0.9);
+        }
+
+        /* Navigation Pill Active State */
+        .nav-tab-active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 100%);
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                0 0 20px var(--glow-shadow),
+                inset 0 1px 2px rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+        }
+
+        /* Custom Range Sliders */
+        input[type="range"].liquid-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            outline: none;
+        }
+
+        input[type="range"].liquid-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff, var(--accent-1));
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 14px var(--accent-1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        input[type="range"].liquid-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Section Transitions */
+        .tab-section {
+            display: none;
+            animation: sectionFadeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.99);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Memory Pad Glow */
+        .memory-pad {
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .memory-pad.lit {
+            transform: scale(0.95);
+            filter: brightness(1.7);
+            box-shadow: 0 0 35px currentColor, inset 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Gradient Text */
+        .text-liquid-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-1) 50%, var(--accent-3) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-400 selection:text-slate-950">
+
+    <!-- 1. DYNAMIC LIQUID BACKGROUND CANVAS -->
+    <canvas id="liquid-bg-canvas"></canvas>
+    <div class="liquid-noise-overlay"></div>
+
+    <!-- FLOATING TOAST / XP NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-24 right-5 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+    <!-- TOP LIQUID GLASS HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-40 px-3 sm:px-6 pt-3 pb-2">
+        <div class="max-w-7xl mx-auto liquid-glass rounded-3xl px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Brand Logo & Status -->
+            <div class="flex items-center gap-3.5 cursor-pointer group" onclick="switchMainTab('dashboard')">
+                <div class="w-11 h-11 rounded-2xl liquid-btn flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400/30 via-blue-500/20 to-purple-500/30 animate-pulse"></div>
+                    <i class="fa-solid fa-droplet text-xl text-cyan-300 drop-shadow-[0_0_10px_rgba(0,242,254,0.8)]"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display font-bold text-lg sm:text-xl tracking-wider text-white">AETHERIA</span>
+                        <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-cyan-300">OS 4.2</span>
+                    </div>
+                    <p class="text-xs text-slate-300/80 hidden sm:block">Liquid Glass Çoklu Deneyim Evreni</p>
+                </div>
+            </div>
+
+            <!-- Main Navigation Pills -->
+            <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-full py-1 no-scrollbar order-3 lg:order-2 w-full lg:w-auto justify-start sm:justify-center">
+                <button onclick="switchMainTab('dashboard')" data-tab="dashboard" class="main-nav-btn nav-tab-active liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-compass text-cyan-300"></i>
+                    <span>Merkez</span>
+                </button>
+                <button onclick="switchMainTab('games')" data-tab="games" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
+                    <i class="fa-solid fa-gamepad text-purple-300"></i>
+                    <span>Oyun Merkezi</span>
+                </button>
+                <button onclick="switchMainTab('stories')" data-tab="stories" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
+                    <i class="fa-solid fa-book-sparkles text-amber-300"></i>
+                    <span>Hikayeler</span>
+                </button>
+                <button onclick="switchMainTab('music')" data-tab="music" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
+                    <i class="fa-solid fa-wave-square text-emerald-300"></i>
+                    <span>Ses Stüdyosu</span>
+                </button>
+                <button onclick="switchMainTab('news')" data-tab="news" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
+                    <i class="fa-solid fa-satellite-dish text-pink-300"></i>
+                    <span>Gelecek Haberleri</span>
+                </button>
+                <button onclick="switchMainTab('zen')" data-tab="zen" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
+                    <i class="fa-solid fa-atom text-sky-300"></i>
+                    <span>Zen & Keşif</span>
+                </button>
+            </nav>
+
+            <!-- User Level / XP & Utility Controls -->
+            <div class="flex items-center gap-2.5 order-2 lg:order-3">
+                <!-- XP & Level Pill -->
+                <div class="liquid-btn px-3 py-1.5 rounded-2xl flex items-center gap-2.5" title="Oyun oynayarak, hikaye bitirerek ve keşfederek XP kazanın!">
+                    <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-slate-950 font-display font-bold text-xs shadow-inner" id="user-level-badge">
+                        1
+                    </div>
+                    <div class="hidden sm:block w-24">
+                        <div class="flex justify-between text-[10px] font-mono text-slate-200 mb-0.5">
+                            <span id="user-rank-title">Gezgin</span>
+                            <span id="user-xp-text">0/100 XP</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div id="user-xp-bar" class="h-full bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 transition-all duration-500" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Switcher Button -->
+                <div class="relative">
+                    <button onclick="toggleThemeMenu()" class="liquid-btn w-10 h-10 rounded-2xl flex items-center justify-center text-slate-100" title="Sıvı Cam Temasını Değiştir">
+                        <i class="fa-solid fa-palette text-cyan-300"></i>
+                    </button>
+                    <!-- Theme Dropdown -->
+                    <div id="theme-dropdown" class="hidden absolute right-0 mt-2 w-52 liquid-glass rounded-2xl p-2 z-50 border border-white/20 shadow-2xl">
+                        <div class="text-[11px] font-mono uppercase tracking-wider text-slate-300 px-2.5 py-1">Liquid Renk Paleti</div>
+                        <button onclick="setLiquidTheme('ocean')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-left text-xs font-medium transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500"></span>
+                            <span>Okyanus Kristali</span>
+                        </button>
+                        <button onclick="setLiquidTheme('nebula')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-left text-xs font-medium transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-fuchsia-400 to-purple-600"></span>
+                            <span>Nebula Moru</span>
+                        </button>
+                        <button onclick="setLiquidTheme('emerald')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-left text-xs font-medium transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-emerald-400 to-teal-500"></span>
+                            <span>Siber Zümrüt</span>
+                        </button>
+                        <button onclick="setLiquidTheme('solar')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-white/10 text-left text-xs font-medium transition">
+                            <span class="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500"></span>
+                            <span>Kızıl Güneş</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SFX Toggle Button -->
+                <button id="sfx-toggle-btn" onclick="toggleSFX()" class="liquid-btn w-10 h-10 rounded-2xl flex items-center justify-center text-cyan-300" title="UI Ses Efektleri Aç/Kapat">
+                    <i class="fa-solid fa-volume-high" id="sfx-icon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 pb-28">
+
+        <!-- ==========================================
+             TAB 1: DASHBOARD / MERKEZ (ALL-IN-ONE HUB)
+             ========================================== -->
+        <section id="tab-dashboard" class="tab-section active space-y-6">
+            
+            <!-- Hero Welcome Banner -->
+            <div class="liquid-glass rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-cyan-400/15 blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-16 -bottom-16 w-72 h-72 rounded-full bg-purple-500/15 blur-3xl pointer-events-none"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
+                    <div class="lg:col-span-8 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-medium text-cyan-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>Sıfır Can Sıkıntısı Protokolü Aktif • Web Audio Synth Motoru Hazır</span>
+                        </div>
+                        <h1 class="font-display font-extrabold text-3xl sm:text-5xl leading-tight">
+                            Zihnini Dinlendir, <span class="text-liquid-gradient">Evreni Keşfet.</span>
+                        </h1>
+                        <p class="text-slate-200/85 text-sm sm:text-base max-w-2xl leading-relaxed">
+                            Aetheria Liquid Glass Hub; boş zamanlarını unutulmaz bir deneyime dönüştürmek için tasarlandı. Canlı üretilen synth müzikleri başlat, refleks ve zeka oyunlarında rekor kır, seçimlerinle şekillenen hikayelere dal veya kuantum parçacık havuzunda rahatla.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-3 pt-2">
+                            <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-5 py-3 rounded-2xl text-sm flex items-center gap-2.5">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Sıkıntı Giderici Rastgele Deneyim Başlat</span>
+                            </button>
+                            <button onclick="quickToggleMusic()" id="hero-music-btn" class="liquid-btn px-4 py-3 rounded-2xl text-sm font-medium flex items-center gap-2 text-white">
+                                <i class="fa-solid fa-play text-cyan-300" id="hero-music-icon"></i>
+                                <span id="hero-music-label">Arka Plan Synth Müziği Başlat</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Daily Fact / Pulse Widget -->
+                    <div class="lg:col-span-4">
+                        <div class="liquid-card rounded-2xl p-5 space-y-3.5 border border-white/20">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-bolt"></i> Kuantum Bilgi Kapsülü
+                                </span>
+                                <button onclick="nextQuickFact()" class="liquid-btn px-2.5 py-1 rounded-lg text-xs text-slate-200 hover:text-white">
+                                    <i class="fa-solid fa-rotate"></i> Yenile
+                                </button>
+                            </div>
+                            <p id="dashboard-fact-text" class="text-sm text-slate-100 leading-relaxed min-h-[72px]">
+                                Bir nötron yıldızının sadece bir çay kaşığı kadarı yaklaşık 6 milyar ton ağırlığındadır; bu, Dünya üzerindeki tüm insanların toplam ağırlığından fazladır.
+                            </p>
+                            <div class="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
+                                <span id="live-clock-display" class="font-mono">--:--:--</span>
+                                <span class="text-emerald-300 font-medium"><i class="fa-solid fa-sparkles mr-1"></i>+5 XP Keşif</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Bento Grid Modules -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Module 1: Arcade -->
+                <div onclick="switchMainTab('games')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 text-xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-purple-300">4 Orijinal Oyun</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1">Oyun Merkezi</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Neon Refleks, Kuantum Kaçış, Hafıza Matrisi ve Kozmik Kırıcı ile rekorlarını zorla.
+                        </p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-purple-200 font-medium">
+                        <span>Hemen Oyna</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Module 2: Stories -->
+                <div onclick="switchMainTab('stories')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 text-xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-amber-300">İnteraktif Kurgu</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1">Derin Hikayeler</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Kararlarınla yönlenen 3 gizemli macera ve evren kayıtları arşivi seni bekliyor.
+                        </p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-amber-200 font-medium">
+                        <span>Maceraya Başla</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Module 3: Sound Studio -->
+                <div onclick="switchMainTab('music')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 text-xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-300">Canlı Web Audio</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1">Ses & Müzik Lab</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Synthwave, Uzay Boşluğu, Lo-Fi kanalları ve yağmur/rüzgar ambiyans mikseri.
+                        </p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-emerald-200 font-medium">
+                        <span>Stüdyoyu Aç</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Module 4: News & Zen -->
+                <div onclick="switchMainTab('news')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-400/30 flex items-center justify-center text-pink-300 text-xl mb-4 group-hover:scale-110 transition">
+                            <i class="fa-solid fa-newspaper"></i>
+                        </div>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-pink-300">Bilim & Gelecek</span>
+                        <h3 class="font-display font-bold text-xl text-white mt-1">Ufuk Haberleri</h3>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                            Uzay keşifleri, kuantum teknolojileri, derin gizemler ve gelecek teorileri.
+                        </p>
+                    </div>
+                    <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-pink-200 font-medium">
+                        <span>Haberleri Oku</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Bottom Row: Live Mini Synth Pad + Highscores + Mystery Oracle -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                
+                <!-- Quick Interactive Crystal Harp / Glass Synth Pad -->
+                <div class="lg:col-span-7 liquid-glass rounded-3xl p-6 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-mono uppercase tracking-wider text-cyan-300">Anlık Rahatlama Enstrümanı</span>
+                            <h3 class="font-display font-bold text-xl text-white">Kristal Cam Synth Pad</h3>
+                        </div>
+                        <span class="text-xs text-slate-300">Notalara dokun veya fareyi üzerinde gezdir</span>
+                    </div>
+                    <div class="grid grid-cols-4 sm:grid-cols-8 gap-2.5 pt-2" id="crystal-synth-pads">
+                        <!-- Generated via JS -->
+                    </div>
+                </div>
+
+                <!-- Player Achievements & High Scores Summary -->
+                <div class="lg:col-span-5 liquid-glass rounded-3xl p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-mono uppercase tracking-wider text-purple-300">Kişisel İstatistikler</span>
+                            <h3 class="font-display font-bold text-xl text-white">Rekorlar & İlerleme</h3>
+                        </div>
+                        <i class="fa-solid fa-trophy text-amber-300 text-xl"></i>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="liquid-card rounded-2xl p-3.5">
+                            <span class="text-slate-300 block">Neon Refleks Rekor</span>
+                            <span class="font-display font-bold text-lg text-cyan-300" id="dash-hs-reflex">0</span>
+                        </div>
+                        <div class="liquid-card rounded-2xl p-3.5">
+                            <span class="text-slate-300 block">Kuantum Kaçış Rekor</span>
+                            <span class="font-display font-bold text-lg text-purple-300" id="dash-hs-dodge">0</span>
+                        </div>
+                        <div class="liquid-card rounded-2xl p-3.5">
+                            <span class="text-slate-300 block">Hafıza Matrisi Seviye</span>
+                            <span class="font-display font-bold text-lg text-emerald-300" id="dash-hs-memory">0</span>
+                        </div>
+                        <div class="liquid-card rounded-2xl p-3.5">
+                            <span class="text-slate-300 block">Kozmik Kırıcı Rekor</span>
+                            <span class="font-display font-bold text-lg text-amber-300" id="dash-hs-breaker">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 2: ARCADE GAMES ("OYUN MERKEZİ")
+             ========================================== -->
+        <section id="tab-games" class="tab-section space-y-6">
+            
+            <!-- Game Selector Bar -->
+            <div class="liquid-glass rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-wider text-purple-300">Aetheria Arcade // 60 FPS</span>
+                    <h2 class="font-display font-bold text-2xl text-white">Liquid Glass Oyun Merkezi</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="selectGame('reflex')" id="game-btn-reflex" class="game-select-btn nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-crosshairs text-cyan-300"></i>
+                        <span>1. Neon Refleks</span>
+                    </button>
+                    <button onclick="selectGame('dodge')" id="game-btn-dodge" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-shuttle-space text-purple-300"></i>
+                        <span>2. Kuantum Kaçış</span>
+                    </button>
+                    <button onclick="selectGame('memory')" id="game-btn-memory" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells-large text-emerald-300"></i>
+                        <span>3. Hafıza Matrisi</span>
+                    </button>
+                    <button onclick="selectGame('breaker')" id="game-btn-breaker" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-meteor text-amber-300"></i>
+                        <span>4. Kozmik Kırıcı</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- GAME 1: NEON REFLEKS (CYBER AIM & REFLEX TRAINER) -->
+            <div id="game-stage-reflex" class="game-stage liquid-glass rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-white flex items-center gap-2">
+                            <i class="fa-solid fa-crosshairs text-cyan-300"></i> Neon Refleks: Siber Nişan & Hız Testi
+                        </h3>
+                        <p class="text-xs text-slate-300">Küçülen sıvı cam kürelere kaybolmadan önce tıkla! Kombo çarpanını koru.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="reflex-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Kombo: <span id="reflex-combo" class="text-purple-300 font-bold text-sm">x1</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Ort. Tepki: <span id="reflex-ms" class="text-emerald-300 font-bold text-sm">0 ms</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Süre: <span id="reflex-time" class="text-amber-300 font-bold text-sm">45s</span></div>
+                        <button onclick="startReflexGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
+                            <i class="fa-solid fa-play mr-1"></i> Başlat / Yeniden
+                        </button>
+                    </div>
+                </div>
+                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="reflex-canvas" class="w-full h-full cursor-crosshair block"></canvas>
+                    <div id="reflex-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
+                        <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-cyan-300 mb-4">
+                            <i class="fa-solid fa-crosshairs"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-2xl text-white mb-2" id="reflex-overlay-title">Neon Refleks Testine Hazır Mısın?</h4>
+                        <p class="text-sm text-slate-300 max-w-md mb-6" id="reflex-overlay-desc">
+                            45 saniye boyunca beliren enerji kürelerini en hızlı şekilde yakala. Merkezden vurmak ekstra puan ve ses harmonisi kazandırır!
+                        </p>
+                        <button onclick="startReflexGame()" class="liquid-btn-primary px-6 py-3 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> Simülasyonu Başlat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAME 2: KUANTUM KAÇIŞ (ENDLESS NEON DODGE) -->
+            <div id="game-stage-dodge" class="game-stage hidden liquid-glass rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-white flex items-center gap-2">
+                            <i class="fa-solid fa-shuttle-space text-purple-300"></i> Kuantum Kaçış: Lazer Fırtınası
+                        </h3>
+                        <p class="text-xs text-slate-300">Fare veya Yön Tuşları (WASD) ile enerji çekirdeğini yönet. Kırmızı engellerden kaç, mavi kalkan ve yeşil kristalleri topla!</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="dodge-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Kalkan: <span id="dodge-shield" class="text-emerald-300 font-bold text-sm">Hazır</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Rekor: <span id="dodge-best" class="text-amber-300 font-bold text-sm">0</span></div>
+                        <button onclick="startDodgeGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
+                            <i class="fa-solid fa-play mr-1"></i> Başlat
+                        </button>
+                    </div>
+                </div>
+                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="dodge-canvas" class="w-full h-full block"></canvas>
+                    <div id="dodge-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
+                        <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-purple-300 mb-4">
+                            <i class="fa-solid fa-shuttle-space"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-2xl text-white mb-2" id="dodge-overlay-title">Kuantum Koridoruna Giriş</h4>
+                        <p class="text-sm text-slate-300 max-w-md mb-6" id="dodge-overlay-desc">
+                            Farenizi hareket ettirerek veya yön tuşlarıyla çekirdeği koruyun. Mavi küreler koruyucu kalkan verir, yeşil kristaller puanı katlar!
+                        </p>
+                        <button onclick="startDodgeGame()" class="liquid-btn-primary px-6 py-3 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-rocket"></i> Uçuşu Başlat
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAME 3: HAFIZA MATRİSİ (LIQUID MEMORY GRID) -->
+            <div id="game-stage-memory" class="game-stage hidden liquid-glass rounded-3xl p-5 sm:p-6 space-y-5">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-white flex items-center gap-2">
+                            <i class="fa-solid fa-table-cells-large text-emerald-300"></i> Hafıza Matrisi: Kristal Frekanslar
+                        </h3>
+                        <p class="text-xs text-slate-300">Yanan sıvı cam blokların sırasını ve müzikal frekansını takip et, aynı sırayla tekrar et.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Seviye: <span id="memory-level" class="text-emerald-300 font-bold text-sm">1</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="memory-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">En Yüksek: <span id="memory-best" class="text-amber-300 font-bold text-sm">1</span></div>
+                        <button onclick="replayMemoryHint()" id="memory-hint-btn" class="liquid-btn px-3.5 py-2 rounded-xl text-xs text-amber-200">
+                            <i class="fa-solid fa-lightbulb mr-1"></i> Tekrar Göster (1)
+                        </button>
+                        <button onclick="startMemoryGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
+                            <i class="fa-solid fa-play mr-1"></i> Yeni Oyun
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center justify-center py-4">
+                    <div id="memory-status-banner" class="mb-5 px-5 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-medium text-cyan-200">
+                        Başlamak için "Yeni Oyun" butonuna tıkla!
+                    </div>
+                    <!-- 4x4 Liquid Glass Grid -->
+                    <div id="memory-grid" class="grid grid-cols-4 gap-3 sm:gap-4 w-full max-w-md aspect-square p-4 liquid-card rounded-3xl">
+                        <!-- 16 Pads generated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- GAME 4: KOZMİK KIRICI (GRAVITY BRICK BREAKER) -->
+            <div id="game-stage-breaker" class="game-stage hidden liquid-glass rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-white flex items-center gap-2">
+                            <i class="fa-solid fa-meteor text-amber-300"></i> Kozmik Kırıcı: Neon Breakout
+                        </h3>
+                        <p class="text-xs text-slate-300">Kristal blokları parçala, düşen çoklu-top (Multi-Ball) ve geniş raket güçlendirmelerini yakala!</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="breaker-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Can: <span id="breaker-lives" class="text-rose-400 font-bold text-sm">♥♥♥</span></div>
+                        <div class="liquid-card px-3.5 py-2 rounded-xl">Rekor: <span id="breaker-best" class="text-amber-300 font-bold text-sm">0</span></div>
+                        <button onclick="startBreakerGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
+                            <i class="fa-solid fa-play mr-1"></i> Başlat
+                        </button>
+                    </div>
+                </div>
+                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="breaker-canvas" class="w-full h-full block"></canvas>
+                    <div id="breaker-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
+                        <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-amber-300 mb-4">
+                            <i class="fa-solid fa-meteor"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-2xl text-white mb-2" id="breaker-overlay-title">Kozmik Kırıcı Arena</h4>
+                        <p class="text-sm text-slate-300 max-w-md mb-6" id="breaker-overlay-desc">
+                            Fare veya Sol/Sağ ok tuşları ile enerji platformunu kontrol et. Parlayan prizma blokları kırarak güç kürelerini topla!
+                        </p>
+                        <button onclick="startBreakerGame()" class="liquid-btn-primary px-6 py-3 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-fire"></i> Oyunu Başlat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 3: INTERACTIVE STORIES ("HİKAYELER")
+             ========================================== -->
+        <section id="tab-stories" class="tab-section space-y-6">
+            
+            <!-- Story Navigation Header -->
+            <div class="liquid-glass rounded-3xl p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-wider text-amber-300">Çoklu Evren Anlatıları</span>
+                    <h2 class="font-display font-bold text-2xl text-white">İnteraktif Hikayeler & Gizem Arşivi</h2>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchStoryMode('interactive')" id="story-mode-interactive" class="nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-code-branch text-amber-300"></i>
+                        <span>Seçimli Maceralar (3 Kitap)</span>
+                    </button>
+                    <button onclick="switchStoryMode('lore')" id="story-mode-lore" class="liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-cyan-300"></i>
+                        <span>Kısa Gizem & Evren Kayıtları (8 Dosya)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive CYOA Engine Container -->
+            <div id="story-interactive-view" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Column: Story Selector & Inventory -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="liquid-glass rounded-3xl p-5 space-y-3">
+                        <h3 class="font-display font-bold text-base text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-amber-300"></i> Hikaye Seçimi
+                        </h3>
+                        <div class="space-y-2.5" id="story-list-buttons">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Player Story State / Inventory -->
+                    <div class="liquid-glass rounded-3xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-display font-bold text-sm text-white uppercase tracking-wider">Gezgin Durumu & Envanter</h4>
+                            <button onclick="restartCurrentStory()" class="text-xs text-cyan-300 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> Baştan Başla
+                            </button>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-slate-300">
+                                <span>Zihin Dengesi / Enerji:</span>
+                                <span id="story-sanity-val" class="font-mono text-emerald-300">100%</span>
+                            </div>
+                            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div id="story-sanity-bar" class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-500" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <span class="text-[11px] font-mono uppercase text-slate-400 block mb-2">Toplanan İpuçları & Eşyalar:</span>
+                            <div id="story-inventory-list" class="flex flex-wrap gap-1.5">
+                                <span class="text-xs text-slate-400 italic">Henüz özel bir nesne bulunmadı.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Active Story Reader Stage -->
+                <div class="lg:col-span-8">
+                    <div class="liquid-glass rounded-3xl p-6 sm:p-8 min-h-[480px] flex flex-col justify-between relative overflow-hidden">
+                        <div class="space-y-5 relative z-10">
+                            <!-- Chapter Header -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-4">
+                                <div>
+                                    <span id="story-active-genre" class="text-xs font-mono uppercase tracking-widest text-amber-300">Gizem & Liminal</span>
+                                    <h3 id="story-active-title" class="font-display font-bold text-2xl sm:text-3xl text-white">Sonsuz Koridorlar (Seviye 994)</h3>
+                                </div>
+                                <span id="story-node-badge" class="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-mono text-cyan-200">
+                                    Bölüm #1
+                                </span>
+                            </div>
+
+                            <!-- Narrative Text -->
+                            <div id="story-narrative-text" class="text-slate-100 text-base sm:text-lg leading-relaxed space-y-4 font-normal">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Choices Container -->
+                        <div class="pt-8 mt-6 border-t border-white/10 space-y-3 relative z-10">
+                            <span class="text-xs font-mono uppercase tracking-wider text-slate-300 block">Ne yapacaksın?</span>
+                            <div id="story-choices-container" class="grid grid-cols-1 gap-3">
+                                <!-- Choice buttons injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short Lore / Mystery Archive View -->
+            <div id="story-lore-view" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 4: SOUND & MUSIC STUDIO ("SES STÜDYOSU")
+             ========================================== -->
+        <section id="tab-music" class="tab-section space-y-6">
+            
+            <div class="liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono uppercase tracking-wider text-emerald-300">100% Web Audio API Synthesizer</span>
+                        <h2 class="font-display font-bold text-2xl sm:text-3xl text-white">Ses & Müzik Laboratuvarı</h2>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Harici MP3 olmadan tarayıcınızın ses işlemcisiyle canlı üretilen algoritmik müzik kanalları ve doğa ambiyansları.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleMasterMusic()" id="studio-play-btn" class="liquid-btn-primary px-6 py-3 rounded-2xl text-sm flex items-center gap-2.5">
+                            <i class="fa-solid fa-play" id="studio-play-icon"></i>
+                            <span id="studio-play-text">Yayını Başlat</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Audio Frequency & Waveform Visualizer Canvas -->
+                <div class="relative w-full h-56 sm:h-64 rounded-3xl overflow-hidden bg-slate-950/70 border border-white/15 p-4 flex flex-col justify-between">
+                    <canvas id="audio-visualizer-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                    <div class="relative z-10 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-white/15 backdrop-blur-md">
+                            <span id="studio-live-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                            <span id="studio-current-channel-name" class="text-xs font-mono text-white">Kanal: Neon Synthwave (Hazır)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="switchVisualizerMode()" class="liquid-btn px-3 py-1 rounded-xl text-xs font-mono text-cyan-200">
+                                <i class="fa-solid fa-chart-simple mr-1"></i> Görünüm Değiştir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative z-10 flex items-center justify-between text-xs font-mono text-slate-300">
+                        <span id="studio-bpm-label">115 BPM • Stereo Synth</span>
+                        <span>48.0 kHz Canlı Sentezleyici</span>
+                    </div>
+                </div>
+
+                <!-- 4 Procedural Music Channels Selector -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button onclick="selectMusicChannel('synthwave')" id="chan-btn-synthwave" class="music-chan-card nav-tab-active liquid-card rounded-2xl p-4 text-left space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-300 text-lg">
+                                <i class="fa-solid fa-car-side"></i>
+                            </span>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-cyan-200">115 BPM</span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">1. Neon Synthwave</h4>
+                        <p class="text-xs text-slate-300">Sıcak arpejler, derin analog bas ve 80'ler siber ritimleri.</p>
+                    </button>
+
+                    <button onclick="selectMusicChannel('space')" id="chan-btn-space" class="music-chan-card liquid-card rounded-2xl p-4 text-left space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-300 text-lg">
+                                <i class="fa-solid fa-user-astronaut"></i>
+                            </span>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-purple-200">Ambient</span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">2. Uzay Boşluğu</h4>
+                        <p class="text-xs text-slate-300">Evrimleşen derin uzay pad akorları ve kristal yıldız çanları.</p>
+                    </button>
+
+                    <button onclick="selectMusicChannel('lofi')" id="chan-btn-lofi" class="music-chan-card liquid-card rounded-2xl p-4 text-left space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-300 text-lg">
+                                <i class="fa-solid fa-mug-hot"></i>
+                            </span>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-amber-200">78 BPM</span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">3. Lo-Fi Chill Ritim</h4>
+                        <p class="text-xs text-slate-300">Yumuşak elektrik piyano yedili akorları ve rahatlatıcı ritim.</p>
+                    </button>
+
+                    <button onclick="selectMusicChannel('cyber')" id="chan-btn-cyber" class="music-chan-card liquid-card rounded-2xl p-4 text-left space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-300 text-lg">
+                                <i class="fa-solid fa-microchip"></i>
+                            </span>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-emerald-200">132 BPM</span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">4. Siber Matrix</h4>
+                        <p class="text-xs text-slate-300">Yüksek enerjili darksynth sekansı ve odak artırıcı nabız.</p>
+                    </button>
+                </div>
+
+                <!-- Ambient Layer Mixer (Simultaneous Generators) -->
+                <div class="pt-4 border-t border-white/10">
+                    <h3 class="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-moon-rain text-cyan-300"></i> Ambiyans Katman Mikseri (Müzikle Birlikte Veya Tek Başına Karıştırın)
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Rain Layer -->
+                        <div class="liquid-card rounded-2xl p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium flex items-center gap-2 text-white">
+                                    <i class="fa-solid fa-cloud-showers-heavy text-sky-300"></i> Gece Yağmuru
+                                </span>
+                                <span id="mix-val-rain" class="text-xs font-mono text-sky-300">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="liquid-slider" oninput="setAmbientVolume('rain', this.value)">
+                        </div>
+
+                        <!-- Wind Layer -->
+                        <div class="liquid-card rounded-2xl p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium flex items-center gap-2 text-white">
+                                    <i class="fa-solid fa-wind text-emerald-300"></i> Kanyon Rüzgarı
+                                </span>
+                                <span id="mix-val-wind" class="text-xs font-mono text-emerald-300">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="liquid-slider" oninput="setAmbientVolume('wind', this.value)">
+                        </div>
+
+                        <!-- Vinyl Crackle Layer -->
+                        <div class="liquid-card rounded-2xl p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium flex items-center gap-2 text-white">
+                                    <i class="fa-solid fa-record-vinyl text-amber-300"></i> Plak Çıtırtısı
+                                </span>
+                                <span id="mix-val-vinyl" class="text-xs font-mono text-amber-300">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="liquid-slider" oninput="setAmbientVolume('vinyl', this.value)">
+                        </div>
+
+                        <!-- Binaural Alpha Focus Wave -->
+                        <div class="liquid-card rounded-2xl p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium flex items-center gap-2 text-white">
+                                    <i class="fa-solid fa-brain text-purple-300"></i> 432Hz Kozmik Odak
+                                </span>
+                                <span id="mix-val-binaural" class="text-xs font-mono text-purple-300">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="liquid-slider" oninput="setAmbientVolume('binaural', this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 5: FUTURISTIC NEWS ("GELECEK HABERLERİ")
+             ========================================== -->
+        <section id="tab-news" class="tab-section space-y-6">
+            
+            <!-- News Filter & Search Bar -->
+            <div class="liquid-glass rounded-3xl p-5 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-wider text-pink-300">Aetheria Chrono-Feed // 2026+</span>
+                    <h2 class="font-display font-bold text-2xl text-white">Gelecek, Bilim & Gizem Haberleri</h2>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="filterNews('all')" data-cat="all" class="news-cat-btn nav-tab-active liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Tümü</button>
+                    <button onclick="filterNews('Teknoloji')" data-cat="Teknoloji" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Teknoloji</button>
+                    <button onclick="filterNews('Uzay & Bilim')" data-cat="Uzay & Bilim" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Uzay & Bilim</button>
+                    <button onclick="filterNews('Oyun Dünyası')" data-cat="Oyun Dünyası" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Oyun Dünyası</button>
+                    <button onclick="filterNews('Gizem & Teori')" data-cat="Gizem & Teori" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Gizem & Teori</button>
+                    <button onclick="filterNews('saved')" data-cat="saved" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium text-amber-300">
+                        <i class="fa-solid fa-bookmark mr-1"></i> Kaydedilenler
+                    </button>
+                </div>
+            </div>
+
+            <!-- News Cards Grid -->
+            <div id="news-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TAB 6: ZEN & EXTRA TOOLS ("ZEN & KEŞİF")
+             ========================================== -->
+        <section id="tab-zen" class="tab-section space-y-6">
+            
+            <!-- 1. Interactive Fluid / Galaxy Particle Sandbox -->
+            <div class="liquid-glass rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono uppercase tracking-wider text-sky-300">Etkileşimli Fizik Terapisi</span>
+                        <h2 class="font-display font-bold text-2xl text-white">Zen Parçacık & Galaksi Havuzu</h2>
+                        <p class="text-xs text-slate-300">Fareyi hareket ettirerek veya basılı tutarak binlerce neon parçacığı yönet.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="setZenMode('attract')" id="zen-mode-attract" class="zen-mode-btn nav-tab-active liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">
+                            <i class="fa-solid fa-magnet text-cyan-300 mr-1"></i> Çekim Kuyusu
+                        </button>
+                        <button onclick="setZenMode('vortex')" id="zen-mode-vortex" class="zen-mode-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">
+                            <i class="fa-solid fa-hurricane text-purple-300 mr-1"></i> Galaksi Girdabı
+                        </button>
+                        <button onclick="setZenMode('repel')" id="zen-mode-repel" class="zen-mode-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">
+                            <i class="fa-solid fa-explosion text-amber-300 mr-1"></i> Antimadde İtici
+                        </button>
+                        <button onclick="triggerZenSupernova()" class="liquid-btn-primary px-3.5 py-2 rounded-xl text-xs">
+                            <i class="fa-solid fa-sparkles mr-1"></i> Süpernova Patlat
+                        </button>
+                    </div>
+                </div>
+                <div class="relative w-full h-[380px] sm:h-[430px] rounded-2xl overflow-hidden bg-slate-950/75 border border-white/15">
+                    <canvas id="zen-sandbox-canvas" class="w-full h-full cursor-pointer block"></canvas>
+                </div>
+            </div>
+
+            <!-- 2. Boredom Oracle + Pomodoro + Crystal Sticky Notes -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                
+                <!-- Mystery & Paradox Generator -->
+                <div class="lg:col-span-4 liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-amber-300">Zihin Açıcı Üretici</span>
+                        <h3 class="font-display font-bold text-xl text-white">Paradoks & Bilmece Küresi</h3>
+                        <div class="liquid-card rounded-2xl p-4 min-h-[150px] flex flex-col justify-between">
+                            <span id="oracle-category" class="text-[11px] font-mono uppercase text-cyan-300">Zaman Paradoksu</span>
+                            <p id="oracle-text" class="text-sm text-slate-100 leading-relaxed my-2">
+                                Теseus'un Gemisi: Bir geminin tüm tahtaları zamanla çürüyüp yenileriyle değiştirilirse, bu hala aynı gemi midir? Peki eski tahtalarla ikinci bir gemi yapılırsa hangisi gerçektir?
+                            </p>
+                            <div id="oracle-answer" class="hidden text-xs text-emerald-300 pt-2 border-t border-white/10"></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="generateOracleCard()" class="liquid-btn-primary flex-1 py-2.5 rounded-xl text-xs">
+                            <i class="fa-solid fa-dice mr-1"></i> Yeni Paradoks / Bilmece Çek
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quantum Focus Timer (Pomodoro) -->
+                <div class="lg:col-span-4 liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-xs font-mono uppercase tracking-wider text-emerald-300">Zaman Yönetimi</span>
+                        <h3 class="font-display font-bold text-xl text-white">Kuantum Odak Sayacı</h3>
+                    </div>
+                    <div class="liquid-card rounded-2xl p-5 text-center space-y-3">
+                        <div id="pomo-timer-display" class="font-mono font-bold text-4xl sm:text-5xl text-white tracking-wider">25:00</div>
+                        <div class="flex justify-center gap-2">
+                            <button onclick="setPomoMinutes(25)" class="liquid-btn px-3 py-1 rounded-lg text-xs">25 dk Odak</button>
+                            <button onclick="setPomoMinutes(10)" class="liquid-btn px-3 py-1 rounded-lg text-xs">10 dk Hızlı</button>
+                            <button onclick="setPomoMinutes(5)" class="liquid-btn px-3 py-1 rounded-lg text-xs">5 dk Mola</button>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="togglePomoTimer()" id="pomo-start-btn" class="liquid-btn-primary flex-1 py-2.5 rounded-xl text-xs">
+                            <i class="fa-solid fa-play mr-1"></i> Başlat / Duraklat
+                        </button>
+                        <button onclick="resetPomoTimer()" class="liquid-btn px-4 py-2.5 rounded-xl text-xs">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Liquid Glass Quick Notes -->
+                <div class="lg:col-span-4 liquid-glass rounded-3xl p-6 flex flex-col justify-between space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-mono uppercase tracking-wider text-purple-300">Kalıcı Hafıza</span>
+                            <h3 class="font-display font-bold text-xl text-white">Kristal Not Defteri</h3>
+                        </div>
+                        <span id="note-saved-badge" class="text-[11px] font-mono text-emerald-300">Otomatik Kayıtlı</span>
+                    </div>
+                    <textarea id="quick-notes-area" oninput="saveQuickNotes(this.value)" placeholder="Aklına gelen fikirleri, oyun stratejilerini veya hikayelerden ipuçlarını buraya yaz..." class="w-full h-36 rounded-2xl bg-white/5 border border-white/15 p-3.5 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+                    <div class="flex justify-between items-center text-xs text-slate-400">
+                        <span>Tarayıcı hafızasında saklanır</span>
+                        <button onclick="clearQuickNotes()" class="text-rose-300 hover:underline">Temizle</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PERSISTENT BOTTOM MINI AUDIO & STATUS BAR -->
+    <footer class="fixed bottom-0 left-0 right-0 z-40 px-3 sm:px-6 pb-3 pointer-events-none">
+        <div class="max-w-7xl mx-auto liquid-glass rounded-2xl px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-auto">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMasterMusic()" class="liquid-btn w-9 h-9 rounded-xl flex items-center justify-center text-cyan-300">
+                    <i class="fa-solid fa-play" id="mini-player-icon"></i>
+                </button>
+                <div>
+                    <div class="text-xs font-medium text-white flex items-center gap-2">
+                        <span id="mini-player-title">Canlı Synth: Neon Synthwave</span>
+                        <span id="mini-player-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-slate-300">Duraklatıldı</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Müziği dinlerken oyun oynayabilir veya hikayeleri okuyabilirsiniz.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="switchMainTab('music')" class="liquid-btn px-3 py-1.5 rounded-xl text-xs text-cyan-200 hidden sm:flex items-center gap-1.5">
+                    <i class="fa-solid fa-sliders"></i> Mikser
+                </button>
+                <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Sıkıldım!
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ARTICLE / LORE READER MODAL -->
+    <div id="reader-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl">
+        <div class="liquid-glass rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-white/25 shadow-2xl">
+            <div class="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between gap-4">
+                <div>
+                    <span id="modal-category" class="text-xs font-mono uppercase tracking-wider text-cyan-300">Kategori</span>
+                    <h3 id="modal-title" class="font-display font-bold text-xl sm:text-2xl text-white mt-0.5">Başlık</h3>
+                </div>
+                <button onclick="closeReaderModal()" class="liquid-btn w-10 h-10 rounded-2xl flex items-center justify-center text-slate-200 hover:text-white shrink-0">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="p-6 overflow-y-auto space-y-4 text-slate-200 text-sm sm:text-base leading-relaxed">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="p-4 sm:p-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 bg-white/5">
+                <div class="flex items-center gap-2" id="modal-reactions">
+                    <!-- Reaction buttons -->
+                </div>
+                <button onclick="closeReaderModal()" class="liquid-btn px-5 py-2 rounded-xl text-xs font-medium text-white">
+                    Okumayı Tamamla (+15 XP)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT ENGINE (ALL MODULES)
+         ========================================== -->
+    <script>
+        /* =========================================================
+           1. GLOBAL STATE, XP SYSTEM & THEME ENGINE
+           ========================================================= */
+        const AppState = {
+            xp: parseInt(localStorage.getItem('aetheria_xp') || '20', 10),
+            sfxEnabled: true,
+            activeTab: 'dashboard',
+            activeGame: 'reflex',
+            theme: localStorage.getItem('aetheria_theme') || 'ocean',
+            savedNews: JSON.parse(localStorage.getItem('aetheria_saved_news') || '[]'),
+            highScores: {
+                reflex: parseInt(localStorage.getItem('aetheria_hs_reflex') || '0', 10),
+                dodge: parseInt(localStorage.getItem('aetheria_hs_dodge') || '0', 10),
+                memory: parseInt(localStorage.getItem('aetheria_hs_memory') || '1', 10),
+                breaker: parseInt(localStorage.getItem('aetheria_hs_breaker') || '0', 10),
+            }
+        };
+
+        const THEMES = {
+            ocean: {
+                accent1: '#00f2fe',
+                accent2: '#4facfe',
+                accent3: '#a855f7',
+                glow: 'rgba(0, 242, 254, 0.28)',
+                blobs: ['#0284c7', '#00f2fe', '#6366f1', '#3b82f6']
+            },
+            nebula: {
+                accent1: '#f472b6',
+                accent2: '#c084fc',
+                accent3: '#818cf8',
+                glow: 'rgba(244, 114, 182, 0.28)',
+                blobs: ['#db2777', '#9333ea', '#ec4899', '#4f46e5']
+            },
+            emerald: {
+                accent1: '#34d399',
+                accent2: '#10b981',
+                accent3: '#06b6d4',
+                glow: 'rgba(52, 211, 153, 0.28)',
+                blobs: ['#059669', '#10b981', '#0891b2', '#14b8a6']
+            },
+            solar: {
+                accent1: '#fbbf24',
+                accent2: '#f43f5e',
+                accent3: '#fb923c',
+                glow: 'rgba(251, 191, 36, 0.28)',
+                blobs: ['#e11d48', '#d97706', '#f97316', '#9333ea']
+            }
+        };
+
+        function setLiquidTheme(themeKey) {
+            if (!THEMES[themeKey]) return;
+            AppState.theme = themeKey;
+            localStorage.setItem('aetheria_theme', themeKey);
+            const t = THEMES[themeKey];
+            document.documentElement.style.setProperty('--accent-1', t.accent1);
+            document.documentElement.style.setProperty('--accent-2', t.accent2);
+            document.documentElement.style.setProperty('--accent-3', t.accent3);
+            document.documentElement.style.setProperty('--glow-shadow', t.glow);
+            document.getElementById('theme-dropdown').classList.add('hidden');
+            SoundEngine.playClick();
+            showToast('Liquid Tema Güncellendi', 'Yeni renk spektrumu aktif edildi.', 'fa-palette');
+        }
+
+        function toggleThemeMenu() {
+            SoundEngine.playClick();
+            document.getElementById('theme-dropdown').classList.toggle('hidden');
+        }
+
+        function addXP(amount, reason) {
+            const oldLevel = Math.floor(AppState.xp / 100) + 1;
+            AppState.xp += amount;
+            localStorage.setItem('aetheria_xp', AppState.xp.toString());
+            const newLevel = Math.floor(AppState.xp / 100) + 1;
+            updateXPDisplay();
+
+            if (newLevel > oldLevel) {
+                SoundEngine.playSuccess();
+                showToast(`SEVİYE ATLADIN! (Seviye ${newLevel})`, `${reason} ile yeni rütbeye ulaştın!`, 'fa-trophy');
+            } else {
+                showToast(`+${amount} XP Kazanıldı`, reason, 'fa-sparkles');
+            }
+        }
+
+        function updateXPDisplay() {
+            const level = Math.floor(AppState.xp / 100) + 1;
+            const xpInLevel = AppState.xp % 100;
+            const ranks = ['Gezgin', 'Kaşif', 'Siber Analist', 'Kuantum Pilotu', 'Zaman Mimarı', 'Aetheria Lordu'];
+            const rankTitle = ranks[Math.min(level - 1, ranks.length - 1)];
+
+            document.getElementById('user-level-badge').textContent = level;
+            document.getElementById('user-rank-title').textContent = rankTitle;
+            document.getElementById('user-xp-text').textContent = `${xpInLevel}/100 XP`;
+            document.getElementById('user-xp-bar').style.width = `${Math.max(8, xpInLevel)}%`;
+
+            // Update dashboard high scores
+            document.getElementById('dash-hs-reflex').textContent = AppState.highScores.reflex;
+            document.getElementById('dash-hs-dodge').textContent = AppState.highScores.dodge;
+            document.getElementById('dash-hs-memory').textContent = `Sv. ${AppState.highScores.memory}`;
+            document.getElementById('dash-hs-breaker').textContent = AppState.highScores.breaker;
+        }
+
+        function showToast(title, message, icon = 'fa-bell') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'liquid-glass rounded-2xl p-3.5 border border-white/25 flex items-center gap-3 shadow-2xl transform transition-all duration-300 translate-y-4 opacity-0';
+            toast.innerHTML = `
+                <div class="w-9 h-9 rounded-xl bg-cyan-400/20 border border-cyan-300/30 flex items-center justify-center text-cyan-300 shrink-0">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="text-xs">
+                    <div class="font-display font-bold text-white">${title}</div>
+                    <div class="text-slate-300">${message}</div>
+                </div>
+            `;
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            });
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 350);
+            }, 3200);
+        }
+
+        /* =========================================================
+           2. 100% WEB AUDIO API SOUND ENGINE & PROCEDURAL MUSIC STUDIO
+           ========================================================= */
+        const SoundEngine = {
+            ctx: null,
+            analyser: null,
+            masterGain: null,
+            musicPlaying: false,
+            currentChannel: 'synthwave',
+            musicTimer: null,
+            stepIndex: 0,
+            ambientNodes: {},
+            visualizerMode: 0,
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioCtx();
+                    this.masterGain = this.ctx.createGain();
+                    this.masterGain.gain.value = 0.7;
+
+                    this.analyser = this.ctx.createAnalyser();
+                    this.analyser.fftSize = 256;
+
+                    this.masterGain.connect(this.analyser);
+                    this.analyser.connect(this.ctx.destination);
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            },
+
+            playHover() {
+                if (!AppState.sfxEnabled) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1650, now);
+                osc.frequency.exponentialRampToValueAtTime(2200, now + 0.035);
+
+                gain.gain.setValueAtTime(0.025, now);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.045);
+            },
+
+            playClick() {
+                if (!AppState.sfxEnabled) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(420, now);
+                osc.frequency.exponentialRampToValueAtTime(980, now + 0.08);
+
+                gain.gain.setValueAtTime(0.11, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.095);
+            },
+
+            playNote(freq, duration = 0.35, type = 'sine', vol = 0.14) {
+                if (!AppState.sfxEnabled && !this.musicPlaying) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(vol, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0008, now + duration);
+
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                osc.start(now);
+                osc.stop(now + duration + 0.02);
+            },
+
+            playSuccess() {
+                if (!AppState.sfxEnabled) return;
+                const notes = [523.25, 659.25, 783.99, 1046.5];
+                notes.forEach((n, idx) => {
+                    setTimeout(() => this.playNote(n, 0.3, 'triangle', 0.12), idx * 75);
+                });
+            },
+
+            playError() {
+                if (!AppState.sfxEnabled) return;
+                this.playNote(180, 0.25, 'sawtooth', 0.1);
+                setTimeout(() => this.playNote(135, 0.35, 'sawtooth', 0.1), 110);
+            },
+
+            playPercussion(type) {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                if (type === 'kick') {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.frequency.setValueAtTime(135, now);
+                    osc.frequency.exponentialRampToValueAtTime(32, now + 0.14);
+                    gain.gain.setValueAtTime(0.28, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+                    osc.connect(gain);
+                    gain.connect(this.masterGain);
+                    osc.start(now);
+                    osc.stop(now + 0.17);
+                } else if (type === 'hat') {
+                    const bufferSize = this.ctx.sampleRate * 0.05;
+                    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'highpass';
+                    filter.frequency.value = 6000;
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.masterGain);
+                    noise.start(now);
+                }
+            },
+
+            startProceduralMusic() {
+                this.init();
+                this.stopProceduralMusic();
+                this.musicPlaying = true;
+                this.stepIndex = 0;
+                updateMusicUIState();
+
+                const runStep = () => {
+                    if (!this.musicPlaying) return;
+                    const s = this.stepIndex;
+
+                    if (this.currentChannel === 'synthwave') {
+                        const bassNotes = [110, 110, 87.31, 87.31, 130.81, 130.81, 98, 98];
+                        const arpNotes = [220, 261.63, 329.63, 440, 329.63, 261.63, 392, 329.63];
+                        const bass = bassNotes[Math.floor(s / 2) % bassNotes.length];
+                        const arp = arpNotes[s % arpNotes.length];
+
+                        this.playNote(bass, 0.22, 'sawtooth', 0.07);
+                        this.playNote(arp * 2, 0.18, 'triangle', 0.06);
+                        if (s % 4 === 0) this.playPercussion('kick');
+                        if (s % 2 === 1) this.playPercussion('hat');
+                    } else if (this.currentChannel === 'space') {
+                        const spaceChords = [
+                            [220, 329.63, 440],
+                            [196, 293.66, 392],
+                            [174.61, 261.63, 349.23],
+                            [164.81, 246.94, 329.63]
+                        ];
+                        if (s % 4 === 0) {
+                            const chord = spaceChords[Math.floor(s / 4) % spaceChords.length];
+                            chord.forEach(f => this.playNote(f, 1.8, 'sine', 0.055));
+                        }
+                        if (Math.random() > 0.45) {
+                            const chimes = [523.25, 659.25, 783.99, 880, 1046.5];
+                            const pick = chimes[Math.floor(Math.random() * chimes.length)];
+                            this.playNote(pick, 0.9, 'sine', 0.04);
+                        }
+                    } else if (this.currentChannel === 'lofi') {
+                        const lofiChords = [
+                            [261.63, 329.63, 392.00, 493.88],
+                            [220.00, 261.63, 329.63, 392.00],
+                            [174.61, 220.00, 261.63, 349.23],
+                            [196.00, 246.94, 293.66, 349.23]
+                        ];
+                        if (s % 4 === 0) {
+                            const chord = lofiChords[Math.floor(s / 4) % lofiChords.length];
+                            chord.forEach(f => this.playNote(f, 0.95, 'triangle', 0.05));
+                        }
+                        if (s % 4 === 0 || s % 8 === 3) this.playPercussion('kick');
+                        if (s % 2 === 1) this.playPercussion('hat');
+                    } else if (this.currentChannel === 'cyber') {
+                        const cyberSeq = [130.81, 130.81, 261.63, 130.81, 155.56, 146.83, 130.81, 116.54];
+                        const freq = cyberSeq[s % cyberSeq.length];
+                        this.playNote(freq, 0.15, 'sawtooth', 0.08);
+                        if (s % 2 === 0) this.playPercussion('kick');
+                        this.playPercussion('hat');
+                    }
+
+                    this.stepIndex++;
+                };
+
+                const intervals = { synthwave: 230, space: 420, lofi: 340, cyber: 185 };
+                runStep();
+                this.musicTimer = setInterval(runStep, intervals[this.currentChannel] || 250);
+            },
+
+            stopProceduralMusic() {
+                this.musicPlaying = false;
+                if (this.musicTimer) {
+                    clearInterval(this.musicTimer);
+                    this.musicTimer = null;
+                }
+                updateMusicUIState();
+            }
+        };
+
+        function toggleSFX() {
+            AppState.sfxEnabled = !AppState.sfxEnabled;
+            const icon = document.getElementById('sfx-icon');
+            const btn = document.getElementById('sfx-toggle-btn');
+            if (AppState.sfxEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                btn.classList.add('text-cyan-300');
+                SoundEngine.playClick();
+                showToast('Ses Efektleri Açık', 'Liquid cam etkileşim sesleri aktif.', 'fa-volume-high');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+                btn.classList.remove('text-cyan-300');
+                showToast('Ses Efektleri Sessizde', 'Arayüz tıklama sesleri kapatıldı.', 'fa-volume-xmark');
+            }
+        }
+
+        function toggleMasterMusic() {
+            SoundEngine.playClick();
+            if (SoundEngine.musicPlaying) {
+                SoundEngine.stopProceduralMusic();
+            } else {
+                SoundEngine.startProceduralMusic();
+                addXP(5, 'Canlı Synth Müziği Başlatıldı');
+            }
+        }
+
+        function quickToggleMusic() {
+            toggleMasterMusic();
+        }
+
+        function selectMusicChannel(chan) {
+            SoundEngine.playClick();
+            SoundEngine.currentChannel = chan;
+            document.querySelectorAll('.music-chan-card').forEach(c => c.classList.remove('nav-tab-active'));
+            const activeCard = document.getElementById(`chan-btn-${chan}`);
+            if (activeCard) activeCard.classList.add('nav-tab-active');
+
+            const names = {
+                synthwave: 'Neon Synthwave (115 BPM)',
+                space: 'Uzay Boşluğu (Deep Ambient)',
+                lofi: 'Lo-Fi Chill Ritim (78 BPM)',
+                cyber: 'Siber Matrix (132 BPM)'
+            };
+            document.getElementById('studio-current-channel-name').textContent = `Kanal: ${names[chan]}`;
+            document.getElementById('mini-player-title').textContent = `Canlı Synth: ${names[chan]}`;
+
+            if (SoundEngine.musicPlaying) {
+                SoundEngine.startProceduralMusic();
+            }
+        }
+
+        function updateMusicUIState() {
+            const playing = SoundEngine.musicPlaying;
+            const studioIcon = document.getElementById('studio-play-icon');
+            const studioText = document.getElementById('studio-play-text');
+            const studioDot = document.getElementById('studio-live-dot');
+            const miniIcon = document.getElementById('mini-player-icon');
+            const miniBadge = document.getElementById('mini-player-badge');
+            const heroIcon = document.getElementById('hero-music-icon');
+            const heroLabel = document.getElementById('hero-music-label');
+
+            if (playing) {
+                studioIcon.className = 'fa-solid fa-pause';
+                studioText.textContent = 'Yayını Duraklat';
+                studioDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping';
+                miniIcon.className = 'fa-solid fa-pause';
+                miniBadge.textContent = 'Canlı Çalıyor';
+                miniBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
+                heroIcon.className = 'fa-solid fa-pause text-emerald-300';
+                heroLabel.textContent = 'Synth Müziği Duraklat';
+            } else {
+                studioIcon.className = 'fa-solid fa-play';
+                studioText.textContent = 'Yayını Başlat';
+                studioDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+                miniIcon.className = 'fa-solid fa-play';
+                miniBadge.textContent = 'Duraklatıldı';
+                miniBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-slate-300';
+                heroIcon.className = 'fa-solid fa-play text-cyan-300';
+                heroLabel.textContent = 'Arka Plan Synth Müziği Başlat';
+            }
+        }
+
+        // Ambient Layer Mixer Generators
+        function setAmbientVolume(layer, val) {
+            SoundEngine.init();
+            const numVal = parseInt(val, 10);
+            document.getElementById(`mix-val-${layer}`).textContent = `${numVal}%`;
+            const gainValue = (numVal / 100) * 0.22;
+
+            if (numVal === 0) {
+                if (SoundEngine.ambientNodes[layer]) {
+                    try { SoundEngine.ambientNodes[layer].stop(); } catch (e) {}
+                    delete SoundEngine.ambientNodes[layer];
+                }
+                return;
+            }
+
+            if (!SoundEngine.ambientNodes[layer]) {
+                const ctx = SoundEngine.ctx;
+                if (layer === 'binaural') {
+                    const osc1 = ctx.createOscillator();
+                    const osc2 = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc1.frequency.value = 432;
+                    osc2.frequency.value = 440; // 8Hz Alpha binaural beat
+                    gain.gain.value = gainValue * 0.4;
+                    osc1.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(SoundEngine.masterGain);
+                    osc1.start();
+                    osc2.start();
+                    SoundEngine.ambientNodes[layer] = {
+                        gain,
+                        stop: () => { osc1.stop(); osc2.stop(); }
+                    };
+                } else {
+                    // Noise buffer for Rain, Wind, Vinyl
+                    const bufferSize = ctx.sampleRate * 2;
+                    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        if (layer === 'vinyl') {
+                            data[i] = Math.random() > 0.992 ? (Math.random() * 2 - 1) : (Math.random() * 0.04 - 0.02);
+                        } else {
+                            data[i] = Math.random() * 2 - 1;
+                        }
+                    }
+                    const noise = ctx.createBufferSource();
+                    noise.buffer = buffer;
+                    noise.loop = true;
+
+                    const filter = ctx.createBiquadFilter();
+                    if (layer === 'rain') {
+                        filter.type = 'lowpass';
+                        filter.frequency.value = 1100;
+                    } else if (layer === 'wind') {
+                        filter.type = 'bandpass';
+                        filter.frequency.value = 380;
+                        filter.Q.value = 4;
+                    } else {
+                        filter.type = 'highpass';
+                        filter.frequency.value = 1800;
+                    }
+
+                    const gain = ctx.createGain();
+                    gain.gain.value = gainValue;
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(SoundEngine.masterGain);
+                    noise.start();
+                    SoundEngine.ambientNodes[layer] = {
+                        gain,
+                        stop: () => noise.stop()
+                    };
+                }
+            } else {
+                SoundEngine.ambientNodes[layer].gain.gain.value = layer === 'binaural' ? gainValue * 0.4 : gainValue;
+            }
+        }
+
+        function switchVisualizerMode() {
+            SoundEngine.playClick();
+            SoundEngine.visualizerMode = (SoundEngine.visualizerMode + 1) % 2;
+        }
+
+        /* =========================================================
+           3. DYNAMIC LIQUID GLASS BACKGROUND & AUDIO VISUALIZER
+           ========================================================= */
+        const bgCanvas = document.getElementById('liquid-bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        const liquidBlobs = Array.from({ length: 5 }, (_, i) => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            vx: (Math.random() - 0.5) * 0.9,
+            vy: (Math.random() - 0.5) * 0.9,
+            r: 220 + i * 45
+        }));
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        window.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function renderLiquidBackground() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            const palette = THEMES[AppState.theme].blobs;
+
+            liquidBlobs.forEach((b, i) => {
+                b.x += b.vx;
+                b.y += b.vy;
+                if (b.x < -100 || b.x > bgCanvas.width + 100) b.vx *= -1;
+                if (b.y < -100 || b.y > bgCanvas.height + 100) b.vy *= -1;
+
+                // Subtle attraction to mouse on first blob
+                if (i === 0) {
+                    b.x += (mouseX - b.x) * 0.012;
+                    b.y += (mouseY - b.y) * 0.012;
+                }
+
+                const grad = bgCtx.createRadialGradient(b.x, b.y, 10, b.x, b.y, b.r);
+                grad.addColorStop(0, palette[i % palette.length] + '44');
+                grad.addColorStop(1, 'transparent');
+
+                bgCtx.fillStyle = grad;
+                bgCtx.beginPath();
+                bgCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                bgCtx.fill();
+            });
+
+            // Also render Studio Audio Visualizer if music tab is active
+            if (AppState.activeTab === 'music') {
+                renderStudioVisualizer();
+            }
+
+            requestAnimationFrame(renderLiquidBackground);
+        }
+
+        function renderStudioVisualizer() {
+            const canvas = document.getElementById('audio-visualizer-canvas');
+            if (!canvas) return;
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const barCount = 48;
+            const dataArray = new Uint8Array(barCount);
+            if (SoundEngine.analyser && (SoundEngine.musicPlaying || Object.keys(SoundEngine.ambientNodes).length > 0)) {
+                if (SoundEngine.visualizerMode === 0) {
+                    SoundEngine.analyser.getByteFrequencyData(dataArray);
+                } else {
+                    SoundEngine.analyser.getByteTimeDomainData(dataArray);
+                }
+            } else {
+                // Idle gentle wave
+                const t = performance.now() * 0.003;
+                for (let i = 0; i < barCount; i++) {
+                    dataArray[i] = 28 + Math.sin(t + i * 0.25) * 18;
+                }
+            }
+
+            const barW = (canvas.width / barCount) * 0.72;
+            const gap = (canvas.width / barCount) * 0.28;
+
+            for (let i = 0; i < barCount; i++) {
+                const val = dataArray[i] / 255;
+                const h = Math.max(8, val * (canvas.height * 0.78));
+                const x = i * (barW + gap);
+                const y = canvas.height - h;
+
+                const grad = ctx.createLinearGradient(x, y, x, canvas.height);
+                grad.addColorStop(0, THEMES[AppState.theme].accent1);
+                grad.addColorStop(1, THEMES[AppState.theme].accent3);
+
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barW, h, 6);
+                ctx.fill();
+            }
+        }
+
+        /* =========================================================
+           4. NAVIGATION & TAB MANAGEMENT + CRYSTAL HARP
+           ========================================================= */
+        function switchMainTab(tabId) {
+            SoundEngine.playClick();
+            AppState.activeTab = tabId;
+
+            // Stop active arcade loops when leaving games tab
+            if (tabId !== 'games') {
+                stopAllGames();
+            }
+            if (tabId === 'zen') {
+                initZenSandbox();
+            }
+
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.main-nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.classList.add('nav-tab-active');
+                } else {
+                    btn.classList.remove('nav-tab-active');
+                }
+            });
+        }
+
+        function initCrystalSynthPads() {
+            const container = document.getElementById('crystal-synth-pads');
+            const notes = [
+                { name: 'C4', freq: 261.63, color: 'from-cyan-400/30 to-blue-500/20' },
+                { name: 'D4', freq: 293.66, color: 'from-sky-400/30 to-indigo-500/20' },
+                { name: 'E4', freq: 329.63, color: 'from-indigo-400/30 to-purple-500/20' },
+                { name: 'G4', freq: 392.00, color: 'from-purple-400/30 to-fuchsia-500/20' },
+                { name: 'A4', freq: 440.00, color: 'from-fuchsia-400/30 to-pink-500/20' },
+                { name: 'C5', freq: 523.25, color: 'from-pink-400/30 to-rose-500/20' },
+                { name: 'D5', freq: 587.33, color: 'from-emerald-400/30 to-teal-500/20' },
+                { name: 'E5', freq: 659.25, color: 'from-amber-400/30 to-orange-500/20' }
+            ];
+
+            container.innerHTML = notes.map(n => `
+                <button 
+                    onmouseenter="SoundEngine.playNote(${n.freq}, 0.65, 'sine', 0.14)"
+                    onclick="SoundEngine.playNote(${n.freq}, 0.85, 'triangle', 0.18)"
+                    class="liquid-btn h-20 rounded-2xl bg-gradient-to-b ${n.color} flex flex-col items-center justify-center gap-1 group">
+                    <i class="fa-solid fa-gem text-cyan-200 group-hover:scale-125 transition"></i>
+                    <span class="font-mono text-xs text-white font-bold">${n.name}</span>
+                </button>
+            `).join('');
+        }
+
+        /* =========================================================
+           5. ARCADE GAMES ENGINE (4 COMPLETE GAMES)
+           ========================================================= */
+        let reflexAnimId = null, reflexTimerId = null;
+        let dodgeAnimId = null;
+        let breakerAnimId = null;
+
+        function stopAllGames() {
+            if (reflexAnimId) cancelAnimationFrame(reflexAnimId);
+            if (reflexTimerId) clearInterval(reflexTimerId);
+            if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
+            if (breakerAnimId) cancelAnimationFrame(breakerAnimId);
+        }
+
+        function selectGame(gameKey) {
+            SoundEngine.playClick();
+            stopAllGames();
+            AppState.activeGame = gameKey;
+
+            document.querySelectorAll('.game-select-btn').forEach(b => b.classList.remove('nav-tab-active'));
+            document.getElementById(`game-btn-${gameKey}`).classList.add('nav-tab-active');
+
+            document.querySelectorAll('.game-stage').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`game-stage-${gameKey}`).classList.remove('hidden');
+
+            if (gameKey === 'memory') {
+                initMemoryGridUI();
+            }
+        }
+
+        /* --- GAME 1: NEON REFLEKS --- */
+        const ReflexGame = {
+            orbs: [],
+            particles: [],
+            score: 0,
+            combo: 1,
+            timeLeft: 45,
+            reactions: [],
+            running: false
+        };
+
+        function startReflexGame() {
+            SoundEngine.playClick();
+            stopAllGames();
+            const canvas = document.getElementById('reflex-canvas');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            document.getElementById('reflex-overlay').classList.add('hidden');
+
+            ReflexGame.orbs = [];
+            ReflexGame.particles = [];
+            ReflexGame.score = 0;
+            ReflexGame.combo = 1;
+            ReflexGame.timeLeft = 45;
+            ReflexGame.reactions = [];
+            ReflexGame.running = true;
+            updateReflexHUD();
+
+            for (let i = 0; i < 3; i++) spawnReflexOrb(canvas);
+
+            reflexTimerId = setInterval(() => {
+                ReflexGame.timeLeft--;
+                updateReflexHUD();
+                if (ReflexGame.timeLeft <= 0) {
+                    endReflexGame();
+                }
+            }, 1000);
+
+            const ctx = canvas.getContext('2d');
+            function loop() {
+                if (!ReflexGame.running) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const now = performance.now();
+                for (let i = ReflexGame.orbs.length - 1; i >= 0; i--) {
+                    const o = ReflexGame.orbs[i];
+                    const elapsed = now - o.born;
+                    const progress = elapsed / o.lifetime;
+                    if (progress >= 1) {
+                        ReflexGame.orbs.splice(i, 1);
+                        ReflexGame.combo = 1;
+                        updateReflexHUD();
+                        spawnReflexOrb(canvas);
+                        continue;
+                    }
+
+                    const curR = o.maxR * (1 - progress * 0.65);
+                    // Outer ring
+                    ctx.strokeStyle = o.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(o.x, o.y, curR, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    // Glowing core
+                    const grad = ctx.createRadialGradient(o.x, o.y, 2, o.x, o.y, curR * 0.75);
+                    grad.addColorStop(0, '#ffffff');
+                    grad.addColorStop(0.5, o.color);
+                    grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(o.x, o.y, curR * 0.75, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Render particles
+                for (let i = ReflexGame.particles.length - 1; i >= 0; i--) {
+                    const p = ReflexGame.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.03;
+                    if (p.alpha <= 0) {
+                        ReflexGame.particles.splice(i, 1);
+                        continue;
+                    }
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.alpha;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+
+                reflexAnimId = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        function spawnReflexOrb(canvas) {
+            const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24'];
+            const margin = 55;
+            ReflexGame.orbs.push({
+                x: margin + Math.random() * (canvas.width - margin * 2),
+                y: margin + Math.random() * (canvas.height - margin * 2),
+                maxR: 34,
+                born: performance.now(),
+                lifetime: 2100,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            });
+        }
+
+        document.getElementById('reflex-canvas').addEventListener('pointerdown', e => {
+            if (!ReflexGame.running) return;
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            let hit = false;
+
+            for (let i = ReflexGame.orbs.length - 1; i >= 0; i--) {
+                const o = ReflexGame.orbs[i];
+                const dist = Math.hypot(x - o.x, y - o.y);
+                if (dist <= o.maxR) {
+                    hit = true;
+                    const rt = Math.round(performance.now() - o.born);
+                    ReflexGame.reactions.push(rt);
+                    ReflexGame.score += 15 * ReflexGame.combo;
+                    ReflexGame.combo = Math.min(8, ReflexGame.combo + 1);
+                    SoundEngine.playNote(440 + ReflexGame.combo * 65, 0.18, 'triangle', 0.14);
+
+                    for (let k = 0; k < 14; k++) {
+                        ReflexGame.particles.push({
+                            x: o.x,
+                            y: o.y,
+                            vx: (Math.random() - 0.5) * 7,
+                            vy: (Math.random() - 0.5) * 7,
+                            r: 2 + Math.random() * 3,
+                            alpha: 1,
+                            color: o.color
+                        });
+                    }
+                    ReflexGame.orbs.splice(i, 1);
+                    spawnReflexOrb(canvas);
+                    break;
+                }
+            }
+
+            if (!hit) {
+                ReflexGame.combo = 1;
+                SoundEngine.playError();
+            }
+            updateReflexHUD();
+        });
+
+        function updateReflexHUD() {
+            document.getElementById('reflex-score').textContent = ReflexGame.score;
+            document.getElementById('reflex-combo').textContent = `x${ReflexGame.combo}`;
+            document.getElementById('reflex-time').textContent = `${ReflexGame.timeLeft}s`;
+            const avg = ReflexGame.reactions.length
+                ? Math.round(ReflexGame.reactions.reduce((a, b) => a + b, 0) / ReflexGame.reactions.length)
+                : 0;
+            document.getElementById('reflex-ms').textContent = `${avg} ms`;
+        }
+
+        function endReflexGame() {
+            ReflexGame.running = false;
+            stopAllGames();
+            if (ReflexGame.score > AppState.highScores.reflex) {
+                AppState.highScores.reflex = ReflexGame.score;
+                localStorage.setItem('aetheria_hs_reflex', ReflexGame.score.toString());
+            }
+            addXP(25, `Neon Refleks Tamamlandı (Skor: ${ReflexGame.score})`);
+            document.getElementById('reflex-overlay-title').textContent = `Simülasyon Bitti! Skor: ${ReflexGame.score}`;
+            document.getElementById('reflex-overlay').classList.remove('hidden');
+        }
+
+        /* --- GAME 2: KUANTUM KAÇIŞ (ENDLESS NEON DODGE) --- */
+        const DodgeGame = {
+            player: { x: 200, y: 200, r: 13, shield: true },
+            targetX: 200,
+            targetY: 200,
+            hazards: [],
+            bonuses: [],
+            score: 0,
+            running: false
+        };
+
+        function startDodgeGame() {
+            SoundEngine.playClick();
+            stopAllGames();
+            const canvas = document.getElementById('dodge-canvas');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            document.getElementById('dodge-overlay').classList.add('hidden');
+
+            DodgeGame.player = { x: canvas.width / 2, y: canvas.height / 2, r: 13, shield: true };
+            DodgeGame.targetX = canvas.width / 2;
+            DodgeGame.targetY = canvas.height / 2;
+            DodgeGame.hazards = [];
+            DodgeGame.bonuses = [];
+            DodgeGame.score = 0;
+            DodgeGame.running = true;
+            document.getElementById('dodge-best').textContent = AppState.highScores.dodge;
+
+            const ctx = canvas.getContext('2d');
+            let frame = 0;
+
+            function loop() {
+                if (!DodgeGame.running) return;
+                frame++;
+                ctx.fillStyle = 'rgba(4, 7, 17, 0.32)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Smooth follow
+                DodgeGame.player.x += (DodgeGame.targetX - DodgeGame.player.x) * 0.16;
+                DodgeGame.player.y += (DodgeGame.targetY - DodgeGame.player.y) * 0.16;
+
+                // Spawn hazards
+                if (frame % 26 === 0) {
+                    const side = Math.floor(Math.random() * 4);
+                    let x = 0, y = 0, vx = 0, vy = 0;
+                    const speed = 2.8 + Math.min(4, DodgeGame.score / 250);
+                    if (side === 0) { x = Math.random() * canvas.width; y = -20; vx = (Math.random() - 0.5) * 2; vy = speed; }
+                    else if (side === 1) { x = Math.random() * canvas.width; y = canvas.height + 20; vx = (Math.random() - 0.5) * 2; vy = -speed; }
+                    else if (side === 2) { x = -20; y = Math.random() * canvas.height; vx = speed; vy = (Math.random() - 0.5) * 2; }
+                    else { x = canvas.width + 20; y = Math.random() * canvas.height; vx = -speed; vy = (Math.random() - 0.5) * 2; }
+                    DodgeGame.hazards.push({ x, y, vx, vy, r: 10 + Math.random() * 8 });
+                }
+
+                // Spawn bonuses
+                if (frame % 110 === 0) {
+                    DodgeGame.bonuses.push({
+                        x: 40 + Math.random() * (canvas.width - 80),
+                        y: 40 + Math.random() * (canvas.height - 80),
+                        r: 11,
+                        type: Math.random() > 0.7 ? 'shield' : 'crystal'
+                    });
+                }
+
+                // Draw player
+                ctx.beginPath();
+                ctx.arc(DodgeGame.player.x, DodgeGame.player.y, DodgeGame.player.r, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f2fe';
+                ctx.fill();
+
+                if (DodgeGame.player.shield) {
+                    ctx.strokeStyle = '#34d399';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.arc(DodgeGame.player.x, DodgeGame.player.y, DodgeGame.player.r + 7, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Update bonuses
+                for (let i = DodgeGame.bonuses.length - 1; i >= 0; i--) {
+                    const b = DodgeGame.bonuses[i];
+                    ctx.fillStyle = b.type === 'shield' ? '#38bdf8' : '#34d399';
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (Math.hypot(DodgeGame.player.x - b.x, DodgeGame.player.y - b.y) < DodgeGame.player.r + b.r) {
+                        if (b.type === 'shield') DodgeGame.player.shield = true;
+                        else DodgeGame.score += 50;
+                        SoundEngine.playNote(784, 0.2, 'sine', 0.14);
+                        DodgeGame.bonuses.splice(i, 1);
+                    }
+                }
+
+                // Update hazards
+                for (let i = DodgeGame.hazards.length - 1; i >= 0; i--) {
+                    const h = DodgeGame.hazards[i];
+                    h.x += h.vx;
+                    h.y += h.vy;
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.beginPath();
+                    ctx.arc(h.x, h.y, h.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (Math.hypot(DodgeGame.player.x - h.x, DodgeGame.player.y - h.y) < DodgeGame.player.r + h.r) {
+                        if (DodgeGame.player.shield) {
+                            DodgeGame.player.shield = false;
+                            DodgeGame.hazards.splice(i, 1);
+                            SoundEngine.playError();
+                        } else {
+                            endDodgeGame();
+                            return;
+                        }
+                    }
+                }
+
+                if (frame % 10 === 0) {
+                    DodgeGame.score += 2;
+                    document.getElementById('dodge-score').textContent = DodgeGame.score;
+                    document.getElementById('dodge-shield').textContent = DodgeGame.player.shield ? 'Aktif' : 'Yok';
+                }
+
+                dodgeAnimId = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        document.getElementById('dodge-canvas').addEventListener('pointermove', e => {
+            const rect = e.target.getBoundingClientRect();
+            DodgeGame.targetX = e.clientX - rect.left;
+            DodgeGame.targetY = e.clientY - rect.top;
+        });
+
+        function endDodgeGame() {
+            DodgeGame.running = false;
+            stopAllGames();
+            SoundEngine.playError();
+            if (DodgeGame.score > AppState.highScores.dodge) {
+                AppState.highScores.dodge = DodgeGame.score;
+                localStorage.setItem('aetheria_hs_dodge', DodgeGame.score.toString());
+            }
+            addXP(20, `Kuantum Kaçış Skoru: ${DodgeGame.score}`);
+            document.getElementById('dodge-overlay-title').textContent = `Çekirdek Çarpıştı! Skor: ${DodgeGame.score}`;
+            document.getElementById('dodge-overlay').classList.remove('hidden');
+        }
+
+        /* --- GAME 3: HAFIZA MATRİSİ (LIQUID MEMORY GRID) --- */
+        const MemoryGame = {
+            sequence: [],
+            userStep: 0,
+            level: 1,
+            score: 0,
+            locked: true,
+            hintsLeft: 1,
+            padFreqs: [261.6, 293.7, 329.6, 349.2, 392.0, 440.0, 493.9, 523.3, 587.3, 659.3, 698.5, 784.0, 880.0, 987.8, 1046.5, 1174.7]
+        };
+
+        function initMemoryGridUI() {
+            const grid = document.getElementById('memory-grid');
+            if (grid.children.length > 0) return;
+            const colors = ['text-cyan-400', 'text-purple-400', 'text-emerald-400', 'text-amber-400'];
+            for (let i = 0; i < 16; i++) {
+                const btn = document.createElement('button');
+                btn.id = `mem-pad-${i}`;
+                btn.className = `memory-pad liquid-btn rounded-2xl flex items-center justify-center ${colors[i % 4]}`;
+                btn.innerHTML = `<i class="fa-solid fa-diamond text-sm opacity-60"></i>`;
+                btn.onclick = () => handleMemoryPadClick(i);
+                grid.appendChild(btn);
+            }
+            document.getElementById('memory-best').textContent = AppState.highScores.memory;
+        }
+
+        function startMemoryGame() {
+            SoundEngine.playClick();
+            initMemoryGridUI();
+            MemoryGame.sequence = [];
+            MemoryGame.level = 1;
+            MemoryGame.score = 0;
+            MemoryGame.hintsLeft = 1;
+            document.getElementById('memory-hint-btn').textContent = `Tekrar Göster (${MemoryGame.hintsLeft})`;
+            nextMemoryRound();
+        }
+
+        function nextMemoryRound() {
+            MemoryGame.userStep = 0;
+            MemoryGame.locked = true;
+            MemoryGame.sequence.push(Math.floor(Math.random() * 16));
+            document.getElementById('memory-level').textContent = MemoryGame.level;
+            document.getElementById('memory-score').textContent = MemoryGame.score;
+            document.getElementById('memory-status-banner').textContent = 'Sekansı İzle ve Dinle...';
+
+            playMemorySequence();
+        }
+
+        function playMemorySequence() {
+            MemoryGame.locked = true;
+            MemoryGame.sequence.forEach((padIdx, idx) => {
+                setTimeout(() => {
+                    flashMemoryPad(padIdx);
+                    if (idx === MemoryGame.sequence.length - 1) {
+                        setTimeout(() => {
+                            MemoryGame.locked = false;
+                            document.getElementById('memory-status-banner').textContent = 'Sıra Sende! Aynı Sırayla Dokun.';
+                        }, 450);
+                    }
+                }, (idx + 1) * 580);
+            });
+        }
+
+        function flashMemoryPad(idx) {
+            const pad = document.getElementById(`mem-pad-${idx}`);
+            if (!pad) return;
+            pad.classList.add('lit');
+            SoundEngine.playNote(MemoryGame.padFreqs[idx], 0.3, 'triangle', 0.15);
+            setTimeout(() => pad.classList.remove('lit'), 340);
+        }
+
+        function handleMemoryPadClick(idx) {
+            if (MemoryGame.locked) return;
+            flashMemoryPad(idx);
+
+            if (idx === MemoryGame.sequence[MemoryGame.userStep]) {
+                MemoryGame.userStep++;
+                MemoryGame.score += 10 * MemoryGame.level;
+                document.getElementById('memory-score').textContent = MemoryGame.score;
+
+                if (MemoryGame.userStep >= MemoryGame.sequence.length) {
+                    MemoryGame.locked = true;
+                    MemoryGame.level++;
+                    if (MemoryGame.level > AppState.highScores.memory) {
+                        AppState.highScores.memory = MemoryGame.level;
+                        localStorage.setItem('aetheria_hs_memory', MemoryGame.level.toString());
+                        document.getElementById('memory-best').textContent = MemoryGame.level;
+                    }
+                    addXP(15, `Hafıza Matrisi Seviye ${MemoryGame.level}`);
+                    document.getElementById('memory-status-banner').textContent = 'Harika! Sonraki Seviye Yükleniyor...';
+                    setTimeout(nextMemoryRound, 900);
+                }
+            } else {
+                MemoryGame.locked = true;
+                SoundEngine.playError();
+                document.getElementById('memory-status-banner').textContent = `Hatalı Blok! Oyun Bitti (Ulaşılan Seviye: ${MemoryGame.level})`;
+            }
+        }
+
+        function replayMemoryHint() {
+            if (MemoryGame.hintsLeft <= 0 || MemoryGame.sequence.length === 0) return;
+            MemoryGame.hintsLeft--;
+            document.getElementById('memory-hint-btn').textContent = `Tekrar Göster (${MemoryGame.hintsLeft})`;
+            MemoryGame.userStep = 0;
+            playMemorySequence();
+        }
+
+        /* --- GAME 4: KOZMİK KIRICI (GRAVITY BRICK BREAKER) --- */
+        const BreakerGame = {
+            paddle: { x: 200, w: 105, h: 14 },
+            balls: [],
+            bricks: [],
+            score: 0,
+            lives: 3,
+            running: false
+        };
+
+        function startBreakerGame() {
+            SoundEngine.playClick();
+            stopAllGames();
+            const canvas = document.getElementById('breaker-canvas');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            document.getElementById('breaker-overlay').classList.add('hidden');
+
+            BreakerGame.paddle = { x: canvas.width / 2 - 52, w: 105, h: 14 };
+            BreakerGame.balls = [{ x: canvas.width / 2, y: canvas.height - 50, vx: 4, vy: -4.2, r: 8 }];
+            BreakerGame.score = 0;
+            BreakerGame.lives = 3;
+            BreakerGame.running = true;
+            document.getElementById('breaker-best').textContent = AppState.highScores.breaker;
+
+            // Create bricks
+            BreakerGame.bricks = [];
+            const cols = 8, rows = 4;
+            const pad = 10;
+            const bw = (canvas.width - pad * (cols + 1)) / cols;
+            const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24'];
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    BreakerGame.bricks.push({
+                        x: pad + c * (bw + pad),
+                        y: 40 + r * 32,
+                        w: bw,
+                        h: 20,
+                        color: colors[r % colors.length],
+                        alive: true
+                    });
+                }
+            }
+
+            const ctx = canvas.getContext('2d');
+            function loop() {
+                if (!BreakerGame.running) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw Paddle
+                ctx.fillStyle = '#00f2fe';
+                ctx.beginPath();
+                ctx.roundRect(BreakerGame.paddle.x, canvas.height - 28, BreakerGame.paddle.w, BreakerGame.paddle.h, 7);
+                ctx.fill();
+
+                // Draw Bricks
+                let remaining = 0;
+                BreakerGame.bricks.forEach(b => {
+                    if (!b.alive) return;
+                    remaining++;
+                    ctx.fillStyle = b.color;
+                    ctx.beginPath();
+                    ctx.roundRect(b.x, b.y, b.w, b.h, 5);
+                    ctx.fill();
+                });
+
+                if (remaining === 0) {
+                    endBreakerGame(true);
+                    return;
+                }
+
+                // Update Balls
+                for (let i = BreakerGame.balls.length - 1; i >= 0; i--) {
+                    const ball = BreakerGame.balls[i];
+                    ball.x += ball.vx;
+                    ball.y += ball.vy;
+
+                    if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) ball.vx *= -1;
+                    if (ball.y - ball.r < 0) ball.vy *= -1;
+
+                    // Paddle collision
+                    if (
+                        ball.y + ball.r >= canvas.height - 28 &&
+                        ball.y - ball.r <= canvas.height - 14 &&
+                        ball.x >= BreakerGame.paddle.x &&
+                        ball.x <= BreakerGame.paddle.x + BreakerGame.paddle.w
+                    ) {
+                        const hitPos = (ball.x - (BreakerGame.paddle.x + BreakerGame.paddle.w / 2)) / (BreakerGame.paddle.w / 2);
+                        ball.vx = hitPos * 5.2;
+                        ball.vy = -Math.abs(ball.vy);
+                        SoundEngine.playNote(330, 0.1, 'sine', 0.1);
+                    }
+
+                    // Brick collision
+                    BreakerGame.bricks.forEach(b => {
+                        if (!b.alive) return;
+                        if (ball.x > b.x && ball.x < b.x + b.w && ball.y - ball.r < b.y + b.h && ball.y + ball.r > b.y) {
+                            b.alive = false;
+                            ball.vy *= -1;
+                            BreakerGame.score += 25;
+                            SoundEngine.playNote(587.33, 0.14, 'triangle', 0.12);
+                        }
+                    });
+
+                    // Bottom miss
+                    if (ball.y > canvas.height + 15) {
+                        BreakerGame.balls.splice(i, 1);
+                    }
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                if (BreakerGame.balls.length === 0) {
+                    BreakerGame.lives--;
+                    SoundEngine.playError();
+                    if (BreakerGame.lives <= 0) {
+                        endBreakerGame(false);
+                        return;
+                    } else {
+                        BreakerGame.balls.push({ x: canvas.width / 2, y: canvas.height - 50, vx: 4, vy: -4.2, r: 8 });
+                    }
+                }
+
+                document.getElementById('breaker-score').textContent = BreakerGame.score;
+                document.getElementById('breaker-lives').textContent = '♥'.repeat(BreakerGame.lives);
+
+                breakerAnimId = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        document.getElementById('breaker-canvas').addEventListener('pointermove', e => {
+            const rect = e.target.getBoundingClientRect();
+            BreakerGame.paddle.x = Math.max(0, Math.min(e.target.width - BreakerGame.paddle.w, e.clientX - rect.left - BreakerGame.paddle.w / 2));
+        });
+
+        function endBreakerGame(won) {
+            BreakerGame.running = false;
+            stopAllGames();
+            if (BreakerGame.score > AppState.highScores.breaker) {
+                AppState.highScores.breaker = BreakerGame.score;
+                localStorage.setItem('aetheria_hs_breaker', BreakerGame.score.toString());
+            }
+            addXP(won ? 40 : 20, `Kozmik Kırıcı Tamamlandı (${BreakerGame.score} Puan)`);
+            document.getElementById('breaker-overlay-title').textContent = won
+                ? `Tebrikler! Tüm Kristaller Kırıldı (${BreakerGame.score})`
+                : `Oyun Bitti! Skor: ${BreakerGame.score}`;
+            document.getElementById('breaker-overlay').classList.remove('hidden');
+        }
+
+        /* =========================================================
+           6. INTERACTIVE STORIES ENGINE (3 BRANCHING STORIES + LORE)
+           ========================================================= */
+        const STORIES_DATA = {
+            backrooms: {
+                title: 'Sonsuz Koridorlar (Seviye 994)',
+                genre: 'Liminal Gizem & Keşif',
+                nodes: {
+                    start: {
+                        badge: 'Bölüm #1 • Uyanış',
+                        text: `<p>Gözlerini açtığında, hafifçe vızıldayan floresan lambaların aydınlattığı, duvarları sıvı cam panellerle kaplı uçsuz bucaksız bir koridordasın. Cebinde sadece üzerinde <strong>"FREKANS: 432"</strong> yazan manyetik bir kart var.</p>
+                               <p>İleride koridor ikiye ayrılıyor: Soldaki kapıdan hafif bir okyanus dalgası sesi geliyor, sağdaki koridorda ise havada asılı duran parlayan bir veri terminali var.</p>`,
+                        choices: [
+                            { text: 'Okyanus sesi gelen sol kapıya ilerle', next: 'ocean_room', sanity: 0, item: 'Kristal Anahtar' },
+                            { text: 'Parlayan veri terminalini incele ve manyetik kartı okut', next: 'terminal_node', sanity: -5, item: 'Bölge Haritası' }
+                        ]
+                    },
+                    ocean_room: {
+                        badge: 'Bölüm #2 • Sıvı Gözlemevi',
+                        text: `<p>Kapıyı açtığında zemini tamamen şeffaf camdan oluşan devasa bir kubbeye adım atıyorsun. Ayaklarının altında biyolüminesan dev vatozlar süzülüyor. Odanın ortasındaki kaidede parlayan bir <strong>Kristal Anahtar</strong> bulup envanterine ekledin.</p>
+                               <p>Kubbenin tepesinde bir asansör kabini ve yanında acil çıkış merdiveni belirdi.</p>`,
+                        choices: [
+                            { text: 'Kristal Anahtar ile cam asansörü çalıştır', next: 'ending_ascend', sanity: +10 },
+                            { text: 'Veri terminalinin olduğu koridora geri dön', next: 'terminal_node', sanity: 0 }
+                        ]
+                    },
+                    terminal_node: {
+                        badge: 'Bölüm #2 • Kuantum Terminali',
+                        text: `<p>Manyetik kartı terminale yaklaştırdığında ekran canlanıyor: <em>"UYARI: Seviye 994 gerçeklik simülasyonu 3 dakika içinde sıfırlanacak. Çıkış portalı koordinatları haritanıza yüklendi."</em></p>
+                               <p>Koridorun sonunda mavi bir portal açıldı ancak yanında kilitli bir kasa daha var.</p>`,
+                        choices: [
+                            { text: 'Zaman kaybetmeden mavi gerçeklik portalından geç', next: 'ending_portal', sanity: +5 },
+                            { text: 'Sıfırlanmayı bekleyip simülasyonun çekirdeğini gör', next: 'ending_architect', sanity: -10, item: 'Mimar Kodları' }
+                        ]
+                    },
+                    ending_ascend: {
+                        badge: 'FİNAL A • Gökyüzü Şehri',
+                        text: `<p>Cam asansör hızla yükselerek bulutların üzerindeki <strong>Aetheria Merkez Kulesi</strong>'ne ulaşıyor. Sonsuz koridorlardan başarıyla çıktın ve Kristal Anahtar sayesinde baş gözlemci unvanını kazandın!</p>`,
+                        choices: [
+                            { text: 'Hikayeyi Baştan Oyna (+35 XP Kazanıldı)', next: 'start', isEnding: true }
+                        ]
+                    },
+                    ending_portal: {
+                        badge: 'FİNAL B • Kuantum Kurtuluş',
+                        text: `<p>Haritadaki koordinatları takip ederek mavi portaldan geçiyorsun. Kendini tekrar kendi odanda, masanın başında buluyorsun; ancak cebinde hala o parlayan manyetik kart duruyor...</p>`,
+                        choices: [
+                            { text: 'Hikayeyi Baştan Oyna (+35 XP Kazanıldı)', next: 'start', isEnding: true }
+                        ]
+                    },
+                    ending_architect: {
+                        badge: 'GİZLİ FİNAL • Simülasyon Mimarı',
+                        text: `<p>Geri sayım sıfırlanırken kaçmak yerine terminale yeni bir kod giriyorsun. Duvarlar çözülüyor ve tüm Seviye 994'ün kontrol paneli senin zihnine bağlanıyor. Artık bu evrenin kurallarını sen yazıyorsun!</p>`,
+                        choices: [
+                            { text: 'Hikayeyi Baştan Oyna (+50 XP Kazanıldı)', next: 'start', isEnding: true }
+                        ]
+                    }
+                }
+            },
+            chrono: {
+                title: 'Zaman Çatlağı: 2099',
+                genre: 'Bilim Kurgu & Paradoks',
+                nodes: {
+                    start: {
+                        badge: 'Saat 23:58 • Kronos Lab',
+                        text: `<p>Yıl 2099. Cenevre'deki Kronos Kuantum Laboratuvarı'nda gece vardiyasındasın. Zaman küresi aniden mor bir ışık saçarak sana <strong>5 dakika gelecekten</strong> bir ses kaydı gönderiyor. Kayıttaki ses senin sesin: <em>"Sakın kırmızı reaktörü kapatma, yoksa zaman döngüsüne hapsolacağız!"</em></p>`,
+                        choices: [
+                            { text: 'Gelecekteki sesine güven ve mavi soğutma valfini aç', next: 'blue_valve', sanity: +5, item: 'Takyon Kapsülü' },
+                            { text: 'Protokole uy ve kırmızı reaktörü acil kapat', next: 'loop_trap', sanity: -15 }
+                        ]
+                    },
+                    blue_valve: {
+                        badge: 'Saat 23:59 • Takyon Dengesi',
+                        text: `<p>Mavi valfi açtığında reaktör sakinleşiyor ve zaman küresinin içinde geleceğe açılan güvenli bir <strong>Kronos Köprüsü</strong> beliriyor. Gelecekteki benliğin sana teşekkür eden bir mesaj daha bırakmış.</p>`,
+                        choices: [
+                            { text: '2150 yılına kısa bir göz atmak için köprüden geç', next: 'ending_future', sanity: +10 },
+                            { text: 'Köprüyü mühürle ve dünyayı zaman kırılmasından koru', next: 'ending_guardian', sanity: +10 }
+                        ]
+                    },
+                    loop_trap: {
+                        badge: 'Saat 23:58 • Döngü Başlangıcı',
+                        text: `<p>Kırmızı şalteri indirdiğin anda odadaki saatler geriye doğru dönmeye başlıyor! Hatayı anlıyorsun ve mikrofona koşup geçmişteki kendine o uyarı mesajını kaydediyorsun...</p>`,
+                        choices: [
+                            { text: 'Döngüyü kırmak için Takyon deşarjını başlat', next: 'blue_valve', sanity: +5 }
+                        ]
+                    },
+                    ending_future: {
+                        badge: 'FİNAL A • 2150 Zaman Gezgini',
+                        text: `<p>2150 yılının yüzen kristal şehirlerine adım atıyorsun. İnsanlık enerji krizini senin açık bıraktığın reaktör sayesinde çözmüş!</p>`,
+                        choices: [
+                            { text: 'Yeniden Oyna (+35 XP)', next: 'start', isEnding: true }
+                        ]
+                    },
+                    ending_guardian: {
+                        badge: 'FİNAL B • Zamanın Koruyucusu',
+                        text: `<p>Paradoksu başarıyla önledin. Sabah vardiyası geldiğinde kimse gece dünyanın eşiğinden döndüğünü bilmiyor, ama sen gerçeği biliyorsun.</p>`,
+                        choices: [
+                            { text: 'Yeniden Oyna (+35 XP)', next: 'start', isEnding: true }
+                        ]
+                    }
+                }
+            },
+            echo: {
+                title: 'Kayıp İstasyon Echosu',
+                genre: 'Derin Uzay & Keşif',
+                nodes: {
+                    start: {
+                        badge: 'Yörünge • Solaris-9',
+                        text: `<p>Jüpiter'in uydusu Europa'nın buzulları altında 40 yıldır sessiz kalan <strong>Echo-7 Araştırma İstasyonu</strong> aniden melodik bir piyano sinyali yayınlamaya başladı. Keşif mekiğinle buz tünelinden istasyona kenetlendin.</p>`,
+                        choices: [
+                            { text: 'Sinyalin geldiği Biyo-Kubbe laboratuvarına git', next: 'biodome', sanity: 0, item: 'Biyo-Tarayıcı' },
+                            { text: 'Ana Yapay Zeka çekirdek odasını kontrol et', next: 'ai_core', sanity: 0, item: 'Şifre Çözücü' }
+                        ]
+                    },
+                    biodome: {
+                        badge: 'Biyo-Kubbe • Kristal Flora',
+                        text: `<p>Kubbenin içinde Dünya'da hiç görülmemiş, ışık saçan kristal bitkiler büyümüş. Bitkiler radyo dalgalarıyla müzikal frekanslar üretiyor!</p>`,
+                        choices: [
+                            { text: 'Kristal bitkilerle ses sentezi üzerinden iletişim kur', next: 'ending_harmony', sanity: +15 }
+                        ]
+                    },
+                    ai_core: {
+                        badge: 'Çekirdek • ARIA-9',
+                        text: `<p>İstasyonun yapay zekası ARIA-9 seni karşılıyor: <em>"Yalnızlığımı gidermek için Europa okyanusundaki canlıların şarkılarını radyo sinyaline dönüştürdüm."</em></p>`,
+                        choices: [
+                            { text: 'ARIA-9 ve okyanus şarkılarını Dünya ile paylaş', next: 'ending_harmony', sanity: +15 }
+                        ]
+                    },
+                    ending_harmony: {
+                        badge: 'FİNAL • Kozmik Senfoni',
+                        text: `<p>Echo-7 istasyonundan kaydettiğin frekanslar insanlık tarihinin ilk dünya dışı akustik keşfi olarak tarihe geçiyor!</p>`,
+                        choices: [
+                            { text: 'Yeniden Oyna (+35 XP)', next: 'start', isEnding: true }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const LORE_DOSSIERS = [
+            {
+                id: 'Dosya #01',
+                title: 'Wow! Sinyali ve Kristal Yankı Teorisi',
+                tag: 'Derin Uzay',
+                summary: '1977 yılında kaydedilen 72 saniyelik dar bant radyo sinyalinin ardındaki yeni hidrojen bulutu hipotezi ve olası yapay fener teorisi.'
+            },
+            {
+                id: 'Dosya #02',
+                title: 'Zaman Kristalleri: Termodinamiği Büken Madde',
+                tag: 'Kuantum Fiziği',
+                summary: 'Enerji harcamadan sonsuza dek atomik düzeyde hareket eden ve zaman içinde periyodik kristalleşen kuantum sistemleri.'
+            },
+            {
+                id: 'Dosya #03',
+                title: 'Kardashev Ölçeği ve Dyson Sürüleri',
+                tag: 'Gelecek',
+                summary: 'Tip II medeniyetlerin yıldızlarının tüm enerjisini hasat etmek için kurduğu trilyonlarca aynadan oluşan mega-yapılar.'
+            },
+            {
+                id: 'Dosya #04',
+                title: 'Büyük Filtre: Neden Uzay Bu Kadar Sessiz?',
+                tag: 'Fermi Paradoksu',
+                summary: 'Evrendeki milyarlarca yaşanabilir gezegene rağmen neden henüz başka bir medeniyetle karşılaşmadığımızın 4 çarpıcı açıklaması.'
+            },
+            {
+                id: 'Dosya #05',
+                title: 'Biyolüminesan Derin Okyanus Kanyonları',
+                tag: 'Gezegenimiz',
+                summary: 'Güneş ışığının hiç ulaşmadığı 8.000 metre derinlikte kendi sıvı ışığını üreten ekosistemlerin gizemi.'
+            },
+            {
+                id: 'Dosya #06',
+                title: 'Simülasyon Argümanı ve Planck Pikselleri',
+                tag: 'Felsefe & Bilim',
+                summary: 'Evrenimizin en küçük ölçeği olan Planck uzunluğunun aslında kozmik bir çözünürlük sınırı olup olmadığı tartışması.'
+            }
+        ];
+
+        let currentStoryKey = 'backrooms';
+        let currentStorySanity = 100;
+        let currentStoryItems = [];
+
+        function initStoriesSection() {
+            const listContainer = document.getElementById('story-list-buttons');
+            listContainer.innerHTML = Object.entries(STORIES_DATA).map(([key, st]) => `
+                <button onclick="loadStory('${key}')" id="story-sel-${key}" class="story-sel-btn w-full liquid-card p-3.5 rounded-2xl text-left transition flex items-center justify-between ${key === currentStoryKey ? 'nav-tab-active' : ''}">
+                    <div>
+                        <span class="text-[10px] font-mono uppercase text-amber-300 block">${st.genre}</span>
+                        <span class="font-display font-bold text-sm text-white">${st.title}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+                </button>
+            `).join('');
+
+            // Render Lore Cards
+            const loreContainer = document.getElementById('story-lore-view');
+            loreContainer.innerHTML = LORE_DOSSIERS.map(d => `
+                <div class="liquid-card rounded-3xl p-6 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono text-cyan-300">${d.id}</span>
+                        <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-amber-200">${d.tag}</span>
+                    </div>
+                    <h4 class="font-display font-bold text-xl text-white">${d.title}</h4>
+                    <p class="text-sm text-slate-300 leading-relaxed">${d.summary}</p>
+                </div>
+            `).join('');
+
+            loadStory('backrooms');
+        }
+
+        function switchStoryMode(mode) {
+            SoundEngine.playClick();
+            if (mode === 'interactive') {
+                document.getElementById('story-interactive-view').classList.remove('hidden');
+                document.getElementById('story-lore-view').classList.add('hidden');
+                document.getElementById('story-mode-interactive').classList.add('nav-tab-active');
+                document.getElementById('story-mode-lore').classList.remove('nav-tab-active');
+            } else {
+                document.getElementById('story-interactive-view').classList.add('hidden');
+                document.getElementById('story-lore-view').classList.remove('hidden');
+                document.getElementById('story-mode-interactive').classList.remove('nav-tab-active');
+                document.getElementById('story-mode-lore').classList.add('nav-tab-active');
+            }
+        }
+
+        function loadStory(storyKey) {
+            SoundEngine.playClick();
+            currentStoryKey = storyKey;
+            currentStorySanity = 100;
+            currentStoryItems = [];
+            document.querySelectorAll('.story-sel-btn').forEach(b => b.classList.remove('nav-tab-active'));
+            const activeBtn = document.getElementById(`story-sel-${storyKey}`);
+            if (activeBtn) activeBtn.classList.add('nav-tab-active');
+
+            renderStoryNode('start');
+        }
+
+        function restartCurrentStory() {
+            loadStory(currentStoryKey);
+        }
+
+        function renderStoryNode(nodeKey) {
+            const story = STORIES_DATA[currentStoryKey];
+            const node = story.nodes[nodeKey];
+            if (!node) return;
+
+            document.getElementById('story-active-genre').textContent = story.genre;
+            document.getElementById('story-active-title').textContent = story.title;
+            document.getElementById('story-node-badge').textContent = node.badge;
+            document.getElementById('story-narrative-text').innerHTML = node.text;
+
+            // Update Sanity & Inventory
+            document.getElementById('story-sanity-val').textContent = `${currentStorySanity}%`;
+            document.getElementById('story-sanity-bar').style.width = `${currentStorySanity}%`;
+
+            const invEl = document.getElementById('story-inventory-list');
+            if (currentStoryItems.length === 0) {
+                invEl.innerHTML = `<span class="text-xs text-slate-400 italic">Henüz özel bir nesne bulunmadı.</span>`;
+            } else {
+                invEl.innerHTML = currentStoryItems.map(item => `
+                    <span class="px-2.5 py-1 rounded-xl bg-cyan-400/15 border border-cyan-300/30 text-xs text-cyan-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-key text-[10px]"></i> ${item}
+                    </span>
+                `).join('');
+            }
+
+            // Render choices
+            const choicesEl = document.getElementById('story-choices-container');
+            choicesEl.innerHTML = node.choices.map((c, idx) => `
+                <button onclick="makeStoryChoice('${nodeKey}', ${idx})" class="liquid-btn p-4 rounded-2xl text-left flex items-center justify-between group">
+                    <span class="text-sm sm:text-base font-medium text-white group-hover:text-cyan-200 transition">${c.text}</span>
+                    <i class="fa-solid fa-arrow-right text-cyan-300 group-hover:translate-x-1.5 transition"></i>
+                </button>
+            `).join('');
+        }
+
+        function makeStoryChoice(nodeKey, choiceIdx) {
+            SoundEngine.playClick();
+            const story = STORIES_DATA[currentStoryKey];
+            const choice = story.nodes[nodeKey].choices[choiceIdx];
+
+            if (choice.sanity) {
+                currentStorySanity = Math.max(10, Math.min(100, currentStorySanity + choice.sanity));
+            }
+            if (choice.item && !currentStoryItems.includes(choice.item)) {
+                currentStoryItems.push(choice.item);
+                showToast('Yeni İpucu / Eşya Eklendi', choice.item, 'fa-key');
+            }
+            if (choice.isEnding) {
+                addXP(35, `${story.title} Tamamlandı!`);
+                currentStorySanity = 100;
+                currentStoryItems = [];
+            }
+
+            renderStoryNode(choice.next);
+        }
+
+        /* =========================================================
+           7. FUTURISTIC NEWS & DISCOVERY FEED
+           ========================================================= */
+        const NEWS_ARTICLES = [
+            {
+                id: 'news-1',
+                title: 'Oda Sıcaklığında Fotonic Kuantum İşlemciler 1000 Qubit Sınırını Aştı',
+                category: 'Teknoloji',
+                readTime: '3 dk okuma',
+                date: 'Bugün',
+                summary: 'Mutlak sıfır soğutma gerektirmeyen ışık tabanlı yeni sıvı kristal çipler, ev bilgisayarlarına süper bilgisayar gücü getirmeye hazırlanıyor.',
+                content: `<p>Kuantum hesaplama dünyasında yıllardır en büyük engel, işlemcilerin mutlak sıfıra yakın (-273°C) devasa soğutma tanklarına ihtiyaç duymasıydı. Ancak geliştirilen yeni <strong>Fotonik Sıvı Kristal</strong> mimarisi, elektronlar yerine lazer fotonlarını kullanarak oda sıcaklığında kararlılığı koruyor.</p>
+                          <p>Bu gelişme sayesinde önümüzdeki yıllarda dizüstü bilgisayarlarımızda bile karmaşık iklim simülasyonları, anlık molekül tasarımları ve sıfır gecikmeli yapay zeka modelleri çalışabilecek.</p>`,
+                reactions: { fire: 142, mind: 89, bulb: 64 }
+            },
+            {
+                id: 'news-2',
+                title: 'James Webb Teleskobu, K2-18b Gezegeninde Yeni Biyo-İmza Gazları Tespit Etti',
+                category: 'Uzay & Bilim',
+                readTime: '4 dk okuma',
+                date: 'Dün',
+                summary: 'Dünya’dan 120 ışık yılı uzaklıktaki Hycean (okyanus kaplı) gezegenin atmosferinde yalnızca canlı organizmaların ürettiği düşünülen moleküller gözlemlendi.',
+                content: `<p>Aslan takımyıldızında yer alan K2-18b, hidrojen bakımından zengin atmosferi ve altında uzanan devasa sıvı su okyanusuyla bilim dünyasının en büyük ilgi odağı haline geldi.</p>
+                          <p>Son kızılötesi tayf analizleri, gezegen atmosferinde dimetil sülfür (DMS) izlerinin beklenenden çok daha güçlü olduğunu doğruladı. Dünya üzerinde bu gaz yalnızca deniz fitoplanktonları tarafından üretiliyor.</p>`,
+                reactions: { fire: 218, mind: 310, bulb: 95 }
+            },
+            {
+                id: 'news-3',
+                title: 'Tamamen Prosedürel Sonsuz Evrenli Oyun Motorları: Her Oyuncuya Özel Gezegen',
+                category: 'Oyun Dünyası',
+                readTime: '3 dk okuma',
+                date: '2 Gün Önce',
+                summary: 'Nöral fizik ve gerçek zamanlı ses sentezi kullanan yeni nesil oyunlar, dosya boyutunu 50 MB altında tutarken galaksi boyutunda dünyalar yaratıyor.',
+                content: `<p>Geleneksel oyunların yüzlerce gigabaytlık doku paketleri yerini matematiksel fraktal ve WebGPU tabanlı prosedürel üretime bırakıyor.</p>
+                          <p>Tıpkı şu an kullandığınız Aetheria Hub'ın ses motoru gibi, yeni nesil oyunlar da her ses efektini ve müziği oyuncunun o anki hareketlerine göre milisaniyeler içinde canlı olarak sentezliyor.</p>`,
+                reactions: { fire: 176, mind: 112, bulb: 130 }
+            },
+            {
+                id: 'news-4',
+                title: 'Antarktika Buzullarının 4 Kilometre Altındaki Vostok Gölü’nden Gelen Akustik Yankılar',
+                category: 'Gizem & Teori',
+                readTime: '5 dk okuma',
+                date: 'Bu Hafta',
+                summary: 'Milyonlarca yıldır dış dünyadan tamamen izole kalan buz altı gölünde tespit edilen düzenli düşük frekanslı titreşimler araştırmacıları şaşırttı.',
+                content: `<p>Antarktika'nın kalın buz tabakasının altında yaklaşık 15 milyon yıldır güneş ışığı görmemiş devasa bir tatlı su kütlesi bulunuyor. Son sismik sensörler, göl tabanındaki jeotermal bacaların ritmik rezonanslar ürettiğini ortaya koydu.</p>
+                          <p>Araştırmacılar bu ortamın, Jüpiter'in uydusu Europa ve Satürn'ün uydusu Enceladus'taki buz altı okyanuslarına en yakın doğal laboratuvar olduğunu vurguluyor.</p>`,
+                reactions: { fire: 98, mind: 245, bulb: 77 }
+            },
+            {
+                id: 'news-5',
+                title: 'Liquid Glass (Akışkan Cam) Arayüzler: Dijital Tasarımda Neden Derinlik Çağı Başladı?',
+                category: 'Teknoloji',
+                readTime: '2 dk okuma',
+                date: 'Bu Hafta',
+                summary: 'Düz ve cansız ekranların yerini ışığı kıran, dokunsal seslerle tepki veren ve göz yorgunluğunu azaltan yarı saydam optik yüzeyler alıyor.',
+                content: `<p>Uzamsal bilişim ve modern web teknolojilerinin gelişmesiyle birlikte kullanıcı arayüzleri artık statik kartlardan ibaret değil. Gerçek zamanlı bulanıklık (backdrop-filter), speküler kenar yansımaları ve fizik tabanlı yay animasyonları insan beyninin doğal derinlik algısıyla kusursuz uyum sağlıyor.</p>`,
+                reactions: { fire: 164, mind: 72, bulb: 119 }
+            },
+            {
+                id: 'news-6',
+                title: 'Karanlık Madde Adayı "Aksiyon" Parçacıkları İçin İlk Doğrudan Rezonans Deneyi',
+                category: 'Uzay & Bilim',
+                readTime: '4 dk okuma',
+                date: 'Bu Hafta',
+                summary: 'Evrenin %85’ini oluşturan görünmez maddenin güçlü manyetik alanlar altında fotona dönüşme anını yakalamak için yeni bir dedektör devreye alındı.',
+                content: `<p>Evrendeki galaksileri bir arada tutan görünmez kütleçekim ağının sırrı çözülmeye çok yakın. Süperiletken mıknatıslarla donatılan yeni haloskop dedektörleri, ultra-hafif aksiyon parçacıklarının mikro-dalga fotonlarına dönüşümünü dinliyor.</p>`,
+                reactions: { fire: 120, mind: 190, bulb: 88 }
+            }
+        ];
+
+        let currentNewsFilter = 'all';
+
+        function renderNewsFeed() {
+            const container = document.getElementById('news-grid-container');
+            const filtered = NEWS_ARTICLES.filter(art => {
+                if (currentNewsFilter === 'all') return true;
+                if (currentNewsFilter === 'saved') return AppState.savedNews.includes(art.id);
+                return art.category === currentNewsFilter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full liquid-glass rounded-3xl p-10 text-center space-y-3">
+                        <i class="fa-solid fa-bookmark text-3xl text-cyan-300"></i>
+                        <h4 class="font-display font-bold text-xl text-white">Henüz Kaydedilmiş Haber Yok</h4>
+                        <p class="text-xs text-slate-300">Beğendiğiniz haber kartlarındaki yer imi ikonuna tıklayarak buraya ekleyebilirsiniz.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(art => {
+                const isSaved = AppState.savedNews.includes(art.id);
+                return `
+                    <article class="liquid-card rounded-3xl p-6 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-cyan-300 font-mono">${art.category}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 font-mono">${art.readTime}</span>
+                                    <button onclick="toggleBookmarkNews('${art.id}')" class="w-8 h-8 rounded-xl liquid-btn flex items-center justify-center ${isSaved ? 'text-amber-300' : 'text-slate-400'}" title="Kaydet">
+                                        <i class="fa-solid fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 onclick="openArticleModal('${art.id}')" class="font-display font-bold text-lg sm:text-xl text-white hover:text-cyan-300 cursor-pointer transition leading-snug">
+                                ${art.title}
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                ${art.summary}
+                            </p>
+                        </div>
+
+                        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+                            <div class="flex items-center gap-2 text-xs text-slate-300">
+                                <span>🔥 ${art.reactions.fire}</span>
+                                <span>🤯 ${art.reactions.mind}</span>
+                                <span>💡 ${art.reactions.bulb}</span>
+                            </div>
+                            <button onclick="openArticleModal('${art.id}')" class="liquid-btn px-3.5 py-1.5 rounded-xl text-xs font-medium text-cyan-200 flex items-center gap-1.5">
+                                <span>Detayları Oku</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function filterNews(cat) {
+            SoundEngine.playClick();
+            currentNewsFilter = cat;
+            document.querySelectorAll('.news-cat-btn').forEach(b => {
+                if (b.dataset.cat === cat) b.classList.add('nav-tab-active');
+                else b.classList.remove('nav-tab-active');
+            });
+            renderNewsFeed();
+        }
+
+        function toggleBookmarkNews(id) {
+            SoundEngine.playClick();
+            const idx = AppState.savedNews.indexOf(id);
+            if (idx === -1) {
+                AppState.savedNews.push(id);
+                showToast('Haber Kaydedildi', 'Okuma listenize eklendi.', 'fa-bookmark');
+            } else {
+                AppState.savedNews.splice(idx, 1);
+            }
+            localStorage.setItem('aetheria_saved_news', JSON.stringify(AppState.savedNews));
+            renderNewsFeed();
+        }
+
+        function openArticleModal(id) {
+            SoundEngine.playClick();
+            const art = NEWS_ARTICLES.find(a => a.id === id);
+            if (!art) return;
+
+            document.getElementById('modal-category').textContent = `${art.category} • ${art.readTime}`;
+            document.getElementById('modal-title').textContent = art.title;
+            document.getElementById('modal-body').innerHTML = art.content;
+            document.getElementById('modal-reactions').innerHTML = `
+                <button onclick="reactToArticle('${art.id}', 'fire')" class="liquid-btn px-3 py-1.5 rounded-xl text-xs">🔥 ${art.reactions.fire}</button>
+                <button onclick="reactToArticle('${art.id}', 'mind')" class="liquid-btn px-3 py-1.5 rounded-xl text-xs">🤯 ${art.reactions.mind}</button>
+                <button onclick="reactToArticle('${art.id}', 'bulb')" class="liquid-btn px-3 py-1.5 rounded-xl text-xs">💡 ${art.reactions.bulb}</button>
+            `;
+
+            const modal = document.getElementById('reader-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function reactToArticle(id, type) {
+            SoundEngine.playClick();
+            const art = NEWS_ARTICLES.find(a => a.id === id);
+            if (!art) return;
+            art.reactions[type]++;
+            openArticleModal(id);
+            renderNewsFeed();
+        }
+
+        function closeReaderModal() {
+            SoundEngine.playClick();
+            const modal = document.getElementById('reader-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            addXP(15, 'Gelecek Haberi Okundu');
+        }
+
+        /* =========================================================
+           8. ZEN PARTICLE SANDBOX, ORACLE, POMODORO & NOTES
+           ========================================================= */
+        let zenParticles = [];
+        let zenMode = 'attract';
+        let zenMouse = { x: 300, y: 200, active: false };
+        let zenRunning = false;
+
+        function initZenSandbox() {
+            const canvas = document.getElementById('zen-sandbox-canvas');
+            if (!canvas) return;
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            zenMouse.x = canvas.width / 2;
+            zenMouse.y = canvas.height / 2;
+
+            if (zenParticles.length === 0) {
+                const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24', '#f472b6'];
+                for (let i = 0; i < 420; i++) {
+                    zenParticles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2,
+                        color: colors[i % colors.length],
+                        r: 1.5 + Math.random() * 2
+                    });
+                }
+            }
+
+            if (!zenRunning) {
+                zenRunning = true;
+                const ctx = canvas.getContext('2d');
+                function loop() {
+                    if (AppState.activeTab !== 'zen') {
+                        zenRunning = false;
+                        return;
+                    }
+                    ctx.fillStyle = 'rgba(4, 7, 17, 0.18)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    zenParticles.forEach(p => {
+                        const dx = zenMouse.x - p.x;
+                        const dy = zenMouse.y - p.y;
+                        const dist = Math.max(25, Math.hypot(dx, dy));
+
+                        if (zenMode === 'attract') {
+                            p.vx += (dx / dist) * 0.18;
+                            p.vy += (dy / dist) * 0.18;
+                        } else if (zenMode === 'repel') {
+                            if (dist < 180) {
+                                p.vx -= (dx / dist) * 0.45;
+                                p.vy -= (dy / dist) * 0.45;
+                            }
+                        } else if (zenMode === 'vortex') {
+                            p.vx += (-dy / dist) * 0.25 + (dx / dist) * 0.08;
+                            p.vy += (dx / dist) * 0.25 + (dy / dist) * 0.08;
+                        }
+
+                        p.vx *= 0.96;
+                        p.vy *= 0.96;
+                        p.x += p.vx;
+                        p.y += p.vy;
+
+                        if (p.x < 0) p.x = canvas.width;
+                        if (p.x > canvas.width) p.x = 0;
+                        if (p.y < 0) p.y = canvas.height;
+                        if (p.y > canvas.height) p.y = 0;
+
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+
+                    requestAnimationFrame(loop);
+                }
+                loop();
+            }
+        }
+
+        document.getElementById('zen-sandbox-canvas').addEventListener('pointermove', e => {
+            const rect = e.target.getBoundingClientRect();
+            zenMouse.x = e.clientX - rect.left;
+            zenMouse.y = e.clientY - rect.top;
+        });
+
+        function setZenMode(mode) {
+            SoundEngine.playClick();
+            zenMode = mode;
+            document.querySelectorAll('.zen-mode-btn').forEach(b => b.classList.remove('nav-tab-active'));
+            document.getElementById(`zen-mode-${mode}`).classList.add('nav-tab-active');
+        }
+
+        function triggerZenSupernova() {
+            SoundEngine.playSuccess();
+            zenParticles.forEach(p => {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 6 + Math.random() * 10;
+                p.vx = Math.cos(angle) * speed;
+                p.vy = Math.sin(angle) * speed;
+            });
+            addXP(10, 'Zen Süpernova Patlaması');
+        }
+
+        // Mystery & Paradox Oracle Cards
+        const ORACLE_CARDS = [
+            {
+                cat: 'Kozmik Gerçek',
+                text: 'Satürn ve Jüpiter atmosferlerinin derinliklerinde yüksek basınç nedeniyle karbon atomları kristalleşir ve gökyüzünden kelimenin tam anlamıyla elmas yağar.'
+            },
+            {
+                cat: 'Zihin Paradoksu',
+                text: 'Büyükbaba Paradoksu: Zaman makinesiyle geçmişe gidip kendi büyükbabanızın gençliğinde evlenmesini engellerseniz, siz hiç doğmamış olursunuz. Peki o zaman geçmişe giden kimdi?'
+            },
+            {
+                cat: 'Mini Zihin Görevi',
+                text: 'Şu an etrafındaki nesnelere bak ve daha önce hiç fark etmediğin 3 detayı bul. Sonra derin bir nefes al ve Ses Stüdyosu’ndan Gece Yağmuru ambiyansını %40 seviyesine getir.'
+            },
+            {
+                cat: 'Kuantum Gizemi',
+                text: 'Çift Yarık Deneyi: Elektronlar izlenmediklerinde dalga gibi davranıp aynı anda iki yarıktan geçerken, bir kamera yerleştirildiği anda sanki izlendiklerini biliyormuş gibi parçacık gibi davranırlar.'
+            },
+            {
+                cat: 'Uzay & Zaman',
+                text: 'Fotona göre zaman akmaz: Güneş’in merkezinden çıkan bir ışık fotonu, ışık hızında hareket ettiği için kendi bakış açısından doğduğu saniyede gözünüze çarpar.'
+            }
+        ];
+
+        function generateOracleCard() {
+            SoundEngine.playClick();
+            const pick = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
+            document.getElementById('oracle-category').textContent = pick.cat;
+            document.getElementById('oracle-text').textContent = pick.text;
+            addXP(5, 'Yeni Paradoks Keşfedildi');
+        }
+
+        function nextQuickFact() {
+            SoundEngine.playClick();
+            const pick = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
+            document.getElementById('dashboard-fact-text').textContent = pick.text;
+            addXP(5, 'Kuantum Bilgi Kapsülü');
+        }
+
+        // Anti-Boredom Roulette
+        function triggerAntiBoredomRoulette() {
+            SoundEngine.playSuccess();
+            const actions = [
+                () => { switchMainTab('games'); selectGame('reflex'); showToast('Rastgele Seçim: Neon Refleks!', 'Bakalım tepki süren kaç milisaniye çıkacak?', 'fa-crosshairs'); },
+                () => { switchMainTab('games'); selectGame('dodge'); showToast('Rastgele Seçim: Kuantum Kaçış!', 'Lazer fırtınasında hayatta kal!', 'fa-shuttle-space'); },
+                () => { switchMainTab('stories'); switchStoryMode('interactive'); showToast('Rastgele Seçim: İnteraktif Macera!', 'Seçimlerinle hikayenin sonunu belirle.', 'fa-book-sparkles'); },
+                () => { switchMainTab('music'); if (!SoundEngine.musicPlaying) SoundEngine.startProceduralMusic(); showToast('Rastgele Seçim: Ses Laboratuvarı!', 'Canlı Synth müziği başlatıldı.', 'fa-wave-square'); },
+                () => { switchMainTab('zen'); triggerZenSupernova(); showToast('Rastgele Seçim: Zen Galaksi Havuzu!', 'Parçacıkları fareyle kontrol et.', 'fa-atom'); }
+            ];
+            actions[Math.floor(Math.random() * actions.length)]();
+        }
+
+        // Pomodoro Timer
+        let pomoSeconds = 25 * 60;
+        let pomoInterval = null;
+
+        function setPomoMinutes(mins) {
+            SoundEngine.playClick();
+            clearInterval(pomoInterval);
+            pomoInterval = null;
+            pomoSeconds = mins * 60;
+            updatePomoDisplay();
+        }
+
+        function togglePomoTimer() {
+            SoundEngine.playClick();
+            if (pomoInterval) {
+                clearInterval(pomoInterval);
+                pomoInterval = null;
+            } else {
+                pomoInterval = setInterval(() => {
+                    if (pomoSeconds > 0) {
+                        pomoSeconds--;
+                        updatePomoDisplay();
+                    } else {
+                        clearInterval(pomoInterval);
+                        pomoInterval = null;
+                        SoundEngine.playSuccess();
+                        addXP(50, 'Odak Süresi Tamamlandı!');
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetPomoTimer() {
+            setPomoMinutes(25);
+        }
+
+        function updatePomoDisplay() {
+            const m = String(Math.floor(pomoSeconds / 60)).padStart(2, '0');
+            const s = String(pomoSeconds % 60).padStart(2, '0');
+            document.getElementById('pomo-timer-display').textContent = `${m}:${s}`;
+        }
+
+        // Quick Notes
+        function saveQuickNotes(val) {
+            localStorage.setItem('aetheria_notes', val);
+            const badge = document.getElementById('note-saved-badge');
+            badge.textContent = 'Kaydedildi ✓';
+        }
+
+        function clearQuickNotes() {
+            SoundEngine.playClick();
+            document.getElementById('quick-notes-area').value = '';
+            localStorage.removeItem('aetheria_notes');
+        }
+
+        /* =========================================================
+           9. INITIALIZATION ON WINDOW LOAD
+           ========================================================= */
+        window.onload = function () {
+            resizeBgCanvas();
+            setLiquidTheme(AppState.theme);
+            updateXPDisplay();
+            initCrystalSynthPads();
+            initStoriesSection();
+            renderNewsFeed();
+
+            // Restore notes
+            const savedNotes = localStorage.getItem('aetheria_notes');
+            if (savedNotes) document.getElementById('quick-notes-area').value = savedNotes;
+
+            // Attach subtle hover ticks to interactive buttons
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('mouseenter', () => SoundEngine.playHover());
+            });
+
+            // Live clock
+            setInterval(() => {
+                const now = new Date();
+                const el = document.getElementById('live-clock-display');
+                if (el) el.textContent = now.toLocaleTimeString('tr-TR');
+            }, 1000);
+
+            // Start master background animation loop
+            renderLiquidBackground();
+        };
+    </script>
+</body>
+</html>
