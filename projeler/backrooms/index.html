@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>BACKROOMS: KASET #1994 (Update 14)</title>
+    <title>BACKROOMS: KASET #1994 (Update 15)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -339,70 +339,124 @@
         @keyframes rot { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
         @media (orientation: portrait) and (max-width: 700px) { body.is-mobile.playing-active #rotate-hint { display: flex; } }
 
-        /* ---------- Dokunmatik mod (ekran genişliğinden bağımsız) ---------- */
+        /* ---------- Dokunmatik mod: tüm kümeler --ms ölçeğiyle ekrana sığar (JS gerçek ekran boyutundan hesaplar) ---------- */
+        :root { --ms: 1; }
         body.is-mobile #pc-shortcuts-hint, body.is-mobile #hud-top-right, body.is-mobile #interaction-prompt { display: none !important; }
-        body.is-mobile #hud { padding: calc(10px + var(--safe-t)) calc(14px + var(--safe-r)) calc(10px + var(--safe-b)) calc(14px + var(--safe-l)); }
-        body.is-mobile #hud-top-left { max-width: 40vw; gap: 3px; }
-        body.is-mobile .osd-line { font-size: 20px; gap: 7px; }
-        body.is-mobile #hud-level-title { font-size: 16px; }
-        body.is-mobile .obj-line { font-size: 15px; gap: 6px; flex-wrap: wrap; }
-        body.is-mobile .osd-chip { font-size: 8.5px; padding: 2px 5px; }
-        body.is-mobile #hud-bottom-bars { position: fixed; top: calc(10px + var(--safe-t)); left: 50%; transform: translateX(-50%); width: 200px; padding: 7px 10px; gap: 5px; border-radius: 10px; }
-        body.is-mobile #hud-bottom-bars .stat-head { font-size: 8px; margin-bottom: 3px; }
+        body.is-mobile #hud { padding: 0; }
+        body.is-mobile .hud-row { display: contents; }
+        body.is-mobile #hud-top-left {
+            position: fixed; top: calc(8px + var(--safe-t)); left: calc(12px + var(--safe-l));
+            width: 300px; max-width: none; gap: 3px; transform: scale(var(--ms)); transform-origin: top left;
+        }
+        body.is-mobile .osd-line { font-size: 19px; gap: 6px; }
+        body.is-mobile #hud-level-title { font-size: 15px; max-width: 290px; }
+        body.is-mobile .obj-line { font-size: 14px; gap: 6px; flex-wrap: nowrap; }
+        body.is-mobile .obj-pip { width: 9px; }
+        body.is-mobile #hud-exit-state { font-size: 8px; padding: 2px 5px; white-space: nowrap; }
+        body.is-mobile .osd-chip { font-size: 8px; padding: 2px 5px; }
+        body.is-mobile #hud-music-badge { display: none !important; }
+        body.is-mobile #hud-bottom-bars {
+            position: fixed; top: calc(8px + var(--safe-t) + 66px * var(--ms)); left: calc(12px + var(--safe-l));
+            width: 176px; padding: 7px 9px; gap: 5px; border-radius: 10px; transform: scale(var(--ms)); transform-origin: top left;
+        }
+        body.is-mobile #hud-bottom-bars .stat-head { font-size: 7.5px; margin-bottom: 3px; letter-spacing: 0.08em; }
+        body.is-mobile #hud-bottom-bars .stat-head .val { font-size: 9px; }
         body.is-mobile #hud-bottom-bars .seg-bar { height: 5px; }
-        body.is-mobile .vf-corner { width: 26px; height: 26px; }
+        body.is-mobile .vf-corner { width: 22px; height: 22px; opacity: 0.6; }
+        body.is-mobile .hud-center { top: 46%; }
+        body.is-mobile #toast-banner { font-size: 11px; padding: 7px 12px; max-width: 58vw; }
 
-        /* ---------- Duyarlı yerleşim ---------- */
+        body.is-mobile .m-top { transform: scale(var(--ms)); transform-origin: top right; }
+        body.is-mobile .m-actions { transform: scale(var(--ms)); transform-origin: bottom right; }
+        body.is-mobile #joystick-base { transform: scale(var(--ms)); }
+        body.is-mobile #joystick-zone { width: 44vw; height: 70vh; }
+        body.is-mobile .joy-hint { font-size: 9px; }
+        @media (max-height: 400px) { body.is-mobile .joy-hint { display: none; } }
+
+        body.is-mobile #automap-canvas { width: min(62vmin, 420px); height: min(62vmin, 420px); }
+        body.is-mobile .map-card { padding: 10px; }
+        @media (max-height: 460px) { body.is-mobile .map-legend { display: none; } }
+
+        /* ---------- Duyarlı yerleşim (menü ve ekranlar) ---------- */
         @media (max-width: 900px) {
             .play-layout { grid-template-columns: 1fr; }
             .preview { position: relative; }
             .preview-art { height: 110px; }
         }
         @media (max-width: 960px), (pointer: coarse) {
-            #hud { padding: calc(10px + var(--safe-t)) calc(14px + var(--safe-r)) calc(10px + var(--safe-b)) calc(14px + var(--safe-l)); }
             #hud-top-left { max-width: 52vw; gap: 3px; }
-            .osd-line { font-size: 20px; gap: 7px; }
-            #hud-level-title { font-size: 17px; }
-            .obj-line { font-size: 15px; gap: 7px; }
-            .osd-chip { font-size: 8.5px; padding: 2px 5px; }
             #pc-shortcuts-hint { display: none !important; }
             .menu-head { padding: 12px 14px; }
             .brand-title { font-size: 34px; }
             .tape-icon { display: none; }
             .menu-body { padding: 12px 14px; }
             .menu-foot { padding: 10px 14px; }
-            .tabs { width: 100%; }
-            .tab { flex: 1; padding: 9px 6px; font-size: 10px; }
+            .tab { padding: 9px 8px; font-size: 10px; }
             .level-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
             .music-panel { grid-template-columns: 1fr; }
             .chips { justify-content: flex-start; }
             .quick-vol { grid-column: auto; }
             .foot-right { flex: 1; justify-content: flex-end; }
+            .settings-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+            .toggles { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+            .btn, .tab, .toggle, .file-chip, .mini-btn, select { min-height: 40px; }
         }
         /* Evren listesi her zaman önce, müzik paneli ve ipuçları sonra */
-        .play-layout > div:first-child { display: flex; flex-direction: column; }
+        .play-layout > div:first-child { display: flex; flex-direction: column; min-width: 0; }
         .play-layout > div:first-child > .section-title { order: 0; }
         .play-layout > div:first-child > .level-grid { order: 1; margin-bottom: 14px; }
         .play-layout > div:first-child > .music-panel { order: 2; }
         .play-layout > div:first-child > .legend { order: 3; }
         .play-layout > div:first-child > .tip { order: 4; }
-        @media (max-width: 600px) { .tabs { width: 100%; } }
-        @media (min-width: 601px) { .tabs { width: auto; } .tab { flex: none; } }
-        @media (max-height: 520px) {
-            .menu-head { padding: 8px 14px; flex-wrap: nowrap; }
-            .brand-kicker { display: none; }
-            .brand-title { font-size: 24px; }
-            .tab { padding: 7px 10px; }
-            .menu-body { padding: 10px 14px; }
-            .menu-foot { padding: 7px 14px; }
-            .btn { height: 38px; }
-            .music-panel p { display: none; }
-            .legend { display: none; }
-            .preview-art { height: 80px; }
-            .preview-desc { display: none; }
-            .m-actions { transform: scale(0.88); transform-origin: bottom right; }
-            #joystick-base { transform: scale(0.88); }
+        body.is-mobile .legend { display: none; }
+        @media (max-width: 600px) {
+            .menu-head { flex-direction: column; align-items: stretch; gap: 10px; }
+            .tabs { width: 100%; }
+            .tab { flex: 1; }
+            .brand-title { font-size: 30px; }
+            .level-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .tape-inner { padding: 8px 10px 10px; }
+            .tape-code { font-size: 20px; }
+            .tape-name { font-size: 11.5px; }
+            .quick-vol { flex-wrap: wrap; }
+            .quick-vol input { flex: 1 1 120px; }
+            #menu-overlay { padding: calc(8px + var(--safe-t)) calc(8px + var(--safe-r)) calc(8px + var(--safe-b)) calc(8px + var(--safe-l)); }
+            #menu-card-container { border-radius: 16px; }
         }
+        @media (min-width: 601px) { .tabs { width: auto; } .tab { flex: none; } }
+        /* Yatay telefon: başlık tek satır, önizleme yana, liste kaydırılır */
+        @media (max-height: 520px) {
+            #menu-overlay { padding: calc(6px + var(--safe-t)) calc(10px + var(--safe-r)) calc(6px + var(--safe-b)) calc(10px + var(--safe-l)); }
+            #menu-card-container { border-radius: 14px; }
+            .menu-head { padding: 7px 12px; flex-wrap: nowrap; flex-direction: row; align-items: center; }
+            .brand-kicker { display: none; }
+            .brand-title { font-size: 22px; white-space: nowrap; }
+            .tabs { width: auto; }
+            .tab { flex: none; padding: 6px 10px; min-height: 34px; }
+            .menu-body { padding: 8px 12px; }
+            .menu-foot { padding: 6px 12px; }
+            .btn { height: 36px; min-height: 36px; }
+            .music-panel p { display: none; }
+            .tip { display: none; }
+            .play-layout { grid-template-columns: minmax(0, 1fr) 210px; gap: 10px; }
+            .preview { position: sticky; top: 0; }
+            .preview-art { height: 64px; }
+            .preview-code { font-size: 28px; bottom: 6px; }
+            .preview-body { padding: 8px 10px 10px; }
+            .preview-name { font-size: 20px; }
+            .preview-desc { display: none; }
+            .preview-meta { gap: 5px; }
+            .meta { padding: 6px 8px; }
+            .level-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 7px; }
+            .tape-inner { padding: 7px 9px 8px; }
+            .tape-code { font-size: 19px; }
+            .tape-name { font-size: 11px; }
+            .tape-ent, .tape-label-lines { display: none; }
+            .trans-card { padding: 16px 18px 14px; }
+            #trans-title { font-size: 34px; margin: 8px 0 6px; }
+            #trans-desc { margin-bottom: 12px; font-size: 11.5px; }
+        }
+        @media (max-height: 520px) and (max-width: 600px) { .play-layout { grid-template-columns: 1fr; } }
         @media (max-width: 420px) {
             .btn { padding: 0 12px; font-size: 11px; }
             #btn-reset-defaults span { display: none; }
@@ -541,7 +595,7 @@
                 <svg class="ring" viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="54"/><circle id="sprint-ring" class="ring-fg" cx="60" cy="60" r="54" stroke-dasharray="339.3" stroke-dashoffset="0"/></svg>
                 <svg class="sprint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="4" r="2"/><path d="m6 20 3-6 3 2 1 6M9 14l1-5 4 1 3 3h3M10 9 6 8l-2 3"/></svg>
                 <span id="sprint-label">KOŞ</span>
-                <span class="sub" id="sprint-sub">BAS-TUT · DOKUN = KİLİT</span>
+                <span class="sub" id="sprint-sub">BASILI TUT</span>
             </button>
         </div>
     </div>
@@ -1150,6 +1204,17 @@ function selectLevelCard(idx) {
         if (card) card.classList.toggle('selected', i === idx);
     }
     updateLevelPreview(idx);
+}
+
+// Mobil arayüz ölçeği: 430px yükseklik / 880px genişlik referans alınır; küçük telefonlarda kümeler küçülür, tabletlerde biraz büyür
+let mobileUIScale = 1;
+function applyMobileUIScale() {
+    const vv = window.visualViewport;
+    const w = vv ? vv.width : window.innerWidth;
+    const h = vv ? vv.height : window.innerHeight;
+    const s = Math.max(0.62, Math.min(1.15, Math.min(h / 430, w / 880)));
+    mobileUIScale = s;
+    document.documentElement.style.setProperty('--ms', s.toFixed(3));
 }
 
 // Mobilde dokunsal geri bildirim
@@ -5938,7 +6003,15 @@ function initEngine() {
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('orientationchange', () => {
         setTimeout(onWindowResize, 120);
+        setTimeout(onWindowResize, 450);
     });
+    ['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => {
+        setTimeout(onWindowResize, 60);
+        setTimeout(onWindowResize, 400);
+    }));
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => setTimeout(onWindowResize, 50));
+    }
     setupInputListeners();
     if (isMobileDevice) {
         setupMobileTouchControls();
@@ -5948,6 +6021,7 @@ function initEngine() {
 }
 
 function onWindowResize() {
+    applyMobileUIScale();
     if (!camera || !renderer) return;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -8192,16 +8266,16 @@ function setupMobileTouchControls() {
     const lookZone = document.getElementById('mobile-look-zone');
     const sprintBtn = document.getElementById('mbtn-sprint');
 
-    const maxRadius = 52;
+    let maxRadius = 52;
     const deadZone = 0.12;
 
-    // Dinlenme konumu: joystick dokunulmadığında sol altta yarı saydam bekler
+    // Dinlenme konumu: joystick dokunulmadığında sol altta yarı saydam bekler (ekran ölçeğine göre)
     function placeBaseAtRest() {
         if (!joyBase) return;
-        const sl = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-l')) || 0;
-        const sb = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-b')) || 0;
-        joyBase.style.left = (96 + sl) + 'px';
-        joyBase.style.top = (window.innerHeight - 110 - sb) + 'px';
+        const s = mobileUIScale;
+        maxRadius = 52 * s;
+        joyBase.style.left = (24 + 72 * s) + 'px';
+        joyBase.style.top = (window.innerHeight - 24 - 80 * s) + 'px';
         joyBase.classList.remove('active', 'running');
     }
     placeBaseAtRest();
@@ -9348,10 +9422,10 @@ function updateSprintButtonUI() {
     btn.classList.toggle('locked', mobileInput.sprintLocked && !exhausted);
     const lbl = document.getElementById('sprint-label');
     const sub = document.getElementById('sprint-sub');
-    let l = 'KOŞ', s = 'BAS-TUT · DOKUN = KİLİT';
+    let l = 'KOŞ', s = 'BASILI TUT';
     if (exhausted) { l = Math.round(player.stamina) + '%'; s = 'NEFES AL…'; }
     else if (isBeingChased) { l = 'KAÇ!'; s = 'ADRENALİN ∞'; }
-    else if (mobileInput.sprintLocked) { l = 'KOŞ'; s = 'KİLİTLİ · DOKUN = BIRAK'; }
+    else if (mobileInput.sprintLocked) { l = 'KOŞ'; s = 'KİLİTLİ ✓'; }
     if (lbl && lbl.textContent !== l) lbl.textContent = l;
     if (sub && sub.textContent !== s) sub.textContent = s;
 }
@@ -9363,7 +9437,33 @@ function formatTimer(sec) {
     return `${hrs}:${mins}:${secs}`;
 }
 
+// Tam ekran + (destekleyen telefonlarda) yatay yön kilidi. Kullanıcı dokunuşu içinde, ağır işlerden ÖNCE çağrılmalı.
+function enterGameFullscreen() {
+    try {
+        const el = document.documentElement;
+        const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+        const lockLandscape = () => {
+            if (isMobileDevice && screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+        };
+        if (isFs) {
+            lockLandscape();
+            return;
+        }
+        const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+        if (!req) return;
+        const res = req.call(el, { navigationUI: 'hide' });
+        if (res && typeof res.then === 'function') {
+            res.then(lockLandscape).catch(() => {});
+        } else {
+            setTimeout(lockLandscape, 150);
+        }
+    } catch (e) {}
+}
+
 function startSelectedLevel() {
+    enterGameFullscreen();
     if (menuPreviewAudio) {
         try { menuPreviewAudio.pause(); } catch (e) {}
         menuPreviewAudio = null;
@@ -9412,6 +9512,7 @@ function startSelectedLevel() {
 
 function resumeGame() {
     if (!isGameRunning) return;
+    enterGameFullscreen();
     audio.init();
     if (audio.bgAudioElement && audio.bgAudioElement.paused) {
         audio.bgAudioElement.play().catch(() => {});
@@ -9689,6 +9790,7 @@ function animate() {
 }
 
 window.onload = function () {
+    applyMobileUIScale();
     loadSettings();
     renderLevelCards();
     renderBestTimes();

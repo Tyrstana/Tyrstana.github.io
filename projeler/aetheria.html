@@ -2,8 +2,11 @@
 <html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHERIA // Liquid Glass Hub — Sıkıntı Giderici Evren</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#040711">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AETHERIA // Liquid Glass Hub — Sıkıntı Giderici Evren (Update 1)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -86,7 +89,6 @@
             color: #f8fafc;
             overflow-x: hidden;
             font-family: 'Outfit', sans-serif;
-            selection-background-color: var(--accent-1);
         }
 
         /* Dynamic Liquid Background Canvas */
@@ -292,9 +294,269 @@
 
         /* Gradient Text */
         .text-liquid-gradient {
-            background: linear-gradient(135deg, #ffffff 0%, var(--accent-1) 50%, var(--accent-3) 100%);
+            background: linear-gradient(110deg, #ffffff 0%, var(--accent-1) 30%, var(--accent-3) 55%, var(--accent-1) 80%, #ffffff 100%);
+            background-size: 220% 100%;
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: gradientFlow 8s ease-in-out infinite;
+        }
+
+        /* =========================================================
+           UPDATE 1 — Görsel cila, akıcı animasyonlar, mobil uyum
+           ========================================================= */
+        :root {
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --dock-h: 68px;
+            --safe-b: env(safe-area-inset-bottom, 0px);
+        }
+
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+
+        .no-scrollbar { scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Film grain for depth */
+        .liquid-noise-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Background canvas is drawn at half resolution and blurred up */
+        #liquid-bg-canvas { filter: blur(30px) saturate(130%); transform: scale(1.08); }
+
+        /* Cursor-follow spotlight on cards */
+        .liquid-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.10), transparent 45%);
+            transition: opacity 0.4s var(--ease-out);
+        }
+        .liquid-card > * { position: relative; z-index: 1; }
+
+        /* Hover effects only on real pointer devices (no sticky hover on touch) */
+        @media (hover: hover) and (pointer: fine) {
+            .liquid-card:hover::after { opacity: 1; }
+        }
+        @media (hover: none) {
+            .liquid-card:hover,
+            .liquid-btn:hover,
+            .liquid-btn-primary:hover { transform: none; }
+            .liquid-card:hover::before { left: -120%; }
+        }
+
+        /* Tactile press feedback everywhere */
+        .liquid-card:active { transform: scale(0.985); transition-duration: 0.12s; }
+        .liquid-btn, .liquid-btn-primary { will-change: transform; }
+        .liquid-btn-primary { position: relative; overflow: hidden; }
+        .liquid-btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+            transform: translateX(-120%);
+            animation: btnSheen 4.5s var(--ease-out) infinite;
+            pointer-events: none;
+        }
+        @keyframes btnSheen {
+            0%, 70% { transform: translateX(-120%); }
+            100% { transform: translateX(120%); }
+        }
+
+        /* Ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0);
+            animation: rippleOut 0.65s var(--ease-out) forwards;
+        }
+        @keyframes rippleOut { to { transform: scale(1); opacity: 0; } }
+
+        /* Focus ring for keyboard users */
+        button:focus-visible, textarea:focus-visible, input:focus-visible {
+            outline: 2px solid var(--accent-1);
+            outline-offset: 2px;
+        }
+
+        /* Sliding active indicator for desktop nav */
+        #main-nav { position: relative; }
+        #nav-indicator {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            height: calc(100% - 8px);
+            border-radius: 1rem;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 22px var(--glow-shadow), inset 0 1px 2px rgba(255, 255, 255, 0.55);
+            transition: transform 0.55s var(--ease-spring), width 0.55s var(--ease-spring), opacity 0.3s;
+            z-index: 0;
+        }
+        #main-nav .main-nav-btn { position: relative; z-index: 1; }
+        #main-nav .main-nav-btn { background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; }
+        #main-nav .main-nav-btn:hover { background: rgba(255, 255, 255, 0.06); transform: none; box-shadow: none; }
+        #main-nav .main-nav-btn.nav-tab-active { color: #fff; }
+
+        /* Header shrinks slightly once scrolled */
+        header > div { transition: padding 0.4s var(--ease-out), background 0.4s, box-shadow 0.4s; }
+        header.scrolled > div {
+            background: linear-gradient(135deg, rgba(10, 16, 32, 0.72) 0%, rgba(10, 16, 32, 0.55) 100%);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 var(--glass-highlight);
+        }
+
+        /* Section entrance: stagger children */
+        .tab-section { animation: none; }
+        .tab-section.active > * {
+            animation: riseIn 0.7s var(--ease-out) both;
+        }
+        .tab-section.active > *:nth-child(2) { animation-delay: 0.07s; }
+        .tab-section.active > *:nth-child(3) { animation-delay: 0.14s; }
+        .tab-section.active > *:nth-child(4) { animation-delay: 0.21s; }
+        .tab-section.active > *:nth-child(5) { animation-delay: 0.28s; }
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(22px) scale(0.985); filter: blur(6px); }
+            to { opacity: 1; transform: none; filter: blur(0); }
+        }
+
+        /* Grid children pop in one after another */
+        .stagger > * { animation: popIn 0.6s var(--ease-out) both; }
+        .stagger > *:nth-child(1) { animation-delay: 0.10s; }
+        .stagger > *:nth-child(2) { animation-delay: 0.16s; }
+        .stagger > *:nth-child(3) { animation-delay: 0.22s; }
+        .stagger > *:nth-child(4) { animation-delay: 0.28s; }
+        .stagger > *:nth-child(5) { animation-delay: 0.34s; }
+        .stagger > *:nth-child(6) { animation-delay: 0.40s; }
+        .stagger > *:nth-child(7) { animation-delay: 0.46s; }
+        .stagger > *:nth-child(8) { animation-delay: 0.52s; }
+        .stagger > *:nth-child(n+9) { animation-delay: 0.56s; }
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(14px) scale(0.97); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Text swap fade (facts, oracle, story) */
+        .swap-anim { animation: swapIn 0.5s var(--ease-out); }
+        @keyframes swapIn {
+            from { opacity: 0; transform: translateY(8px); filter: blur(4px); }
+            to { opacity: 1; transform: none; filter: blur(0); }
+        }
+
+        /* Hero floating orbs */
+        .hero-orb { animation: orbDrift 14s ease-in-out infinite alternate; }
+        .hero-orb.b { animation-duration: 18s; animation-direction: alternate-reverse; }
+        @keyframes orbDrift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, 30px) scale(1.15); }
+            100% { transform: translate(30px, -20px) scale(0.95); }
+        }
+
+        /* Game overlays fade + scale */
+        #reflex-overlay, #dodge-overlay, #breaker-overlay { transition: opacity 0.35s var(--ease-out); }
+        #reflex-overlay > *, #dodge-overlay > *, #breaker-overlay > * { animation: popIn 0.55s var(--ease-out) both; }
+        .game-canvas { touch-action: none; -webkit-user-select: none; user-select: none; }
+
+        /* Memory pads: smoother lit pulse */
+        .memory-pad { transition: transform 0.25s var(--ease-spring), filter 0.25s, box-shadow 0.25s; }
+        .memory-pad.lit { transform: scale(0.92); }
+        .memory-pad.wrong { animation: shake 0.45s var(--ease-out); box-shadow: 0 0 30px #f43f5e; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* Theme dropdown animation */
+        #theme-dropdown {
+            transform-origin: top right;
+            animation: dropIn 0.28s var(--ease-spring);
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-6px) scale(0.94); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Reader modal: fade + rise (bottom sheet on mobile) */
+        #reader-modal { transition: opacity 0.3s var(--ease-out); opacity: 0; }
+        #reader-modal.open { opacity: 1; }
+        #reader-modal .modal-panel { transition: transform 0.45s var(--ease-spring); transform: translateY(30px) scale(0.97); }
+        #reader-modal.open .modal-panel { transform: none; }
+
+        /* Toasts */
+        .toast-enter { animation: toastIn 0.5s var(--ease-spring) both; }
+        .toast-leave { animation: toastOut 0.35s var(--ease-out) both; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.92); }
+            to { opacity: 1; transform: none; }
+        }
+        @keyframes toastOut { to { opacity: 0; transform: translateX(30px) scale(0.95); } }
+        .toast-progress { animation: toastBar 3.2s linear forwards; transform-origin: left; }
+        @keyframes toastBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+        /* XP badge pulse on level / gain */
+        .xp-bump { animation: xpBump 0.6s var(--ease-spring); }
+        @keyframes xpBump { 40% { transform: scale(1.25); } }
+
+        /* Mobile bottom dock */
+        #mobile-dock { padding-bottom: calc(8px + var(--safe-b)); }
+        .dock-btn { transition: color 0.3s, transform 0.3s var(--ease-spring); }
+        .dock-btn .dock-icon {
+            transition: transform 0.4s var(--ease-spring), background 0.3s, box-shadow 0.3s;
+        }
+        .dock-btn.active { color: #fff; }
+        .dock-btn.active .dock-icon {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.06));
+            box-shadow: 0 0 18px var(--glow-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+        .dock-btn:active { transform: scale(0.9); }
+
+        /* ---------- Mobile ---------- */
+        @media (max-width: 1023px) {
+            #mini-player-bar { bottom: calc(var(--dock-h) + var(--safe-b) + 6px); }
+            #toast-container { bottom: calc(var(--dock-h) + var(--safe-b) + 76px); }
+            main { padding-bottom: calc(var(--dock-h) + var(--safe-b) + 96px) !important; }
+        }
+        @media (max-width: 640px) {
+            /* Lighter blur = smoother scrolling on phones */
+            .liquid-glass { backdrop-filter: blur(16px) saturate(170%); -webkit-backdrop-filter: blur(16px) saturate(170%); }
+            .liquid-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.035) 100%); }
+            .liquid-btn { backdrop-filter: none; }
+            #liquid-bg-canvas { filter: blur(22px) saturate(130%); }
+            .hud-chip { font-size: 11px; }
+            #toast-container { left: 0; right: 0; margin: 0 auto; }
+            #reader-modal { align-items: flex-end; padding: 0; }
+            #reader-modal .modal-panel { border-radius: 1.75rem 1.75rem 0 0; max-height: 90vh; transform: translateY(100%); }
+            #reader-modal.open .modal-panel { transform: none; }
+            h1 { letter-spacing: -0.01em; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
@@ -305,14 +567,14 @@
     <div class="liquid-noise-overlay"></div>
 
     <!-- FLOATING TOAST / XP NOTIFICATION CONTAINER -->
-    <div id="toast-container" class="fixed bottom-24 right-5 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+    <div id="toast-container" class="fixed bottom-24 right-0 sm:right-5 z-[60] flex flex-col gap-2.5 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
     <!-- TOP LIQUID GLASS HEADER & NAVIGATION -->
-    <header class="sticky top-0 z-40 px-3 sm:px-6 pt-3 pb-2">
-        <div class="max-w-7xl mx-auto liquid-glass rounded-3xl px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+    <header id="site-header" class="sticky top-0 z-40 px-3 sm:px-6 pt-3 pb-2" style="padding-top: max(0.75rem, env(safe-area-inset-top));">
+        <div class="max-w-7xl mx-auto liquid-glass rounded-3xl px-3.5 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 sm:gap-4">
             
             <!-- Brand Logo & Status -->
-            <div class="flex items-center gap-3.5 cursor-pointer group" onclick="switchMainTab('dashboard')">
+            <div class="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer group min-w-0" onclick="switchMainTab('dashboard')">
                 <div class="w-11 h-11 rounded-2xl liquid-btn flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform">
                     <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400/30 via-blue-500/20 to-purple-500/30 animate-pulse"></div>
                     <i class="fa-solid fa-droplet text-xl text-cyan-300 drop-shadow-[0_0_10px_rgba(0,242,254,0.8)]"></i>
@@ -320,14 +582,15 @@
                 <div>
                     <div class="flex items-center gap-2">
                         <span class="font-display font-bold text-lg sm:text-xl tracking-wider text-white">AETHERIA</span>
-                        <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-cyan-300">OS 4.2</span>
+                        <span class="hidden sm:inline text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-cyan-300 whitespace-nowrap">OS 4.2</span>
                     </div>
                     <p class="text-xs text-slate-300/80 hidden sm:block">Liquid Glass Çoklu Deneyim Evreni</p>
                 </div>
             </div>
 
             <!-- Main Navigation Pills -->
-            <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-full py-1 no-scrollbar order-3 lg:order-2 w-full lg:w-auto justify-start sm:justify-center">
+            <nav id="main-nav" class="hidden lg:flex items-center gap-1.5 py-1 px-1 no-scrollbar">
+                <div id="nav-indicator"></div>
                 <button onclick="switchMainTab('dashboard')" data-tab="dashboard" class="main-nav-btn nav-tab-active liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0">
                     <i class="fa-solid fa-compass text-cyan-300"></i>
                     <span>Merkez</span>
@@ -337,7 +600,7 @@
                     <span>Oyun Merkezi</span>
                 </button>
                 <button onclick="switchMainTab('stories')" data-tab="stories" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
-                    <i class="fa-solid fa-book-sparkles text-amber-300"></i>
+                    <i class="fa-solid fa-book-open text-amber-300"></i>
                     <span>Hikayeler</span>
                 </button>
                 <button onclick="switchMainTab('music')" data-tab="music" class="main-nav-btn liquid-btn px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 text-slate-200 shrink-0">
@@ -355,7 +618,7 @@
             </nav>
 
             <!-- User Level / XP & Utility Controls -->
-            <div class="flex items-center gap-2.5 order-2 lg:order-3">
+            <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
                 <!-- XP & Level Pill -->
                 <div class="liquid-btn px-3 py-1.5 rounded-2xl flex items-center gap-2.5" title="Oyun oynayarak, hikaye bitirerek ve keşfederek XP kazanın!">
                     <div class="w-7 h-7 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-slate-950 font-display font-bold text-xs shadow-inner" id="user-level-badge">
@@ -416,28 +679,29 @@
         <section id="tab-dashboard" class="tab-section active space-y-6">
             
             <!-- Hero Welcome Banner -->
-            <div class="liquid-glass rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
-                <div class="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-cyan-400/15 blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-16 -bottom-16 w-72 h-72 rounded-full bg-purple-500/15 blur-3xl pointer-events-none"></div>
+            <div class="liquid-glass rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden">
+                <div class="hero-orb absolute -right-16 -top-16 w-72 h-72 rounded-full bg-cyan-400/20 blur-3xl pointer-events-none"></div>
+                <div class="hero-orb b absolute -left-16 -bottom-16 w-72 h-72 rounded-full bg-purple-500/20 blur-3xl pointer-events-none"></div>
+                <div class="absolute inset-0 pointer-events-none opacity-[0.07]" style="background-image: linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px); background-size: 44px 44px; -webkit-mask-image: radial-gradient(ellipse at 70% 30%, #000 10%, transparent 70%); mask-image: radial-gradient(ellipse at 70% 30%, #000 10%, transparent 70%);"></div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
                     <div class="lg:col-span-8 space-y-4">
                         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-medium text-cyan-200">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                            <span>Sıfır Can Sıkıntısı Protokolü Aktif • Web Audio Synth Motoru Hazır</span>
+                            <span class="relative flex w-2 h-2"><span class="absolute inset-0 rounded-full bg-emerald-400 animate-ping"></span><span class="relative w-2 h-2 rounded-full bg-emerald-400"></span></span>
+                            <span>Sıfır Can Sıkıntısı Protokolü Aktif<span class="hidden sm:inline"> • Web Audio Synth Motoru Hazır</span></span>
                         </div>
-                        <h1 class="font-display font-extrabold text-3xl sm:text-5xl leading-tight">
-                            Zihnini Dinlendir, <span class="text-liquid-gradient">Evreni Keşfet.</span>
+                        <h1 class="font-display font-extrabold text-[2rem] sm:text-5xl lg:text-6xl leading-[1.08] tracking-tight">
+                            Zihnini Dinlendir, <br class="hidden sm:block"><span class="text-liquid-gradient">Evreni Keşfet.</span>
                         </h1>
                         <p class="text-slate-200/85 text-sm sm:text-base max-w-2xl leading-relaxed">
                             Aetheria Liquid Glass Hub; boş zamanlarını unutulmaz bir deneyime dönüştürmek için tasarlandı. Canlı üretilen synth müzikleri başlat, refleks ve zeka oyunlarında rekor kır, seçimlerinle şekillenen hikayelere dal veya kuantum parçacık havuzunda rahatla.
                         </p>
                         <div class="flex flex-wrap items-center gap-3 pt-2">
-                            <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-5 py-3 rounded-2xl text-sm flex items-center gap-2.5">
+                            <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-5 py-3 rounded-2xl text-sm flex items-center justify-center gap-2.5 w-full sm:w-auto">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                <span>Sıkıntı Giderici Rastgele Deneyim Başlat</span>
+                                <span><span class="sm:hidden">Rastgele Deneyim Başlat</span><span class="hidden sm:inline">Sıkıntı Giderici Rastgele Deneyim Başlat</span></span>
                             </button>
-                            <button onclick="quickToggleMusic()" id="hero-music-btn" class="liquid-btn px-4 py-3 rounded-2xl text-sm font-medium flex items-center gap-2 text-white">
+                            <button onclick="quickToggleMusic()" id="hero-music-btn" class="liquid-btn px-4 py-3 rounded-2xl text-sm font-medium flex items-center justify-center gap-2 text-white w-full sm:w-auto">
                                 <i class="fa-solid fa-play text-cyan-300" id="hero-music-icon"></i>
                                 <span id="hero-music-label">Arka Plan Synth Müziği Başlat</span>
                             </button>
@@ -460,7 +724,7 @@
                             </p>
                             <div class="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
                                 <span id="live-clock-display" class="font-mono">--:--:--</span>
-                                <span class="text-emerald-300 font-medium"><i class="fa-solid fa-sparkles mr-1"></i>+5 XP Keşif</span>
+                                <span class="text-emerald-300 font-medium"><i class="fa-solid fa-star mr-1"></i>+5 XP Keşif</span>
                             </div>
                         </div>
                     </div>
@@ -468,9 +732,9 @@
             </div>
 
             <!-- Quick Bento Grid Modules -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stagger grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <!-- Module 1: Arcade -->
-                <div onclick="switchMainTab('games')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                <div onclick="switchMainTab('games')" class="liquid-card rounded-3xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
                     <div>
                         <div class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 text-xl mb-4 group-hover:scale-110 transition">
                             <i class="fa-solid fa-gamepad"></i>
@@ -488,7 +752,7 @@
                 </div>
 
                 <!-- Module 2: Stories -->
-                <div onclick="switchMainTab('stories')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                <div onclick="switchMainTab('stories')" class="liquid-card rounded-3xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
                     <div>
                         <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 text-xl mb-4 group-hover:scale-110 transition">
                             <i class="fa-solid fa-book-open-reader"></i>
@@ -506,7 +770,7 @@
                 </div>
 
                 <!-- Module 3: Sound Studio -->
-                <div onclick="switchMainTab('music')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                <div onclick="switchMainTab('music')" class="liquid-card rounded-3xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
                     <div>
                         <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 text-xl mb-4 group-hover:scale-110 transition">
                             <i class="fa-solid fa-sliders"></i>
@@ -524,7 +788,7 @@
                 </div>
 
                 <!-- Module 4: News & Zen -->
-                <div onclick="switchMainTab('news')" class="liquid-card rounded-3xl p-5 cursor-pointer flex flex-col justify-between group">
+                <div onclick="switchMainTab('news')" class="liquid-card rounded-3xl p-4 sm:p-5 cursor-pointer flex flex-col justify-between group">
                     <div>
                         <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-400/30 flex items-center justify-center text-pink-300 text-xl mb-4 group-hover:scale-110 transition">
                             <i class="fa-solid fa-newspaper"></i>
@@ -554,7 +818,7 @@
                         </div>
                         <span class="text-xs text-slate-300">Notalara dokun veya fareyi üzerinde gezdir</span>
                     </div>
-                    <div class="grid grid-cols-4 sm:grid-cols-8 gap-2.5 pt-2" id="crystal-synth-pads">
+                    <div class="grid grid-cols-4 sm:grid-cols-8 gap-2.5 pt-2" id="crystal-synth-pads" data-x>
                         <!-- Generated via JS -->
                     </div>
                 </div>
@@ -601,20 +865,20 @@
                     <span class="text-xs font-mono uppercase tracking-wider text-purple-300">Aetheria Arcade // 60 FPS</span>
                     <h2 class="font-display font-bold text-2xl text-white">Liquid Glass Oyun Merkezi</h2>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="selectGame('reflex')" id="game-btn-reflex" class="game-select-btn nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto -mx-1 px-1 py-1 snap-x">
+                    <button onclick="selectGame('reflex')" id="game-btn-reflex" class="game-select-btn nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0 snap-start">
                         <i class="fa-solid fa-crosshairs text-cyan-300"></i>
                         <span>1. Neon Refleks</span>
                     </button>
-                    <button onclick="selectGame('dodge')" id="game-btn-dodge" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <button onclick="selectGame('dodge')" id="game-btn-dodge" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0 snap-start">
                         <i class="fa-solid fa-shuttle-space text-purple-300"></i>
                         <span>2. Kuantum Kaçış</span>
                     </button>
-                    <button onclick="selectGame('memory')" id="game-btn-memory" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <button onclick="selectGame('memory')" id="game-btn-memory" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0 snap-start">
                         <i class="fa-solid fa-table-cells-large text-emerald-300"></i>
                         <span>3. Hafıza Matrisi</span>
                     </button>
-                    <button onclick="selectGame('breaker')" id="game-btn-breaker" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <button onclick="selectGame('breaker')" id="game-btn-breaker" class="game-select-btn liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2 shrink-0 snap-start">
                         <i class="fa-solid fa-meteor text-amber-300"></i>
                         <span>4. Kozmik Kırıcı</span>
                     </button>
@@ -631,17 +895,17 @@
                         <p class="text-xs text-slate-300">Küçülen sıvı cam kürelere kaybolmadan önce tıkla! Kombo çarpanını koru.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="reflex-score" class="text-cyan-300 font-bold text-sm">0</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Kombo: <span id="reflex-combo" class="text-purple-300 font-bold text-sm">x1</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Ort. Tepki: <span id="reflex-ms" class="text-emerald-300 font-bold text-sm">0 ms</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Süre: <span id="reflex-time" class="text-amber-300 font-bold text-sm">45s</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Skor: <span id="reflex-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Kombo: <span id="reflex-combo" class="text-purple-300 font-bold text-sm">x1</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Ort. Tepki: <span id="reflex-ms" class="text-emerald-300 font-bold text-sm">0 ms</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Süre: <span id="reflex-time" class="text-amber-300 font-bold text-sm">45s</span></div>
                         <button onclick="startReflexGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
                             <i class="fa-solid fa-play mr-1"></i> Başlat / Yeniden
                         </button>
                     </div>
                 </div>
-                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
-                    <canvas id="reflex-canvas" class="w-full h-full cursor-crosshair block"></canvas>
+                <div class="relative w-full h-[min(440px,62vh)] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="reflex-canvas" class="game-canvas w-full h-full cursor-crosshair block"></canvas>
                     <div id="reflex-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
                         <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-cyan-300 mb-4">
                             <i class="fa-solid fa-crosshairs"></i>
@@ -667,16 +931,16 @@
                         <p class="text-xs text-slate-300">Fare veya Yön Tuşları (WASD) ile enerji çekirdeğini yönet. Kırmızı engellerden kaç, mavi kalkan ve yeşil kristalleri topla!</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="dodge-score" class="text-cyan-300 font-bold text-sm">0</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Kalkan: <span id="dodge-shield" class="text-emerald-300 font-bold text-sm">Hazır</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Rekor: <span id="dodge-best" class="text-amber-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Skor: <span id="dodge-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Kalkan: <span id="dodge-shield" class="text-emerald-300 font-bold text-sm">Hazır</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Rekor: <span id="dodge-best" class="text-amber-300 font-bold text-sm">0</span></div>
                         <button onclick="startDodgeGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
                             <i class="fa-solid fa-play mr-1"></i> Başlat
                         </button>
                     </div>
                 </div>
-                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
-                    <canvas id="dodge-canvas" class="w-full h-full block"></canvas>
+                <div class="relative w-full h-[min(440px,62vh)] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="dodge-canvas" class="game-canvas w-full h-full block"></canvas>
                     <div id="dodge-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
                         <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-purple-300 mb-4">
                             <i class="fa-solid fa-shuttle-space"></i>
@@ -702,9 +966,9 @@
                         <p class="text-xs text-slate-300">Yanan sıvı cam blokların sırasını ve müzikal frekansını takip et, aynı sırayla tekrar et.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Seviye: <span id="memory-level" class="text-emerald-300 font-bold text-sm">1</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="memory-score" class="text-cyan-300 font-bold text-sm">0</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">En Yüksek: <span id="memory-best" class="text-amber-300 font-bold text-sm">1</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Seviye: <span id="memory-level" class="text-emerald-300 font-bold text-sm">1</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Skor: <span id="memory-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">En Yüksek: <span id="memory-best" class="text-amber-300 font-bold text-sm">1</span></div>
                         <button onclick="replayMemoryHint()" id="memory-hint-btn" class="liquid-btn px-3.5 py-2 rounded-xl text-xs text-amber-200">
                             <i class="fa-solid fa-lightbulb mr-1"></i> Tekrar Göster (1)
                         </button>
@@ -735,16 +999,16 @@
                         <p class="text-xs text-slate-300">Kristal blokları parçala, düşen çoklu-top (Multi-Ball) ve geniş raket güçlendirmelerini yakala!</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3 text-xs font-mono">
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Skor: <span id="breaker-score" class="text-cyan-300 font-bold text-sm">0</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Can: <span id="breaker-lives" class="text-rose-400 font-bold text-sm">♥♥♥</span></div>
-                        <div class="liquid-card px-3.5 py-2 rounded-xl">Rekor: <span id="breaker-best" class="text-amber-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Skor: <span id="breaker-score" class="text-cyan-300 font-bold text-sm">0</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Can: <span id="breaker-lives" class="text-rose-400 font-bold text-sm">♥♥♥</span></div>
+                        <div class="hud-chip liquid-card px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl">Rekor: <span id="breaker-best" class="text-amber-300 font-bold text-sm">0</span></div>
                         <button onclick="startBreakerGame()" class="liquid-btn-primary px-4 py-2 rounded-xl font-sans text-xs">
                             <i class="fa-solid fa-play mr-1"></i> Başlat
                         </button>
                     </div>
                 </div>
-                <div class="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
-                    <canvas id="breaker-canvas" class="w-full h-full block"></canvas>
+                <div class="relative w-full h-[min(440px,62vh)] sm:h-[480px] rounded-2xl overflow-hidden bg-slate-950/60 border border-white/15">
+                    <canvas id="breaker-canvas" class="game-canvas w-full h-full block"></canvas>
                     <div id="breaker-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/75 backdrop-blur-md p-6 text-center">
                         <div class="w-16 h-16 rounded-3xl liquid-btn flex items-center justify-center text-3xl text-amber-300 mb-4">
                             <i class="fa-solid fa-meteor"></i>
@@ -772,12 +1036,12 @@
                     <span class="text-xs font-mono uppercase tracking-wider text-amber-300">Çoklu Evren Anlatıları</span>
                     <h2 class="font-display font-bold text-2xl text-white">İnteraktif Hikayeler & Gizem Arşivi</h2>
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="switchStoryMode('interactive')" id="story-mode-interactive" class="nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto -mx-1 px-1 py-1">
+                    <button onclick="switchStoryMode('interactive')" id="story-mode-interactive" class="shrink-0 nav-tab-active liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
                         <i class="fa-solid fa-code-branch text-amber-300"></i>
                         <span>Seçimli Maceralar (3 Kitap)</span>
                     </button>
-                    <button onclick="switchStoryMode('lore')" id="story-mode-lore" class="liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <button onclick="switchStoryMode('lore')" id="story-mode-lore" class="shrink-0 liquid-btn px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium flex items-center gap-2">
                         <i class="fa-solid fa-folder-open text-cyan-300"></i>
                         <span>Kısa Gizem & Evren Kayıtları (8 Dosya)</span>
                     </button>
@@ -856,7 +1120,7 @@
             </div>
 
             <!-- Short Lore / Mystery Archive View -->
-            <div id="story-lore-view" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div id="story-lore-view" class="stagger hidden grid grid-cols-1 md:grid-cols-2 gap-5">
                 <!-- Populated by JS -->
             </div>
         </section>
@@ -902,7 +1166,7 @@
                 </div>
 
                 <!-- 4 Procedural Music Channels Selector -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="stagger grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <button onclick="selectMusicChannel('synthwave')" id="chan-btn-synthwave" class="music-chan-card nav-tab-active liquid-card rounded-2xl p-4 text-left space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-300 text-lg">
@@ -953,7 +1217,7 @@
                     <h3 class="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-cloud-moon-rain text-cyan-300"></i> Ambiyans Katman Mikseri (Müzikle Birlikte Veya Tek Başına Karıştırın)
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="stagger grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         <!-- Rain Layer -->
                         <div class="liquid-card rounded-2xl p-4 space-y-3">
                             <div class="flex items-center justify-between">
@@ -1013,20 +1277,20 @@
                     <span class="text-xs font-mono uppercase tracking-wider text-pink-300">Aetheria Chrono-Feed // 2026+</span>
                     <h2 class="font-display font-bold text-2xl text-white">Gelecek, Bilim & Gizem Haberleri</h2>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="filterNews('all')" data-cat="all" class="news-cat-btn nav-tab-active liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Tümü</button>
-                    <button onclick="filterNews('Teknoloji')" data-cat="Teknoloji" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Teknoloji</button>
-                    <button onclick="filterNews('Uzay & Bilim')" data-cat="Uzay & Bilim" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Uzay & Bilim</button>
-                    <button onclick="filterNews('Oyun Dünyası')" data-cat="Oyun Dünyası" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Oyun Dünyası</button>
-                    <button onclick="filterNews('Gizem & Teori')" data-cat="Gizem & Teori" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Gizem & Teori</button>
-                    <button onclick="filterNews('saved')" data-cat="saved" class="news-cat-btn liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium text-amber-300">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto -mx-1 px-1 py-1">
+                    <button onclick="filterNews('all')" data-cat="all" class="news-cat-btn shrink-0 nav-tab-active liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Tümü</button>
+                    <button onclick="filterNews('Teknoloji')" data-cat="Teknoloji" class="news-cat-btn shrink-0 liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Teknoloji</button>
+                    <button onclick="filterNews('Uzay & Bilim')" data-cat="Uzay & Bilim" class="news-cat-btn shrink-0 liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Uzay & Bilim</button>
+                    <button onclick="filterNews('Oyun Dünyası')" data-cat="Oyun Dünyası" class="news-cat-btn shrink-0 liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Oyun Dünyası</button>
+                    <button onclick="filterNews('Gizem & Teori')" data-cat="Gizem & Teori" class="news-cat-btn shrink-0 liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium">Gizem & Teori</button>
+                    <button onclick="filterNews('saved')" data-cat="saved" class="news-cat-btn shrink-0 liquid-btn px-3.5 py-2 rounded-xl text-xs font-medium text-amber-300">
                         <i class="fa-solid fa-bookmark mr-1"></i> Kaydedilenler
                     </button>
                 </div>
             </div>
 
             <!-- News Cards Grid -->
-            <div id="news-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div id="news-grid-container" class="stagger grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- Populated dynamically via JS -->
             </div>
         </section>
@@ -1055,12 +1319,12 @@
                             <i class="fa-solid fa-explosion text-amber-300 mr-1"></i> Antimadde İtici
                         </button>
                         <button onclick="triggerZenSupernova()" class="liquid-btn-primary px-3.5 py-2 rounded-xl text-xs">
-                            <i class="fa-solid fa-sparkles mr-1"></i> Süpernova Patlat
+                            <i class="fa-solid fa-star mr-1"></i> Süpernova Patlat
                         </button>
                     </div>
                 </div>
-                <div class="relative w-full h-[380px] sm:h-[430px] rounded-2xl overflow-hidden bg-slate-950/75 border border-white/15">
-                    <canvas id="zen-sandbox-canvas" class="w-full h-full cursor-pointer block"></canvas>
+                <div class="relative w-full h-[min(400px,60vh)] sm:h-[430px] rounded-2xl overflow-hidden bg-slate-950/75 border border-white/15">
+                    <canvas id="zen-sandbox-canvas" class="game-canvas w-full h-full cursor-pointer block"></canvas>
                 </div>
             </div>
 
@@ -1075,7 +1339,7 @@
                         <div class="liquid-card rounded-2xl p-4 min-h-[150px] flex flex-col justify-between">
                             <span id="oracle-category" class="text-[11px] font-mono uppercase text-cyan-300">Zaman Paradoksu</span>
                             <p id="oracle-text" class="text-sm text-slate-100 leading-relaxed my-2">
-                                Теseus'un Gemisi: Bir geminin tüm tahtaları zamanla çürüyüp yenileriyle değiştirilirse, bu hala aynı gemi midir? Peki eski tahtalarla ikinci bir gemi yapılırsa hangisi gerçektir?
+                                Theseus'un Gemisi: Bir geminin tüm tahtaları zamanla çürüyüp yenileriyle değiştirilirse, bu hala aynı gemi midir? Peki eski tahtalarla ikinci bir gemi yapılırsa hangisi gerçektir?
                             </p>
                             <div id="oracle-answer" class="hidden text-xs text-emerald-300 pt-2 border-t border-white/10"></div>
                         </div>
@@ -1132,15 +1396,15 @@
     </main>
 
     <!-- PERSISTENT BOTTOM MINI AUDIO & STATUS BAR -->
-    <footer class="fixed bottom-0 left-0 right-0 z-40 px-3 sm:px-6 pb-3 pointer-events-none">
-        <div class="max-w-7xl mx-auto liquid-glass rounded-2xl px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-auto">
-            <div class="flex items-center gap-3">
+    <footer id="mini-player-bar" class="fixed bottom-0 left-0 right-0 z-40 px-3 sm:px-6 pb-3 pointer-events-none">
+        <div class="max-w-7xl mx-auto liquid-glass rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between gap-3 sm:gap-4 pointer-events-auto">
+            <div class="flex items-center gap-3 min-w-0">
                 <button onclick="toggleMasterMusic()" class="liquid-btn w-9 h-9 rounded-xl flex items-center justify-center text-cyan-300">
                     <i class="fa-solid fa-play" id="mini-player-icon"></i>
                 </button>
-                <div>
-                    <div class="text-xs font-medium text-white flex items-center gap-2">
-                        <span id="mini-player-title">Canlı Synth: Neon Synthwave</span>
+                <div class="min-w-0">
+                    <div class="text-xs font-medium text-white flex items-center gap-2 min-w-0">
+                        <span id="mini-player-title" class="truncate">Canlı Synth: Neon Synthwave</span>
                         <span id="mini-player-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/10 text-slate-300">Duraklatıldı</span>
                     </div>
                     <p class="text-[11px] text-slate-400 hidden sm:block">Müziği dinlerken oyun oynayabilir veya hikayeleri okuyabilirsiniz.</p>
@@ -1151,16 +1415,46 @@
                 <button onclick="switchMainTab('music')" class="liquid-btn px-3 py-1.5 rounded-xl text-xs text-cyan-200 hidden sm:flex items-center gap-1.5">
                     <i class="fa-solid fa-sliders"></i> Mikser
                 </button>
-                <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5">
+                <button onclick="triggerAntiBoredomRoulette()" class="liquid-btn-primary px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shrink-0">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Sıkıldım!
                 </button>
             </div>
         </div>
     </footer>
 
+    <!-- MOBILE BOTTOM DOCK NAVIGATION (< lg) -->
+    <nav id="mobile-dock" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 px-2 pt-2" aria-label="Ana menü">
+        <div class="liquid-glass rounded-[1.6rem] mx-auto max-w-lg grid grid-cols-6 px-1 py-1.5" style="height: var(--dock-h);">
+            <button onclick="switchMainTab('dashboard')" data-tab="dashboard" class="dock-btn active flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-compass text-cyan-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Merkez</span>
+            </button>
+            <button onclick="switchMainTab('games')" data-tab="games" class="dock-btn flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-gamepad text-purple-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Oyunlar</span>
+            </button>
+            <button onclick="switchMainTab('stories')" data-tab="stories" class="dock-btn flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-book-open text-amber-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Hikaye</span>
+            </button>
+            <button onclick="switchMainTab('music')" data-tab="music" class="dock-btn flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-wave-square text-emerald-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Stüdyo</span>
+            </button>
+            <button onclick="switchMainTab('news')" data-tab="news" class="dock-btn flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-satellite-dish text-pink-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Haber</span>
+            </button>
+            <button onclick="switchMainTab('zen')" data-tab="zen" class="dock-btn flex flex-col items-center justify-center gap-0.5 text-slate-400">
+                <span class="dock-icon w-9 h-8 rounded-xl flex items-center justify-center"><i class="fa-solid fa-atom text-sky-300"></i></span>
+                <span class="text-[10px] font-medium leading-none">Zen</span>
+            </button>
+        </div>
+    </nav>
+
     <!-- ARTICLE / LORE READER MODAL -->
-    <div id="reader-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl">
-        <div class="liquid-glass rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-white/25 shadow-2xl">
+    <div id="reader-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xl" onclick="if (event.target === this) closeReaderModal()">
+        <div class="modal-panel liquid-glass rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-white/25 shadow-2xl">
             <div class="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between gap-4">
                 <div>
                     <span id="modal-category" class="text-xs font-mono uppercase tracking-wider text-cyan-300">Kategori</span>
@@ -1237,7 +1531,7 @@
             }
         };
 
-        function setLiquidTheme(themeKey) {
+        function setLiquidTheme(themeKey, silent = false) {
             if (!THEMES[themeKey]) return;
             AppState.theme = themeKey;
             localStorage.setItem('aetheria_theme', themeKey);
@@ -1247,6 +1541,7 @@
             document.documentElement.style.setProperty('--accent-3', t.accent3);
             document.documentElement.style.setProperty('--glow-shadow', t.glow);
             document.getElementById('theme-dropdown').classList.add('hidden');
+            if (silent) return;
             SoundEngine.playClick();
             showToast('Liquid Tema Güncellendi', 'Yeni renk spektrumu aktif edildi.', 'fa-palette');
         }
@@ -1267,7 +1562,7 @@
                 SoundEngine.playSuccess();
                 showToast(`SEVİYE ATLADIN! (Seviye ${newLevel})`, `${reason} ile yeni rütbeye ulaştın!`, 'fa-trophy');
             } else {
-                showToast(`+${amount} XP Kazanıldı`, reason, 'fa-sparkles');
+                showToast(`+${amount} XP Kazanıldı`, reason, 'fa-star');
             }
         }
 
@@ -1277,7 +1572,11 @@
             const ranks = ['Gezgin', 'Kaşif', 'Siber Analist', 'Kuantum Pilotu', 'Zaman Mimarı', 'Aetheria Lordu'];
             const rankTitle = ranks[Math.min(level - 1, ranks.length - 1)];
 
-            document.getElementById('user-level-badge').textContent = level;
+            const badge = document.getElementById('user-level-badge');
+            badge.textContent = level;
+            badge.classList.remove('xp-bump');
+            void badge.offsetWidth;
+            badge.classList.add('xp-bump');
             document.getElementById('user-rank-title').textContent = rankTitle;
             document.getElementById('user-xp-text').textContent = `${xpInLevel}/100 XP`;
             document.getElementById('user-xp-bar').style.width = `${Math.max(8, xpInLevel)}%`;
@@ -1292,22 +1591,24 @@
         function showToast(title, message, icon = 'fa-bell') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'liquid-glass rounded-2xl p-3.5 border border-white/25 flex items-center gap-3 shadow-2xl transform transition-all duration-300 translate-y-4 opacity-0';
+            toast.className = 'toast-enter relative overflow-hidden liquid-glass rounded-2xl p-3.5 border border-white/25 flex items-center gap-3 shadow-2xl';
             toast.innerHTML = `
                 <div class="w-9 h-9 rounded-xl bg-cyan-400/20 border border-cyan-300/30 flex items-center justify-center text-cyan-300 shrink-0">
                     <i class="fa-solid ${icon}"></i>
                 </div>
-                <div class="text-xs">
+                <div class="text-xs min-w-0">
                     <div class="font-display font-bold text-white">${title}</div>
                     <div class="text-slate-300">${message}</div>
                 </div>
+                <div class="toast-progress absolute left-0 bottom-0 h-0.5 w-full bg-gradient-to-r from-cyan-300 to-purple-400 opacity-70"></div>
             `;
             container.appendChild(toast);
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-4', 'opacity-0');
-            });
+            // Keep the stack short on small screens
+            while (container.children.length > (window.innerWidth < 640 ? 2 : 4)) {
+                container.firstElementChild.remove();
+            }
             setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
+                toast.classList.replace('toast-enter', 'toast-leave');
                 setTimeout(() => toast.remove(), 350);
             }, 3200);
         }
@@ -1708,30 +2009,43 @@
             r: 220 + i * 45
         }));
 
+        // Background is rendered at half resolution (it is blurred anyway) — much cheaper on phones
+        const BG_SCALE = 0.5;
         function resizeBgCanvas() {
-            bgCanvas.width = window.innerWidth;
-            bgCanvas.height = window.innerHeight;
+            bgCanvas.width = Math.ceil(window.innerWidth * BG_SCALE);
+            bgCanvas.height = Math.ceil(window.innerHeight * BG_SCALE);
+            bgCtx.setTransform(BG_SCALE, 0, 0, BG_SCALE, 0, 0);
         }
         window.addEventListener('resize', resizeBgCanvas);
-        window.addEventListener('mousemove', e => {
+        window.addEventListener('pointermove', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-        });
+        }, { passive: true });
 
-        function renderLiquidBackground() {
-            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+        // Smoothed mouse position so blob follow feels liquid instead of jumpy
+        let smoothMouseX = mouseX, smoothMouseY = mouseY;
+        let bgLastTime = performance.now();
+
+        function renderLiquidBackground(now = performance.now()) {
+            // Normalised delta (1 = one 60fps frame) keeps speed equal on 60/120/144Hz screens
+            const dt = Math.min(3, (now - bgLastTime) / 16.667);
+            bgLastTime = now;
+            const W = window.innerWidth, H = window.innerHeight;
+            bgCtx.clearRect(0, 0, W, H);
             const palette = THEMES[AppState.theme].blobs;
+            smoothMouseX += (mouseX - smoothMouseX) * 0.06 * dt;
+            smoothMouseY += (mouseY - smoothMouseY) * 0.06 * dt;
 
             liquidBlobs.forEach((b, i) => {
-                b.x += b.vx;
-                b.y += b.vy;
-                if (b.x < -100 || b.x > bgCanvas.width + 100) b.vx *= -1;
-                if (b.y < -100 || b.y > bgCanvas.height + 100) b.vy *= -1;
+                b.x += b.vx * dt;
+                b.y += b.vy * dt;
+                if (b.x < -100 || b.x > W + 100) b.vx *= -1;
+                if (b.y < -100 || b.y > H + 100) b.vy *= -1;
 
                 // Subtle attraction to mouse on first blob
                 if (i === 0) {
-                    b.x += (mouseX - b.x) * 0.012;
-                    b.y += (mouseY - b.y) * 0.012;
+                    b.x += (smoothMouseX - b.x) * 0.012 * dt;
+                    b.y += (smoothMouseY - b.y) * 0.012 * dt;
                 }
 
                 const grad = bgCtx.createRadialGradient(b.x, b.y, 10, b.x, b.y, b.r);
@@ -1755,12 +2069,8 @@
         function renderStudioVisualizer() {
             const canvas = document.getElementById('audio-visualizer-canvas');
             if (!canvas) return;
-            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-            }
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const ctx = fitCanvas(canvas);
+            ctx.clearRect(0, 0, canvas.cw, canvas.ch);
 
             const barCount = 48;
             const dataArray = new Uint8Array(barCount);
@@ -1778,16 +2088,16 @@
                 }
             }
 
-            const barW = (canvas.width / barCount) * 0.72;
-            const gap = (canvas.width / barCount) * 0.28;
+            const barW = (canvas.cw / barCount) * 0.72;
+            const gap = (canvas.cw / barCount) * 0.28;
 
             for (let i = 0; i < barCount; i++) {
                 const val = dataArray[i] / 255;
-                const h = Math.max(8, val * (canvas.height * 0.78));
+                const h = Math.max(8, val * (canvas.ch * 0.78));
                 const x = i * (barW + gap);
-                const y = canvas.height - h;
+                const y = canvas.ch - h;
 
-                const grad = ctx.createLinearGradient(x, y, x, canvas.height);
+                const grad = ctx.createLinearGradient(x, y, x, canvas.ch);
                 grad.addColorStop(0, THEMES[AppState.theme].accent1);
                 grad.addColorStop(1, THEMES[AppState.theme].accent3);
 
@@ -1801,21 +2111,77 @@
         /* =========================================================
            4. NAVIGATION & TAB MANAGEMENT + CRYSTAL HARP
            ========================================================= */
+        /* --- Animation helpers (Update 1) --- */
+        // Returns a per-loop clock giving normalised frame delta (1.0 = one 60fps frame)
+        function makeClock() {
+            let last = null;
+            return now => {
+                if (last === null) { last = now; return 1; }
+                const dt = Math.min(2.5, Math.max(0, (now - last) / 16.667));
+                last = now;
+                return dt;
+            };
+        }
+
+        // True when a float frame counter crossed a multiple of `every` during this step
+        function crossed(frame, dt, every) {
+            return Math.floor(frame / every) !== Math.floor((frame - dt) / every);
+        }
+
+        // Sizes a canvas for the device pixel ratio (crisp on retina phones) and
+        // exposes the CSS-pixel size as canvas.cw / canvas.ch for game logic
+        function fitCanvas(canvas, force = false) {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = canvas.clientWidth, h = canvas.clientHeight;
+            const ctx = canvas.getContext('2d');
+            if (force || canvas.cw !== w || canvas.ch !== h || canvas.dpr !== dpr) {
+                canvas.width = Math.round(w * dpr);
+                canvas.height = Math.round(h * dpr);
+                canvas.cw = w;
+                canvas.ch = h;
+                canvas.dpr = dpr;
+            }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return ctx;
+        }
+
+        function animateSwap(el) {
+            if (!el) return;
+            el.classList.remove('swap-anim');
+            void el.offsetWidth;
+            el.classList.add('swap-anim');
+        }
+
+        function moveNavIndicator() {
+            const indicator = document.getElementById('nav-indicator');
+            const active = document.querySelector('#main-nav .main-nav-btn.nav-tab-active');
+            if (!indicator || !active || !active.offsetWidth) return;
+            indicator.style.width = `${active.offsetWidth}px`;
+            indicator.style.transform = `translateX(${active.offsetLeft}px)`;
+        }
+
         function switchMainTab(tabId) {
+            if (tabId === AppState.activeTab && document.getElementById(`tab-${tabId}`).classList.contains('active')) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
             SoundEngine.playClick();
             AppState.activeTab = tabId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.dock-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
 
             // Stop active arcade loops when leaving games tab
             if (tabId !== 'games') {
                 stopAllGames();
             }
-            if (tabId === 'zen') {
-                initZenSandbox();
-            }
-
             document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
             const target = document.getElementById(`tab-${tabId}`);
             if (target) target.classList.add('active');
+
+            // Init after the section is visible so the canvas has a real size
+            if (tabId === 'zen') {
+                initZenSandbox();
+            }
 
             document.querySelectorAll('.main-nav-btn').forEach(btn => {
                 if (btn.dataset.tab === tabId) {
@@ -1824,6 +2190,7 @@
                     btn.classList.remove('nav-tab-active');
                 }
             });
+            moveNavIndicator();
         }
 
         function initCrystalSynthPads() {
@@ -1862,6 +2229,15 @@
             if (reflexTimerId) clearInterval(reflexTimerId);
             if (dodgeAnimId) cancelAnimationFrame(dodgeAnimId);
             if (breakerAnimId) cancelAnimationFrame(breakerAnimId);
+            // A game interrupted mid-run (tab/game switch) would otherwise stay frozen
+            // behind a hidden overlay; bring the start screen back instead
+            [['reflex', ReflexGame], ['dodge', DodgeGame], ['breaker', BreakerGame]].forEach(([key, game]) => {
+                if (game.running) {
+                    game.running = false;
+                    document.getElementById(`${key}-overlay-title`).textContent = 'Oyun Duraklatıldı — Yeniden Başlat';
+                    document.getElementById(`${key}-overlay`).classList.remove('hidden');
+                }
+            });
         }
 
         function selectGame(gameKey) {
@@ -1895,8 +2271,7 @@
             SoundEngine.playClick();
             stopAllGames();
             const canvas = document.getElementById('reflex-canvas');
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+            fitCanvas(canvas, true);
             document.getElementById('reflex-overlay').classList.add('hidden');
 
             ReflexGame.orbs = [];
@@ -1919,11 +2294,12 @@
             }, 1000);
 
             const ctx = canvas.getContext('2d');
-            function loop() {
+            const clock = makeClock();
+            function loop(now = performance.now()) {
+                const dt = clock(now);
                 if (!ReflexGame.running) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.cw, canvas.ch);
 
-                const now = performance.now();
                 for (let i = ReflexGame.orbs.length - 1; i >= 0; i--) {
                     const o = ReflexGame.orbs[i];
                     const elapsed = now - o.born;
@@ -1958,9 +2334,9 @@
                 // Render particles
                 for (let i = ReflexGame.particles.length - 1; i >= 0; i--) {
                     const p = ReflexGame.particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.alpha -= 0.03;
+                    p.x += p.vx * dt;
+                    p.y += p.vy * dt;
+                    p.alpha -= 0.03 * dt;
                     if (p.alpha <= 0) {
                         ReflexGame.particles.splice(i, 1);
                         continue;
@@ -1982,8 +2358,8 @@
             const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24'];
             const margin = 55;
             ReflexGame.orbs.push({
-                x: margin + Math.random() * (canvas.width - margin * 2),
-                y: margin + Math.random() * (canvas.height - margin * 2),
+                x: margin + Math.random() * (canvas.cw - margin * 2),
+                y: margin + Math.random() * (canvas.ch - margin * 2),
                 maxR: 34,
                 born: performance.now(),
                 lifetime: 2100,
@@ -2071,13 +2447,12 @@
             SoundEngine.playClick();
             stopAllGames();
             const canvas = document.getElementById('dodge-canvas');
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+            fitCanvas(canvas, true);
             document.getElementById('dodge-overlay').classList.add('hidden');
 
-            DodgeGame.player = { x: canvas.width / 2, y: canvas.height / 2, r: 13, shield: true };
-            DodgeGame.targetX = canvas.width / 2;
-            DodgeGame.targetY = canvas.height / 2;
+            DodgeGame.player = { x: canvas.cw / 2, y: canvas.ch / 2, r: 13, shield: true };
+            DodgeGame.targetX = canvas.cw / 2;
+            DodgeGame.targetY = canvas.ch / 2;
             DodgeGame.hazards = [];
             DodgeGame.bonuses = [];
             DodgeGame.score = 0;
@@ -2087,33 +2462,35 @@
             const ctx = canvas.getContext('2d');
             let frame = 0;
 
-            function loop() {
+            const clock = makeClock();
+            function loop(now = performance.now()) {
+                const dt = clock(now);
                 if (!DodgeGame.running) return;
-                frame++;
-                ctx.fillStyle = 'rgba(4, 7, 17, 0.32)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                frame += dt;
+                ctx.fillStyle = `rgba(4, 7, 17, ${1 - Math.pow(0.68, dt)})`;
+                ctx.fillRect(0, 0, canvas.cw, canvas.ch);
 
                 // Smooth follow
-                DodgeGame.player.x += (DodgeGame.targetX - DodgeGame.player.x) * 0.16;
-                DodgeGame.player.y += (DodgeGame.targetY - DodgeGame.player.y) * 0.16;
+                DodgeGame.player.x += (DodgeGame.targetX - DodgeGame.player.x) * (1 - Math.pow(0.84, dt));
+                DodgeGame.player.y += (DodgeGame.targetY - DodgeGame.player.y) * (1 - Math.pow(0.84, dt));
 
                 // Spawn hazards
-                if (frame % 26 === 0) {
+                if (crossed(frame, dt, 26)) {
                     const side = Math.floor(Math.random() * 4);
                     let x = 0, y = 0, vx = 0, vy = 0;
                     const speed = 2.8 + Math.min(4, DodgeGame.score / 250);
-                    if (side === 0) { x = Math.random() * canvas.width; y = -20; vx = (Math.random() - 0.5) * 2; vy = speed; }
-                    else if (side === 1) { x = Math.random() * canvas.width; y = canvas.height + 20; vx = (Math.random() - 0.5) * 2; vy = -speed; }
-                    else if (side === 2) { x = -20; y = Math.random() * canvas.height; vx = speed; vy = (Math.random() - 0.5) * 2; }
-                    else { x = canvas.width + 20; y = Math.random() * canvas.height; vx = -speed; vy = (Math.random() - 0.5) * 2; }
+                    if (side === 0) { x = Math.random() * canvas.cw; y = -20; vx = (Math.random() - 0.5) * 2; vy = speed; }
+                    else if (side === 1) { x = Math.random() * canvas.cw; y = canvas.ch + 20; vx = (Math.random() - 0.5) * 2; vy = -speed; }
+                    else if (side === 2) { x = -20; y = Math.random() * canvas.ch; vx = speed; vy = (Math.random() - 0.5) * 2; }
+                    else { x = canvas.cw + 20; y = Math.random() * canvas.ch; vx = -speed; vy = (Math.random() - 0.5) * 2; }
                     DodgeGame.hazards.push({ x, y, vx, vy, r: 10 + Math.random() * 8 });
                 }
 
                 // Spawn bonuses
-                if (frame % 110 === 0) {
+                if (crossed(frame, dt, 110)) {
                     DodgeGame.bonuses.push({
-                        x: 40 + Math.random() * (canvas.width - 80),
-                        y: 40 + Math.random() * (canvas.height - 80),
+                        x: 40 + Math.random() * (canvas.cw - 80),
+                        y: 40 + Math.random() * (canvas.ch - 80),
                         r: 11,
                         type: Math.random() > 0.7 ? 'shield' : 'crystal'
                     });
@@ -2152,8 +2529,8 @@
                 // Update hazards
                 for (let i = DodgeGame.hazards.length - 1; i >= 0; i--) {
                     const h = DodgeGame.hazards[i];
-                    h.x += h.vx;
-                    h.y += h.vy;
+                    h.x += h.vx * dt;
+                    h.y += h.vy * dt;
                     ctx.fillStyle = '#f43f5e';
                     ctx.beginPath();
                     ctx.arc(h.x, h.y, h.r, 0, Math.PI * 2);
@@ -2171,7 +2548,7 @@
                     }
                 }
 
-                if (frame % 10 === 0) {
+                if (crossed(frame, dt, 10)) {
                     DodgeGame.score += 2;
                     document.getElementById('dodge-score').textContent = DodgeGame.score;
                     document.getElementById('dodge-shield').textContent = DodgeGame.player.shield ? 'Aktif' : 'Yok';
@@ -2296,6 +2673,9 @@
             } else {
                 MemoryGame.locked = true;
                 SoundEngine.playError();
+                const wrongPad = document.getElementById(`mem-pad-${idx}`);
+                wrongPad.classList.add('wrong');
+                setTimeout(() => wrongPad.classList.remove('wrong'), 500);
                 document.getElementById('memory-status-banner').textContent = `Hatalı Blok! Oyun Bitti (Ulaşılan Seviye: ${MemoryGame.level})`;
             }
         }
@@ -2322,12 +2702,12 @@
             SoundEngine.playClick();
             stopAllGames();
             const canvas = document.getElementById('breaker-canvas');
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+            fitCanvas(canvas, true);
             document.getElementById('breaker-overlay').classList.add('hidden');
 
-            BreakerGame.paddle = { x: canvas.width / 2 - 52, w: 105, h: 14 };
-            BreakerGame.balls = [{ x: canvas.width / 2, y: canvas.height - 50, vx: 4, vy: -4.2, r: 8 }];
+            const paddleW = Math.round(Math.max(80, Math.min(120, canvas.cw * 0.24)));
+            BreakerGame.paddle = { x: canvas.cw / 2 - paddleW / 2, w: paddleW, h: 14 };
+            BreakerGame.balls = [{ x: canvas.cw / 2, y: canvas.ch - 50, vx: 4, vy: -4.2, r: 8 }];
             BreakerGame.score = 0;
             BreakerGame.lives = 3;
             BreakerGame.running = true;
@@ -2337,7 +2717,7 @@
             BreakerGame.bricks = [];
             const cols = 8, rows = 4;
             const pad = 10;
-            const bw = (canvas.width - pad * (cols + 1)) / cols;
+            const bw = (canvas.cw - pad * (cols + 1)) / cols;
             const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24'];
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
@@ -2353,14 +2733,16 @@
             }
 
             const ctx = canvas.getContext('2d');
-            function loop() {
+            const clock = makeClock();
+            function loop(now = performance.now()) {
+                const dt = clock(now);
                 if (!BreakerGame.running) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.cw, canvas.ch);
 
                 // Draw Paddle
                 ctx.fillStyle = '#00f2fe';
                 ctx.beginPath();
-                ctx.roundRect(BreakerGame.paddle.x, canvas.height - 28, BreakerGame.paddle.w, BreakerGame.paddle.h, 7);
+                ctx.roundRect(BreakerGame.paddle.x, canvas.ch - 28, BreakerGame.paddle.w, BreakerGame.paddle.h, 7);
                 ctx.fill();
 
                 // Draw Bricks
@@ -2382,16 +2764,16 @@
                 // Update Balls
                 for (let i = BreakerGame.balls.length - 1; i >= 0; i--) {
                     const ball = BreakerGame.balls[i];
-                    ball.x += ball.vx;
-                    ball.y += ball.vy;
+                    ball.x += ball.vx * dt;
+                    ball.y += ball.vy * dt;
 
-                    if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.width) ball.vx *= -1;
+                    if (ball.x - ball.r < 0 || ball.x + ball.r > canvas.cw) ball.vx *= -1;
                     if (ball.y - ball.r < 0) ball.vy *= -1;
 
                     // Paddle collision
                     if (
-                        ball.y + ball.r >= canvas.height - 28 &&
-                        ball.y - ball.r <= canvas.height - 14 &&
+                        ball.y + ball.r >= canvas.ch - 28 &&
+                        ball.y - ball.r <= canvas.ch - 14 &&
                         ball.x >= BreakerGame.paddle.x &&
                         ball.x <= BreakerGame.paddle.x + BreakerGame.paddle.w
                     ) {
@@ -2413,7 +2795,7 @@
                     });
 
                     // Bottom miss
-                    if (ball.y > canvas.height + 15) {
+                    if (ball.y > canvas.ch + 15) {
                         BreakerGame.balls.splice(i, 1);
                     }
 
@@ -2430,7 +2812,7 @@
                         endBreakerGame(false);
                         return;
                     } else {
-                        BreakerGame.balls.push({ x: canvas.width / 2, y: canvas.height - 50, vx: 4, vy: -4.2, r: 8 });
+                        BreakerGame.balls.push({ x: canvas.cw / 2, y: canvas.ch - 50, vx: 4, vy: -4.2, r: 8 });
                     }
                 }
 
@@ -2444,8 +2826,43 @@
 
         document.getElementById('breaker-canvas').addEventListener('pointermove', e => {
             const rect = e.target.getBoundingClientRect();
-            BreakerGame.paddle.x = Math.max(0, Math.min(e.target.width - BreakerGame.paddle.w, e.clientX - rect.left - BreakerGame.paddle.w / 2));
+            BreakerGame.paddle.x = Math.max(0, Math.min(e.target.cw - BreakerGame.paddle.w, e.clientX - rect.left - BreakerGame.paddle.w / 2));
         });
+
+        // Keyboard controls (WASD / arrows) promised in the game descriptions
+        const heldKeys = new Set();
+        window.addEventListener('keydown', e => {
+            if (e.target.matches('textarea, input')) return;
+            const k = e.key.toLowerCase();
+            if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', 'w', 'a', 's', 'd'].includes(k)) {
+                if (DodgeGame.running || BreakerGame.running) e.preventDefault();
+                heldKeys.add(k);
+            }
+            if (k === 'escape') {
+                closeReaderModal(true);
+                document.getElementById('theme-dropdown').classList.add('hidden');
+            }
+        });
+        window.addEventListener('keyup', e => heldKeys.delete(e.key.toLowerCase()));
+        window.addEventListener('blur', () => heldKeys.clear());
+
+        (function keyboardControlLoop() {
+            const left = heldKeys.has('arrowleft') || heldKeys.has('a');
+            const right = heldKeys.has('arrowright') || heldKeys.has('d');
+            const up = heldKeys.has('arrowup') || heldKeys.has('w');
+            const down = heldKeys.has('arrowdown') || heldKeys.has('s');
+            if (DodgeGame.running && (left || right || up || down)) {
+                const c = document.getElementById('dodge-canvas');
+                const step = 7;
+                DodgeGame.targetX = Math.max(14, Math.min(c.cw - 14, DodgeGame.player.x + (right - left) * step * 3));
+                DodgeGame.targetY = Math.max(14, Math.min(c.ch - 14, DodgeGame.player.y + (down - up) * step * 3));
+            }
+            if (BreakerGame.running && (left || right)) {
+                const c = document.getElementById('breaker-canvas');
+                BreakerGame.paddle.x = Math.max(0, Math.min(c.cw - BreakerGame.paddle.w, BreakerGame.paddle.x + (right - left) * 9));
+            }
+            requestAnimationFrame(keyboardControlLoop);
+        })();
 
         function endBreakerGame(won) {
             BreakerGame.running = false;
@@ -2710,6 +3127,8 @@
             document.getElementById('story-active-title').textContent = story.title;
             document.getElementById('story-node-badge').textContent = node.badge;
             document.getElementById('story-narrative-text').innerHTML = node.text;
+            animateSwap(document.getElementById('story-narrative-text'));
+            animateSwap(document.getElementById('story-choices-container'));
 
             // Update Sanity & Inventory
             document.getElementById('story-sanity-val').textContent = `${currentStorySanity}%`;
@@ -2924,8 +3343,13 @@
             `;
 
             const modal = document.getElementById('reader-modal');
+            if (modal.classList.contains('open')) return;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.getElementById('modal-body').scrollTop = 0;
+            document.body.style.overflow = 'hidden';
+            void modal.offsetWidth; // commit the hidden state so the fade-in transition runs
+            modal.classList.add('open');
         }
 
         function reactToArticle(id, type) {
@@ -2937,11 +3361,16 @@
             renderNewsFeed();
         }
 
-        function closeReaderModal() {
-            SoundEngine.playClick();
+        function closeReaderModal(fromEscape = false) {
             const modal = document.getElementById('reader-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            if (!modal.classList.contains('open')) return;
+            SoundEngine.playClick();
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 320);
             addXP(15, 'Gelecek Haberi Okundu');
         }
 
@@ -2956,17 +3385,16 @@
         function initZenSandbox() {
             const canvas = document.getElementById('zen-sandbox-canvas');
             if (!canvas) return;
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            zenMouse.x = canvas.width / 2;
-            zenMouse.y = canvas.height / 2;
+            fitCanvas(canvas, true);
+            zenMouse.x = canvas.cw / 2;
+            zenMouse.y = canvas.ch / 2;
 
             if (zenParticles.length === 0) {
                 const colors = ['#00f2fe', '#a855f7', '#34d399', '#fbbf24', '#f472b6'];
                 for (let i = 0; i < 420; i++) {
                     zenParticles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
+                        x: Math.random() * canvas.cw,
+                        y: Math.random() * canvas.ch,
                         vx: (Math.random() - 0.5) * 2,
                         vy: (Math.random() - 0.5) * 2,
                         color: colors[i % colors.length],
@@ -2978,13 +3406,15 @@
             if (!zenRunning) {
                 zenRunning = true;
                 const ctx = canvas.getContext('2d');
-                function loop() {
+                const clock = makeClock();
+                function loop(now = performance.now()) {
+                    const dt = clock(now);
                     if (AppState.activeTab !== 'zen') {
                         zenRunning = false;
                         return;
                     }
-                    ctx.fillStyle = 'rgba(4, 7, 17, 0.18)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = `rgba(4, 7, 17, ${1 - Math.pow(0.82, dt)})`;
+                    ctx.fillRect(0, 0, canvas.cw, canvas.ch);
 
                     zenParticles.forEach(p => {
                         const dx = zenMouse.x - p.x;
@@ -2992,27 +3422,27 @@
                         const dist = Math.max(25, Math.hypot(dx, dy));
 
                         if (zenMode === 'attract') {
-                            p.vx += (dx / dist) * 0.18;
-                            p.vy += (dy / dist) * 0.18;
+                            p.vx += (dx / dist) * 0.18 * dt;
+                            p.vy += (dy / dist) * 0.18 * dt;
                         } else if (zenMode === 'repel') {
                             if (dist < 180) {
-                                p.vx -= (dx / dist) * 0.45;
-                                p.vy -= (dy / dist) * 0.45;
+                                p.vx -= (dx / dist) * 0.45 * dt;
+                                p.vy -= (dy / dist) * 0.45 * dt;
                             }
                         } else if (zenMode === 'vortex') {
-                            p.vx += (-dy / dist) * 0.25 + (dx / dist) * 0.08;
-                            p.vy += (dx / dist) * 0.25 + (dy / dist) * 0.08;
+                            p.vx += ((-dy / dist) * 0.25 + (dx / dist) * 0.08) * dt;
+                            p.vy += ((dx / dist) * 0.25 + (dy / dist) * 0.08) * dt;
                         }
 
-                        p.vx *= 0.96;
-                        p.vy *= 0.96;
-                        p.x += p.vx;
-                        p.y += p.vy;
+                        p.vx *= Math.pow(0.96, dt);
+                        p.vy *= Math.pow(0.96, dt);
+                        p.x += p.vx * dt;
+                        p.y += p.vy * dt;
 
-                        if (p.x < 0) p.x = canvas.width;
-                        if (p.x > canvas.width) p.x = 0;
-                        if (p.y < 0) p.y = canvas.height;
-                        if (p.y > canvas.height) p.y = 0;
+                        if (p.x < 0) p.x = canvas.cw;
+                        if (p.x > canvas.cw) p.x = 0;
+                        if (p.y < 0) p.y = canvas.ch;
+                        if (p.y > canvas.ch) p.y = 0;
 
                         ctx.fillStyle = p.color;
                         ctx.beginPath();
@@ -3079,6 +3509,7 @@
             const pick = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
             document.getElementById('oracle-category').textContent = pick.cat;
             document.getElementById('oracle-text').textContent = pick.text;
+            animateSwap(document.getElementById('oracle-text').parentElement);
             addXP(5, 'Yeni Paradoks Keşfedildi');
         }
 
@@ -3086,6 +3517,7 @@
             SoundEngine.playClick();
             const pick = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
             document.getElementById('dashboard-fact-text').textContent = pick.text;
+            animateSwap(document.getElementById('dashboard-fact-text'));
             addXP(5, 'Kuantum Bilgi Kapsülü');
         }
 
@@ -3095,7 +3527,7 @@
             const actions = [
                 () => { switchMainTab('games'); selectGame('reflex'); showToast('Rastgele Seçim: Neon Refleks!', 'Bakalım tepki süren kaç milisaniye çıkacak?', 'fa-crosshairs'); },
                 () => { switchMainTab('games'); selectGame('dodge'); showToast('Rastgele Seçim: Kuantum Kaçış!', 'Lazer fırtınasında hayatta kal!', 'fa-shuttle-space'); },
-                () => { switchMainTab('stories'); switchStoryMode('interactive'); showToast('Rastgele Seçim: İnteraktif Macera!', 'Seçimlerinle hikayenin sonunu belirle.', 'fa-book-sparkles'); },
+                () => { switchMainTab('stories'); switchStoryMode('interactive'); showToast('Rastgele Seçim: İnteraktif Macera!', 'Seçimlerinle hikayenin sonunu belirle.', 'fa-book-open'); },
                 () => { switchMainTab('music'); if (!SoundEngine.musicPlaying) SoundEngine.startProceduralMusic(); showToast('Rastgele Seçim: Ses Laboratuvarı!', 'Canlı Synth müziği başlatıldı.', 'fa-wave-square'); },
                 () => { switchMainTab('zen'); triggerZenSupernova(); showToast('Rastgele Seçim: Zen Galaksi Havuzu!', 'Parçacıkları fareyle kontrol et.', 'fa-atom'); }
             ];
@@ -3162,7 +3594,7 @@
            ========================================================= */
         window.onload = function () {
             resizeBgCanvas();
-            setLiquidTheme(AppState.theme);
+            setLiquidTheme(AppState.theme, true);
             updateXPDisplay();
             initCrystalSynthPads();
             initStoriesSection();
@@ -3172,9 +3604,76 @@
             const savedNotes = localStorage.getItem('aetheria_notes');
             if (savedNotes) document.getElementById('quick-notes-area').value = savedNotes;
 
-            // Attach subtle hover ticks to interactive buttons
-            document.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('mouseenter', () => SoundEngine.playHover());
+            // Subtle hover ticks only where a real mouse hovers (avoids double sounds on tap)
+            const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            if (finePointer) {
+                document.addEventListener('mouseover', e => {
+                    const btn = e.target.closest('button');
+                    if (btn && !btn.contains(e.relatedTarget)) SoundEngine.playHover();
+                });
+            }
+
+            // Cursor spotlight on cards (single delegated listener, rAF-throttled)
+            let spotlightEvent = null, spotlightQueued = false;
+            document.addEventListener('pointermove', e => {
+                if (e.pointerType !== 'mouse') return;
+                spotlightEvent = e;
+                if (spotlightQueued) return;
+                spotlightQueued = true;
+                requestAnimationFrame(() => {
+                    spotlightQueued = false;
+                    const ev = spotlightEvent;
+                    const card = ev.target.closest && ev.target.closest('.liquid-card');
+                    if (!card) return;
+                    const r = card.getBoundingClientRect();
+                    card.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+                    card.style.setProperty('--my', `${ev.clientY - r.top}px`);
+                });
+            }, { passive: true });
+
+            // Ripple feedback on buttons
+            document.addEventListener('pointerdown', e => {
+                const btn = e.target.closest('.liquid-btn, .liquid-btn-primary, .dock-btn .dock-icon');
+                if (!btn) return;
+                const r = btn.getBoundingClientRect();
+                const size = Math.max(r.width, r.height) * 2;
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - r.left - size / 2}px`;
+                ripple.style.top = `${e.clientY - r.top - size / 2}px`;
+                if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+                btn.style.overflow = 'hidden';
+                btn.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 650);
+            });
+
+            // Tap / press immediately moves the player too (not just drag) — needed on touch screens
+            ['dodge-canvas', 'breaker-canvas', 'zen-sandbox-canvas'].forEach(id => {
+                const c = document.getElementById(id);
+                c.addEventListener('pointerdown', e => c.dispatchEvent(new PointerEvent('pointermove', e)));
+            });
+
+            // Close the theme menu when tapping elsewhere
+            document.addEventListener('click', e => {
+                const dd = document.getElementById('theme-dropdown');
+                if (!dd.classList.contains('hidden') && !e.target.closest('#theme-dropdown') && !e.target.closest('[onclick="toggleThemeMenu()"]')) {
+                    dd.classList.add('hidden');
+                }
+            });
+
+            // Header gets denser once the page scrolls
+            const header = document.getElementById('site-header');
+            const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            // Keep nav indicator and zen canvas in sync with layout changes
+            moveNavIndicator();
+            document.fonts && document.fonts.ready.then(moveNavIndicator);
+            window.addEventListener('resize', () => {
+                moveNavIndicator();
+                if (AppState.activeTab === 'zen') fitCanvas(document.getElementById('zen-sandbox-canvas'));
             });
 
             // Live clock
