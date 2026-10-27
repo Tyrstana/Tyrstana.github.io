@@ -326,7 +326,6 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 @media (min-width:900px){.card-vis canvas{width:114%;margin-left:-7%}}
 .card:hover .card-vis canvas{scale:1.06}
 .card-idx{position:absolute;top:16px;left:16px;font:500 12px/1 var(--mono);padding:8px 12px;border-radius:100px;background:rgba(0,0,0,.6);color:#fff}
-.card-ver{position:absolute;top:16px;right:16px;font:500 12px/1 var(--mono);padding:8px 12px;border-radius:100px;background:#f3efe8;color:#000}
 .card-new{position:absolute;left:16px;bottom:16px;font:500 11px/1 var(--mono);padding:8px 12px;border-radius:100px;color:#000;letter-spacing:.08em;
   background:linear-gradient(90deg,#c8ff4d,#fff,#c8ff4d);background-size:200% 100%;animation:shine 2.4s linear infinite}
 @keyframes shine{to{background-position:-200% 0}}
@@ -416,13 +415,13 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(14,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(15,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(14,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(15,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -747,9 +746,9 @@ footer a{color:var(--fg)}
   <!-- STATS -->
   <div class="stats" data-morph="1" data-gx="0">
     <div class="stat"><div class="stat-num"><span class="count" data-to="7">0</span></div><p>Büyük proje, dört farklı alanda</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="37">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="14">0</span></div><p>Günde çıkan tüm bu iş</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="15">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="39">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="15">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
   <!-- PROJECTS -->
@@ -774,9 +773,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">14 Gün, <em>43</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">15 Gün, <em>46</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14–27 Ekim arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14–28 Ekim arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -796,8 +795,8 @@ footer a{color:var(--fg)}
       <article class="trait" style="--tc:rgba(255,91,46,.2)">
         <div class="trait-top"><span class="trait-num">01 / İterasyon</span><div class="trait-icon ic-loop"></div></div>
         <h3>Asla “bitti” demem</h3>
-        <p>Bir projeyi yayınlamak benim için başlangıç. Backrooms oyunum tam 15 güncelleme gördü; Küllerin Saltanatı “final” olduktan sonra bile bir final daha aldı.</p>
-        <span class="trait-big">15</span>
+        <p>Bir projeyi yayınlamak benim için başlangıç. Backrooms oyunum tam 16 güncelleme gördü; Küllerin Saltanatı “final” olduktan sonra bile bir final daha aldı.</p>
+        <span class="trait-big">16</span>
       </article>
       <article class="trait" style="--tc:rgba(138,107,255,.24)">
         <div class="trait-top"><span class="trait-num">02 / Atmosfer</span><div class="trait-icon ic-eye"></div></div>
@@ -834,7 +833,7 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 06 · 25 Ekim</div><h4>Şafak</h4><p>Küllerin Saltanatı final sürümüne ulaştı, Portal Silahı Update 6'yı aldı. Boss savaşları, yeni evrenler, daha fazla kaos.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 07 · 26 Ekim</div><h4>Cila Günü</h4><p>Backrooms Update 15'i, AeroSim havayolu yönetimiyle Update 4'ü, Aetheria daha akıcı animasyonlar ve mobil uyumla Update 1'i aldı.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero estetiğine bir aşk mektubu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 — Şimdi</div><h4>Bu Site · Update 5</h4><p>Yeni proje, daha akıcı bir proje vitrini ve klavyede saklı bir Frutiger Aero sürprizi. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim — Şimdi</div><h4>Bu Site · Update 6</h4><p>Backrooms ve Aero Drift yeni hallerine kavuştu; vitrin artık sürüm numarası değil, sadece neyin güncellendiğini gösteriyor. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -871,7 +870,7 @@ footer a{color:var(--fg)}
 </main>
 
 <footer>
-  <span>© 2026 Emir Yalçın — elle kodlandı · Update 5</span>
+  <span>© 2026 Emir Yalçın — elle kodlandı · Update 6</span>
   <span class="egg">İpucu: klavyede <kbd>backrooms</kbd> ya da <kbd>frutiger</kbd> yaz</span>
   <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link" style="color:var(--fg)">github.com/Tyrstana ↗</a>
   <button id="toTop" data-cursor="link">Başa dön ↑</button>
@@ -882,7 +881,7 @@ footer a{color:var(--fg)}
   <div class="player-bg"></div>
   <div class="player-win">
     <div class="player-bar">
-      <div class="player-title"><i></i><span id="plTitle">—</span><small id="plVer"></small></div>
+      <div class="player-title"><i></i><span id="plTitle">—</span></div>
       <div class="player-actions">
         <button class="btn" id="plFull" data-cursor="link"><span>⛶ Tam ekran</span></button>
         <a class="btn hide-sm" id="plNew" target="_blank" rel="noopener" data-cursor="link"><span>Yeni sekme ↗</span></a>
@@ -927,23 +926,23 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
-  { title:'Aero Drift', cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 2', isNew:'✦ YENİ PROJE', draw:'frutiger',
+  { title:'Aero Drift', cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 3', isNew:true, draw:'frutiger',
     desc:'Frutiger Aero estetiğinde çayırlarda süzül, cam bir şehri keşfet. Uçan adalar, monoray, Aero OS bilgisayarları, halka yarışı ve kendi film müziği.',
     chips:['Three.js','Frutiger Aero','Müzik'], file:'projeler/aero-drift.html' },
-  { title:'Backrooms: Kaset #1994', cat:'3D Korku Oyunu', ver:'Update 15', draw:'backrooms',
+  { title:'Backrooms: Kaset #1994', cat:'3D Korku Oyunu', ver:'Update 16', isNew:true, draw:'backrooms',
     desc:'Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu. Yeni seviyeler, el feneri pilleri, mobil + PC ve özel müzikler.',
     chips:['Three.js','Web Audio','Mobil'], file:'projeler/backrooms/index.html', dl:false },
   { title:'AeroSim 3D PRO', cat:'Uçuş & Havalimanı Simülatörü', ver:'Update 4', draw:'aero',
     desc:'Mega bir havalimanı, gerçekçi hava trafik kontrolü ve artık havayolu yönetimi: yeni hatlar aç, park kapıları kur, filonu büyüt.',
     chips:['Three.js','ATC','Ekonomi'], file:'projeler/aerosim.html' },
   { title:'Aetheria', cat:'Web Deneyimi', ver:'Update 1', draw:'aetheria',
-    desc:'Liquid glass arayüzlü, sıkıntı giderici bir dijital evren. Update 1 ile görsel cila, daha akıcı animasyonlar ve tam mobil uyum.',
+    desc:'Liquid glass arayüzlü, sıkıntı giderici bir dijital evren. Görsel cila, akıcı animasyonlar ve tam mobil uyum.',
     chips:['CSS','Glassmorphism','Mobil'], file:'projeler/aetheria.html' },
   { title:'Küllerin Saltanatı', cat:'Açık Dünya RPG', ver:'Final 2', draw:'fantasy',
     desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası. Boss savaşları, görev günlüğü, nadir eşyalar, büyüler ve Küllerin Hükümdarı ile son hesaplaşma.',
     chips:['Three.js','RPG','Boss Savaşları'], file:'projeler/kullerin-saltanati.html' },
   { title:'Portal Silahı: Çoklu Evren', cat:'Keşif Oyunu', ver:'Update 6', draw:'portal',
-    desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Update 6 ile yenilenen evrenler, skor sistemi ve daha fazla kaos.',
+    desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Yenilenen evrenler, skor sistemi ve bolca kaos.',
     chips:['Three.js','Shader','Keşif'], file:'projeler/portal-silahi.html' },
   { title:'Skin Stealer', cat:'Minecraft Forge Modu', ver:'v1.2.0', draw:'mc', mod:true,
     desc:'Oyuncu kılığına giren, Türkçe sahte sohbet yazan bir varlık. Backrooms seviyeleri, akıl sağlığı sistemi ve Smiler. İndir, mods klasörüne at.',
@@ -964,8 +963,8 @@ PROJECTS.forEach((p, i) => {
   a.innerHTML = `
     <div class="card-in">
     <div class="card-vis"><canvas data-draw="${p.draw}"></canvas>
-      <span class="card-idx">${String(i + 1).padStart(2, '0')}</span><span class="card-ver">${p.ver}</span>
-      ${p.isNew ? `<span class="card-new">${p.isNew === true ? '✦ YENİ GÜNCELLEME' : p.isNew}</span>` : ''}
+      <span class="card-idx">${String(i + 1).padStart(2, '0')}</span>
+      ${p.isNew ? '<span class="card-new">✦ GÜNCELLEME</span>' : ''}
       <div class="card-play"><span>${p.mod ? dlIcon : playIcon}</span></div></div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
@@ -1008,9 +1007,10 @@ const LOG = [
   ['24 Eki', ['Skin Stealer — v1.2.0', 'Kişisel site — v1']],
   ['25 Eki', ['Portal Silahı — Update 6', 'Küllerin Saltanatı — Final', 'Küllerin Saltanatı — Final 2', 'Kişisel site — Update 2']],
   ['26 Eki', ['Backrooms — Update 15', 'Aetheria — Update 1', 'AeroSim — Update 4', 'Kişisel site — Update 3']],
-  ['27 Eki', ['Aero Drift — ilk sürüm', 'Aero Drift — Güncelleme 1', 'Aero Drift — Güncelleme 2', 'Kişisel site — Update 4', 'Kişisel site — Update 5']]
+  ['27 Eki', ['Aero Drift — ilk sürüm', 'Aero Drift — Güncelleme 1', 'Aero Drift — Güncelleme 2', 'Kişisel site — Update 4', 'Kişisel site — Update 5']],
+  ['28 Eki', ['Backrooms — Update 16', 'Aero Drift — Güncelleme 3', 'Kişisel site — Update 6']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 3];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
@@ -1158,7 +1158,6 @@ const DRAW = {
       x.fillStyle = g; x.beginPath(); x.arc(bx, by, r, 0, 7); x.fill();
       x.strokeStyle = 'rgba(255,255,255,.7)'; x.lineWidth = 1 * s; x.stroke();
     });
-    x.fillStyle = 'rgba(255,255,255,.95)'; x.font = `700 ${22 * s}px Syne`; x.fillText('Aero Drift', 18 * s, 34 * s);
   },
   mc(x, w, h, t, s, st) {
     const N = 14, cs = Math.ceil(w / N);
@@ -1628,7 +1627,7 @@ function openPlayer(i, ox, oy) {
   const p = PROJECTS[i];
   lastFocus = document.activeElement;
   $('#plTitle').textContent = p.title;
-  $('#plVer').textContent = p.ver;
+
   const url = encodeURI(p.file);
   $('#plNew').href = url;
   $('#plNew').style.display = p.mod ? 'none' : '';

@@ -2,8 +2,12 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Aero Drift — Güncelleme 2</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b78c8">
+<title>Aero Drift — Güncelleme 3</title>
 <style>
   :root{ --ink:#0b3a63; }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -314,6 +318,110 @@
   .gamebox{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;background:linear-gradient(#e9f7ff,#c9ecff);height:100%}
   .gamebox canvas{border-radius:8px;box-shadow:inset 0 0 0 1px #7fb8e0;cursor:pointer;background:linear-gradient(#bff0ff,#e9fbff)}
 
+  /* ---------- touch / mobile ---------- */
+  html,body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;overscroll-behavior:none;touch-action:manipulation}
+  #game canvas{touch-action:none}
+  .paint canvas,.gamebox canvas,.os-win .tb{touch-action:none}
+  #touch{position:fixed;inset:0;z-index:12;pointer-events:none;display:none}
+  body.touch #hud{z-index:13}
+  body.touch.ingame #touch{display:block}
+  body.touch #crosshint,body.touch .hud-hint,body.touch #prompt,body.touch .hud-counts{display:none!important}
+  #t-look{position:absolute;inset:0;pointer-events:auto;touch-action:none}
+  #t-joyzone{position:absolute;left:0;bottom:0;width:44vw;height:70vh;pointer-events:auto;touch-action:none}
+  #t-joy{position:absolute;width:130px;height:130px;margin:-65px 0 0 -65px;border-radius:50%;opacity:0;transition:opacity .15s;pointer-events:none;
+    background:radial-gradient(circle,rgba(255,255,255,.15),rgba(255,255,255,.35) 70%,rgba(255,255,255,.55));border:2px solid rgba(255,255,255,.85);box-shadow:0 6px 20px rgba(0,60,120,.3)}
+  #t-joy.on{opacity:1}
+  #t-knob{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff 0 12%,#7fe0ff 45%,#0f86da);border:1px solid rgba(0,70,150,.6);box-shadow:0 3px 10px rgba(0,60,120,.4)}
+  #t-joyhint{position:absolute;left:calc(26px + env(safe-area-inset-left));bottom:calc(30px + env(safe-area-inset-bottom));width:110px;height:110px;border-radius:50%;
+    border:2px dashed rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,40,90,.8);pointer-events:none;transition:opacity .3s}
+  .tb-btn{position:absolute;pointer-events:auto;touch-action:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;
+    text-shadow:0 1px 2px rgba(0,40,90,.7);user-select:none;border:1px solid rgba(0,70,150,.55);
+    background:linear-gradient(180deg,rgba(150,235,255,.92) 0%,rgba(58,185,245,.9) 48%,rgba(15,134,218,.9) 52%,rgba(70,200,255,.92) 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 4px 12px rgba(0,60,120,.35)}
+  .tb-btn::before{content:"";position:absolute;left:12%;right:12%;top:3px;height:42%;border-radius:50% 50% 40% 40%;background:linear-gradient(rgba(255,255,255,.85),rgba(255,255,255,.08));pointer-events:none}
+  .tb-btn.down{transform:scale(.92);filter:brightness(1.15)}
+  #t-act.down{transform:translateX(-50%) scale(.94)}
+  .tb-btn.green{background:linear-gradient(180deg,rgba(210,255,170,.95),rgba(111,216,60,.92) 48%,rgba(62,173,23,.92) 52%,rgba(123,232,68,.95));border-color:rgba(30,110,10,.55)}
+  .tb-btn.orange{background:linear-gradient(180deg,#ffe9a8,#ffb21c 48%,#f08c00 52%,#ffc94a);border-color:rgba(150,80,0,.5)}
+  .tb-btn.silver{color:#164a74;text-shadow:0 1px 0 #fff;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(227,240,250,.9) 48%,rgba(199,220,236,.9) 52%,rgba(234,245,255,.95));border-color:rgba(80,130,180,.5)}
+  #t-jump{right:calc(22px + env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));width:86px;height:86px;font-size:13px}
+  #t-run{right:calc(122px + env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));width:64px;height:64px;font-size:12px}
+  #t-cam{right:calc(128px + env(safe-area-inset-right));bottom:calc(100px + env(safe-area-inset-bottom));width:48px;height:48px;font-size:20px}
+  #t-wave{right:calc(30px + env(safe-area-inset-right));bottom:calc(122px + env(safe-area-inset-bottom));width:48px;height:48px;font-size:20px}
+  #t-act{left:50%;transform:translateX(-50%);bottom:calc(66px + env(safe-area-inset-bottom));border-radius:999px;padding:0 20px;height:50px;max-width:44vw;font-size:13.5px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:bob 1.2s ease-in-out infinite alternate}
+  #t-act span{position:relative;overflow:hidden;text-overflow:ellipsis}
+  #t-pause{right:calc(12px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:16px}
+  #t-fs{right:calc(60px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:17px}
+  #t-race{left:50%;top:calc(76px + env(safe-area-inset-top));transform:translateX(-50%);border-radius:999px;height:34px;padding:0 14px;font-size:12.5px}
+  #rotate{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;
+    background:linear-gradient(180deg,rgba(11,95,201,.92),rgba(58,166,242,.92));color:#fff;font-weight:700;font-size:18px;text-shadow:0 1px 3px rgba(0,40,90,.6)}
+  #rotate .ph{font-size:64px;animation:rot 2s ease-in-out infinite}
+  @keyframes rot{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+  body.touch .hud-score{left:calc(10px + env(safe-area-inset-left));top:calc(8px + env(safe-area-inset-top));padding:6px 12px;min-width:0;border-radius:14px}
+  body.touch .hud-score .lbl{font-size:10px;letter-spacing:2px}
+  body.touch .hud-score .val{font-size:24px}
+  body.touch .combo{font-size:11px;padding:2px 8px}
+  body.touch .hud-timer{top:calc(8px + env(safe-area-inset-top));font-size:16px;padding:6px 16px}
+  body.touch #racehud{top:calc(46px + env(safe-area-inset-top));font-size:12.5px;padding:5px 14px}
+  body.touch .hud-map{right:calc(10px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));width:108px;height:108px;padding:6px}
+  body.touch .hud-map canvas{width:96px;height:96px}
+  body.touch .hud-map .zone{font-size:10px;bottom:-20px;padding:2px 8px}
+  body.touch .hud-quests{display:block!important;left:calc(10px + env(safe-area-inset-left));top:calc(102px + env(safe-area-inset-top));width:min(210px,32vw);padding:7px 10px;pointer-events:auto;border-radius:14px}
+  body.touch .hud-quests h3{font-size:10px;margin-bottom:2px;cursor:pointer}
+  body.touch .hud-quests h3::after{content:" ▾"}
+  body.touch .hud-quests.collapsed h3::after{content:" ▸"}
+  body.touch .hud-quests.collapsed #quests,body.touch .hud-quests.collapsed .qhint{display:none}
+  body.touch .quest{font-size:11px;margin:4px 0;gap:6px}
+  body.touch .quest .chk{width:15px;height:15px}
+  body.touch .quest .qk{font-size:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0}
+  body.touch .quest .qk::after{content:"✕";font-size:11px;color:#c0392b}
+  body.touch .hud-quests .qhint{font-size:9.5px}
+  body.touch .hud-energy{bottom:calc(10px + env(safe-area-inset-bottom));width:min(260px,28vw);padding:6px 10px;border-radius:14px}
+  body.touch .hud-energy .lbl{font-size:9px;margin-bottom:3px;letter-spacing:1px}
+  body.touch .ebar{height:11px}
+  body.touch #buffs span{font-size:10px;padding:1px 6px}
+  body.touch #toast{top:calc(52px + env(safe-area-inset-top));font-size:13.5px;padding:8px 16px;white-space:normal;max-width:56vw;text-align:center}
+  body.touch #dialog{bottom:calc(124px + env(safe-area-inset-bottom));width:min(520px,56vw);padding:10px 12px;pointer-events:auto}
+  body.touch #dialog .txt{font-size:13px}
+  body.touch #achpop{top:auto;bottom:calc(150px + env(safe-area-inset-bottom));right:calc(10px + env(safe-area-inset-right));font-size:12px;padding:6px 12px 6px 6px}
+  body.touch #achpop .ai{width:30px;height:30px;font-size:15px}
+  body.touch .ft{font-size:17px}
+  @media (max-height:520px){
+    .overlay{padding:8px}
+    .window{max-height:calc(100dvh - 16px);padding-bottom:12px}
+    .titlebar{padding:6px 10px 5px 14px}
+    .content{padding:8px 16px 0;gap:7px}
+    .logo h1{font-size:38px}
+    .logo .sub{font-size:11px;margin-top:2px}
+    .orb-deco{display:none}
+    .btn{min-width:0;padding:9px 18px;font-size:14px}
+    .btn.small{padding:8px 14px;font-size:13px}
+    .menu-buttons{gap:7px}
+    .panel h2{font-size:19px}
+    .help-grid,.legend{font-size:12.5px;gap:5px 10px}
+    .setting{font-size:13px}
+    input[type=range]{width:min(200px,36vw)}
+    .stars{font-size:32px}.final{font-size:38px}
+    .stats div{padding:4px 10px;font-size:13px}
+    .swatches .sw{width:24px;height:24px}
+    .monitor{padding:6px 6px 16px;border-radius:12px}
+    .monitor::after{display:none}
+    #os{padding:0}
+    .os-icons{grid-template-rows:repeat(auto-fill,74px)}
+    .os-icon{width:72px;font-size:10.5px;padding:3px}
+    .os-icon .ic{width:38px;height:38px;font-size:20px;border-radius:10px}
+    .os-side{display:none}
+    .os-taskbar{height:40px}
+    .os-desk{bottom:40px}
+  }
+  @media (max-width:900px){ .os-side{display:none} .os-win .tb{height:36px} .os-win .tb .x{width:48px;height:26px} .gamebox canvas{max-width:100%;height:auto} }
+  .touch-only{display:none}
+  body.touch .touch-only{display:block}
+  body.touch .help-grid.touch-only{display:grid}
+  body.touch .key-only{display:none}
+
   @media (max-width:760px){
     .logo h1{font-size:46px}
     .hud-quests,.hud-hint{display:none}
@@ -376,6 +484,23 @@
 <div id="crosshint" class="glass hidden">Kamerayı kontrol etmek için tıkla</div>
 <div id="fps" class="hidden"></div>
 
+<!-- touch controls (phones / tablets) -->
+<div id="touch">
+  <div id="t-look"></div>
+  <div id="t-joyzone"></div>
+  <div id="t-joyhint">Sürükle<br>ve yürü</div>
+  <div id="t-joy"><div id="t-knob"></div></div>
+  <div class="tb-btn" id="t-jump">ZIPLA</div>
+  <div class="tb-btn green" id="t-run">HIZ</div>
+  <div class="tb-btn silver" id="t-cam">🎥</div>
+  <div class="tb-btn silver" id="t-wave">👋</div>
+  <div class="tb-btn orange hidden" id="t-act"><span></span></div>
+  <div class="tb-btn silver" id="t-pause">❚❚</div>
+  <div class="tb-btn silver" id="t-fs">⛶</div>
+  <div class="tb-btn silver hidden" id="t-race">✕ Yarışı bırak</div>
+</div>
+<div id="rotate" class="hidden"><div class="ph">📱</div><div>En iyi deneyim için telefonunu yan çevir</div><button class="btn small silver" id="rotate-ok"><span>Böyle devam et</span></button></div>
+
 <!-- MAIN MENU -->
 <div id="menu" class="overlay hidden">
   <div class="window glass">
@@ -394,6 +519,7 @@
           <button class="btn silver small" id="b-ach"><span>🏆 Başarımlar</span></button>
           <button class="btn silver small" id="b-help"><span>Nasıl Oynanır</span></button>
           <button class="btn silver small" id="b-settings"><span>Ayarlar</span></button>
+          <button class="btn silver small" id="b-fs"><span>⛶ Tam Ekran</span></button>
         </div>
       </div>
       <div class="footnote">Çayırda süzül · cam şehri keşfet · binalara gir · bilgisayarları kullan</div>
@@ -407,7 +533,16 @@
     <div class="titlebar"><span>Nasıl Oynanır</span><div class="dots"><i></i><i></i><i></i></div></div>
     <div class="content">
       <h2>Kontroller</h2>
-      <div class="help-grid">
+      <div class="help-grid touch-only" id="help-touch">
+        <span><span class="key">Sol</span></span><span>Ekranın sol yarısında parmağını sürükle: yürü (hafif itince yavaş yürür)</span>
+        <span><span class="key">Sağ</span></span><span>Ekranın sağ tarafını kaydır: kamerayı döndür</span>
+        <span><span class="key">ZIPLA</span></span><span>Zıpla · havada tekrar: çift zıplama · basılı tut: süzül</span>
+        <span><span class="key">HIZ</span></span><span>Basılı tut: Aero hız (enerji harcar)</span>
+        <span><span class="key">Turuncu</span></span><span>Yakında bir şey varsa çıkan düğmeye dokun: etkileşim</span>
+        <span><span class="key">🎥 👋</span></span><span>Bakış açısını değiştir · el salla</span>
+        <span><span class="key">✕</span></span><span>Görev listesindeki ✕ ile görevi değiştir</span>
+      </div>
+      <div class="help-grid key-only">
         <span><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span></span><span>Yürü (ok tuşları da olur)</span>
         <span><span class="key">Fare</span></span><span>Kamerayı döndür · tekerlek: yakınlaş/uzaklaş</span>
         <span><span class="key">V</span></span><span>Bakış açısı: Normal · Yakın · Uzak · İlk şahıs · Kuş bakışı</span>
@@ -465,6 +600,7 @@
       <div class="setting"><span>Y eksenini ters çevir</span><input type="checkbox" id="s-invert"></div>
       <div class="setting"><span>Uyarlanabilir çözünürlük (FPS düşünce)</span><input type="checkbox" id="s-adaptive"></div>
       <div class="setting"><span>FPS göstergesi</span><input type="checkbox" id="s-fps"></div>
+      <div class="setting"><span>Oyuna başlarken tam ekran</span><input type="checkbox" id="s-autofs"></div>
       <button class="btn small" data-back>Kaydet ve Dön</button>
     </div>
   </div>
@@ -550,7 +686,10 @@ const setLoad = (p, t) => { $('ldbar').style.width = (p * 100) + '%'; if (t) $('
    ============================================================ */
 function loadJSON(k, d = {}) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } }
 function saveJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-const settings = Object.assign({ quality: 'high', sens: 1, fov: 66, music: 0.6, sfx: 0.8, invertY: false, color: 0, adaptive: true, fpsShow: false }, loadJSON('aeroDrift.settings'));
+// touch devices get on-screen controls, lighter default graphics and auto fullscreen
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && !matchMedia('(pointer: fine)').matches);
+if (IS_TOUCH) document.body.classList.add('touch');
+const settings = Object.assign({ quality: IS_TOUCH ? 'mid' : 'high', sens: 1, fov: IS_TOUCH ? 70 : 66, music: 0.6, sfx: 0.8, invertY: false, color: 0, adaptive: true, fpsShow: false, autoFs: IS_TOUCH }, loadJSON('aeroDrift.settings'));
 const best = Object.assign({ time: 0, zen: 0, race: 0 }, loadJSON('aeroDrift.best'));
 let wallet = loadJSON('aeroDrift.wallet', 0) | 0;
 const achUnlocked = loadJSON('aeroDrift.ach', {});
@@ -2378,7 +2517,7 @@ addEventListener('keydown', e => {
   if (state !== 'playing') { if (e.code === 'KeyP' && state === 'paused') resume(); return; }
   if ((e.code === 'Escape' || e.code === 'KeyP') && !document.pointerLockElement) pause();
   if (e.code === 'KeyE') interact();
-  if (e.code === 'KeyV') { camMode = (camMode + 1) % CAM_MODES.length; camDistT = CAM_MODES[camMode].d || camDistT; pitch = CAM_MODES[camMode].p; toast('🎥 Kamera: ' + CAM_MODES[camMode].n, 1.6); camModesUsed.add(camMode); if (camModesUsed.size >= CAM_MODES.length) unlock('views'); }
+  if (e.code === 'KeyV') cycleCam();
   if (e.code === 'KeyQ') doWave();
   if (e.code === 'KeyR' && (race.active)) cancelRace();
   if (e.code === 'Digit1' || e.code === 'Digit2' || e.code === 'Digit3') cancelQuest(+e.code.slice(5) - 1);
@@ -2402,7 +2541,8 @@ addEventListener('mousemove', e => {
   }
 });
 addEventListener('wheel', e => { if (state === 'playing' && !CAM_MODES[camMode].fp) camDistT = clamp(camDistT + Math.sign(e.deltaY) * 1.2, 2.5, 24); }, { passive: true });
-function lockPointer() { try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+function cycleCam() { camMode = (camMode + 1) % CAM_MODES.length; camDistT = CAM_MODES[camMode].d || camDistT; pitch = CAM_MODES[camMode].p; toast('🎥 Kamera: ' + CAM_MODES[camMode].n, 1.6); camModesUsed.add(camMode); if (camModesUsed.size >= CAM_MODES.length) unlock('views'); }
+function lockPointer() { if (IS_TOUCH) return; try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === canvas) { hadLock = true; $('crosshint').classList.add('hidden'); }
   else { if (hadLock && state === 'playing') pause(); hadLock = false; }
@@ -2433,7 +2573,7 @@ function doWave() {
 /* ============================================================
    Interactions & activities
    ============================================================ */
-let currentIt = null, currentNpc = null, dialogNpc = null;
+let currentIt = null, currentNpc = null, dialogNpc = null, lastIt = null;
 const talkedTo = new Set();
 function findInteract() {
   currentIt = null; currentNpc = null;
@@ -2673,9 +2813,10 @@ function updatePlayer(dt) {
   if (P.mode === 'sit' || P.mode === 'scope') { P.energy = Math.min(100, P.energy + 25 * dt); return; }
 
   fwd.set(-Math.sin(yaw), 0, -Math.cos(yaw)); right.set(Math.cos(yaw), 0, -Math.sin(yaw));
-  const mx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0), mz = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
+  // keyboard + analog touch joystick (touchIn is -1..1 on each axis)
+  const mx = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + touchIn.x, mz = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) + touchIn.y;
   mv.set(0, 0, 0).addScaledVector(fwd, mz).addScaledVector(right, mx);
-  const moving = mv.lengthSq() > 0; if (moving) mv.normalize();
+  const moving = mv.lengthSq() > 0.0004; if (mv.lengthSq() > 1) mv.normalize();
 
   // stamina with hysteresis: once empty you are "tired" until it refills to 35,
   // so holding Shift no longer flips boost on/off every frame (speed/FOV/camera stutter)
@@ -3117,7 +3258,7 @@ function updateHUD(dt) {
   if ($('buffs').innerHTML !== bh) $('buffs').innerHTML = bh;
   setTxt('c-drops', String(stats.drops)); setTxt('c-orbs', String(stats.orbs)); setTxt('c-bubbles', String(stats.bubbles)); setTxt('c-rings', String(stats.rings));
   if (toastT > 0) { toastT -= dt; if (toastT <= 0) $('toast').classList.remove('show'); }
-  const it = findInteract();
+  const it = findInteract(); lastIt = it;
   const pe = $('prompt');
   if (it && !dialogNpc) { const txt = '[E] ' + it.label.replace(/ \(E.*\)$/, ''); if (pe.textContent !== txt) pe.textContent = txt; pe.classList.remove('hidden'); } else pe.classList.add('hidden');
   const zn = currentZone();
@@ -3251,7 +3392,7 @@ document.querySelectorAll('[data-back]').forEach(b => b.onclick = () => {
 function syncSettingsUI() {
   document.querySelectorAll('#s-quality button').forEach(b => b.classList.toggle('on', b.dataset.q === settings.quality));
   $('s-sens').value = settings.sens; $('s-music').value = settings.music; $('s-sfx').value = settings.sfx; $('s-invert').checked = settings.invertY; $('s-fov').value = settings.fov;
-  $('s-adaptive').checked = settings.adaptive; $('s-fps').checked = settings.fpsShow;
+  $('s-adaptive').checked = settings.adaptive; $('s-fps').checked = settings.fpsShow; $('s-autofs').checked = settings.autoFs;
 }
 document.querySelectorAll('#s-quality button').forEach(b => b.onclick = () => { settings.quality = b.dataset.q; syncSettingsUI(); applyQuality(); });
 $('s-sens').oninput = e => settings.sens = +e.target.value;
@@ -3260,6 +3401,7 @@ $('s-music').oninput = e => { settings.music = +e.target.value; Sound.applyVolum
 $('s-sfx').oninput = e => { settings.sfx = +e.target.value; Sound.applyVolumes(); };
 $('s-invert').onchange = e => settings.invertY = e.target.checked;
 $('s-adaptive').onchange = e => { settings.adaptive = e.target.checked; if (!settings.adaptive) { resScale = 1; setRenderScale(); } };
+$('s-autofs').onchange = e => { settings.autoFs = e.target.checked; };
 $('s-fps').onchange = e => { settings.fpsShow = e.target.checked; $('fps').classList.toggle('hidden', !settings.fpsShow); };
 function buildSwatches() {
   const box = $('swatches');
@@ -3269,6 +3411,139 @@ function buildSwatches() {
     s.onclick = () => { setPlayerColor(i); box.querySelectorAll('.sw').forEach((x, j) => x.classList.toggle('on', j === i)); Sound.init(); Sound.click(); };
     box.appendChild(s);
   });
+}
+
+
+/* ============================================================
+   Mobile: touch controls, fullscreen, orientation
+   ============================================================ */
+const touchIn = { x: 0, y: 0 };
+const capture = (el, id) => { try { el.setPointerCapture(id); } catch (e) {} };
+
+/* ---------- fullscreen + landscape ---------- */
+function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function enterFullscreen() {
+  const el = document.documentElement;
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!req || isFullscreen()) { lockLandscape(); return; }
+  try {
+    const p = req.call(el, { navigationUI: 'hide' });
+    if (p && p.then) p.then(lockLandscape).catch(() => {}); else lockLandscape();
+  } catch (e) {}
+}
+function exitFullscreen() { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex && isFullscreen()) try { ex.call(document); } catch (e) {} }
+function toggleFullscreen() { if (isFullscreen()) exitFullscreen(); else enterFullscreen(); }
+function lockLandscape() { if (IS_TOUCH && screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }
+// starting / resuming the game is a user gesture, so it is allowed to go fullscreen
+['b-zen', 'b-play', 'b-again', 'b-resume'].forEach(id => $(id).addEventListener('click', () => { if (settings.autoFs) enterFullscreen(); }, true));
+$('b-fs').onclick = () => { Sound.init(); toggleFullscreen(); };
+const fsChanged = () => {
+  $('b-fs').querySelector('span').textContent = isFullscreen() ? '⛶ Pencere' : '⛶ Tam Ekran';
+  setTimeout(() => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); setRenderScale(); }, 120);
+};
+document.addEventListener('fullscreenchange', fsChanged);
+document.addEventListener('webkitfullscreenchange', fsChanged);
+
+/* ---------- portrait hint ---------- */
+let rotateDismissed = false;
+function checkOrientation() {
+  const show = IS_TOUCH && !rotateDismissed && innerHeight > innerWidth * 1.05 && state === 'playing';
+  $('rotate').classList.toggle('hidden', !show);
+}
+$('rotate-ok').onclick = () => { rotateDismissed = true; checkOrientation(); };
+addEventListener('resize', () => setTimeout(checkOrientation, 200));
+addEventListener('orientationchange', () => setTimeout(() => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); setRenderScale(); checkOrientation(); }, 300));
+
+/* ---------- joystick (left half, floating) ---------- */
+const joy = { id: null, ox: 0, oy: 0, used: false };
+const JOY_R = 56;
+const joyEl = $('t-joy'), knobEl = $('t-knob');
+$('t-joyzone').addEventListener('pointerdown', e => {
+  if (joy.id !== null) return;
+  e.preventDefault(); Sound.init();
+  joy.id = e.pointerId; joy.ox = e.clientX; joy.oy = e.clientY;
+  joyEl.style.left = joy.ox + 'px'; joyEl.style.top = joy.oy + 'px'; joyEl.classList.add('on');
+  knobEl.style.transform = 'translate(0,0)';
+  if (!joy.used) { joy.used = true; $('t-joyhint').style.opacity = 0; }
+  capture($('t-joyzone'), e.pointerId);
+});
+$('t-joyzone').addEventListener('pointermove', e => {
+  if (e.pointerId !== joy.id) return;
+  let dx = e.clientX - joy.ox, dy = e.clientY - joy.oy;
+  const len = Math.hypot(dx, dy);
+  // let the base follow the finger when it drags far, so you never "run out" of stick
+  if (len > JOY_R * 1.6) { const k = (len - JOY_R * 1.6) / len; joy.ox += dx * k; joy.oy += dy * k; joyEl.style.left = joy.ox + 'px'; joyEl.style.top = joy.oy + 'px'; dx = e.clientX - joy.ox; dy = e.clientY - joy.oy; }
+  const l2 = Math.hypot(dx, dy), cl = Math.min(l2, JOY_R), nx = l2 ? dx / l2 : 0, ny = l2 ? dy / l2 : 0;
+  knobEl.style.transform = `translate(${nx * cl}px,${ny * cl}px)`;
+  let m = cl / JOY_R; m = m < 0.12 ? 0 : (m - 0.12) / 0.88;
+  touchIn.x = nx * m; touchIn.y = -ny * m;
+});
+const joyEnd = e => { if (e.pointerId !== joy.id) return; joy.id = null; touchIn.x = touchIn.y = 0; joyEl.classList.remove('on'); };
+$('t-joyzone').addEventListener('pointerup', joyEnd);
+$('t-joyzone').addEventListener('pointercancel', joyEnd);
+
+/* ---------- camera look (rest of the screen) ---------- */
+const look = { id: null, x: 0, y: 0 };
+$('t-look').addEventListener('pointerdown', e => {
+  if (look.id !== null) return;
+  e.preventDefault(); Sound.init();
+  look.id = e.pointerId; look.x = e.clientX; look.y = e.clientY;
+  capture($('t-look'), e.pointerId);
+});
+$('t-look').addEventListener('pointermove', e => {
+  if (e.pointerId !== look.id || state !== 'playing') return;
+  const dx = e.clientX - look.x, dy = e.clientY - look.y; look.x = e.clientX; look.y = e.clientY;
+  const s = 0.0052 * settings.sens * (P.mode === 'scope' ? 0.35 : 1);
+  yaw -= dx * s;
+  const fp = CAM_MODES[camMode].fp || P.mode === 'scope';
+  pitch = clamp(pitch + dy * s * (settings.invertY ? -1 : 1), fp ? -1.35 : -0.5, 1.35);
+});
+const lookEnd = e => { if (e.pointerId === look.id) look.id = null; };
+$('t-look').addEventListener('pointerup', lookEnd);
+$('t-look').addEventListener('pointercancel', lookEnd);
+
+/* ---------- buttons ---------- */
+function holdBtn(id, onDown, onUp) {
+  const el = $(id);
+  el.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); Sound.init(); el.classList.add('down'); capture(el, e.pointerId); onDown && onDown(); });
+  const up = e => { el.classList.remove('down'); onUp && onUp(); };
+  el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+}
+holdBtn('t-jump', () => { if (state !== 'playing') return; if (P.mode === 'sit') standUp(); else if (!keys.jump) doJump(); keys.jump = true; }, () => keys.jump = false);
+holdBtn('t-run', () => { keys.boost = true; }, () => keys.boost = false);
+holdBtn('t-cam', () => { if (state === 'playing') cycleCam(); });
+holdBtn('t-wave', () => { if (state === 'playing') doWave(); });
+holdBtn('t-act', () => { if (state === 'playing') interact(); });
+holdBtn('t-pause', () => { if (state === 'playing') { keys.boost = keys.jump = false; touchIn.x = touchIn.y = 0; pause(); } });
+holdBtn('t-fs', () => toggleFullscreen());
+holdBtn('t-race', () => { cancelRace(); });
+$('dialog').addEventListener('pointerdown', e => { if (!IS_TOUCH || state !== 'playing') return; e.stopPropagation(); interact(); });
+
+/* ---------- quests panel: collapse + tap ✕ to cancel ---------- */
+document.querySelector('.hud-quests h3').addEventListener('pointerdown', e => { if (!IS_TOUCH) return; e.stopPropagation(); document.querySelector('.hud-quests').classList.toggle('collapsed'); });
+$('quests').addEventListener('pointerdown', e => {
+  const k = e.target.closest('.qk'); if (!k) return;
+  e.stopPropagation(); cancelQuest([...$('quests').querySelectorAll('.qk')].indexOf(k));
+});
+if (IS_TOUCH && innerHeight < 430) document.querySelector('.hud-quests').classList.add('collapsed');
+
+/* ---------- per-frame touch UI state ---------- */
+let touchUiState = '';
+function updateTouchUI() {
+  const ingame = state === 'playing';
+  document.body.classList.toggle('ingame', ingame);
+  if (!IS_TOUCH || !ingame) return;
+  let label = '';
+  if (dialogNpc) label = '💬 Devam';
+  else if (lastIt) label = lastIt.label.replace(/ \(E.*\)$/, '');
+  const raceOn = race.active;
+  const key = label + '|' + raceOn;
+  if (key !== touchUiState) {
+    touchUiState = key;
+    const act = $('t-act');
+    act.classList.toggle('hidden', !label); act.querySelector('span').textContent = label;
+    $('t-race').classList.toggle('hidden', !raceOn);
+  }
 }
 
 
@@ -3696,7 +3971,7 @@ function makeAquaSaver(win) {
    Main loop & boot
    ============================================================ */
 const clock = new THREE.Clock();
-let T = 0;
+let T = 0, prevLoopState = '';
 function loop() {
   requestAnimationFrame(loop);
   const rawDt = clock.getDelta();
@@ -3730,6 +4005,8 @@ function loop() {
   if (playing) updateHUD(dt);
   updateAchPopup(dt);
   updateFloatTexts(dt);
+  updateTouchUI();
+  if (state !== prevLoopState) { prevLoopState = state; checkOrientation(); }
   if (state === 'pc' || document.hidden) return;
   if (++frameNo % shadowEvery === 0) sun.shadow.needsUpdate = true;
   if (useBloom) composer.render(); else renderer.render(scene, camera);
