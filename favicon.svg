@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="14" y1="12" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff5b2e"/>
+      <stop offset=".5" stop-color="#ff8a4c"/>
+      <stop offset="1" stop-color="#8a6bff"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="#07070b"/>
+  <rect x=".75" y=".75" width="62.5" height="62.5" rx="14.25" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="1.5"/>
+  <!-- the "E" of EMİR, drawn as shapes so it renders the same in every browser -->
+  <path fill="url(#g)" d="M15 15.5a3.5 3.5 0 0 1 3.5-3.5h25a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H26.5v4.5H40a3 3 0 0 1 3 3v3.5a3 3 0 0 1-3 3H26.5V41.5H44.5a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-26a3.5 3.5 0 0 1-3.5-3.5z"/>
+  <!-- the dot from "EMİR." -->
+  <circle cx="54" cy="48.5" r="4.5" fill="#c8ff4d"/>
+</svg>
