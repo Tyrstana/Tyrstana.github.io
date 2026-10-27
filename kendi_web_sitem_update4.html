@@ -1358,8 +1358,11 @@ if (hoverable && !reduce) {
 const SCR = 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ#%&*';
 function scramble(el) {
   const orig = el.dataset.orig || (el.dataset.orig = el.textContent);
+  // a newer scramble on the same element cancels this one, so a stale run can't write the old text last
+  const id = el._scr = (el._scr || 0) + 1;
   let f = 0;
   const run = () => {
+    if (el._scr !== id) return;
     el.textContent = [...orig].map((ch, i) => ch === ' ' ? ' ' : i < f / 2 ? orig[i] : SCR[Math.random() * SCR.length | 0]).join('');
     if (f++ < orig.length * 2) requestAnimationFrame(run); else el.textContent = orig;
   };
