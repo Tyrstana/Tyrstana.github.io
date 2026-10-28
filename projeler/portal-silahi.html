@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Rick Sanchez: Portal Silahı — Çoklu Evren Kaşifi (Update 6)</title>
+    <title>Rick Sanchez: Portal Silahı — Çoklu Evren Kaşifi (Update 7)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -169,6 +169,24 @@
             color: var(--cy); border-color: rgba(60,232,255,.45); letter-spacing: .1em;
         }
         .is-touch #cruiser-badge { top: calc(62px + var(--st)); font-size: 10px; padding: 4px 10px; }
+        #cruiser-hud {
+            position: fixed; left: calc(18px + var(--sl)); bottom: calc(18px + var(--sb));
+            display: flex; align-items: center; gap: 18px; padding: 8px 18px; border-radius: 16px;
+            border-color: rgba(60,232,255,.4); transition: border-color .2s, box-shadow .2s;
+        }
+        #cruiser-hud.boost { border-color: rgba(255,111,224,.8); box-shadow: 0 0 24px rgba(255,111,224,.35); }
+        .ch-cell { display: flex; align-items: baseline; gap: 5px; min-width: 70px; }
+        .ch-v { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: #e6fbff; }
+        .ch-k { font-size: 9.5px; letter-spacing: .14em; color: var(--mut); font-weight: 700; text-transform: uppercase; }
+        .ch-boostwrap { display: flex; flex-direction: column; gap: 4px; }
+        .ch-bar { width: 130px; height: 7px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; }
+        #ch-boost { height: 100%; width: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--cy), #ff6fe0); transition: width .1s linear; }
+        #ch-boost.low { background: var(--red); }
+        .is-touch #cruiser-badge { display: none !important; }
+        .is-touch #cruiser-hud { bottom: auto; top: calc(60px + var(--st)); left: calc(14px + var(--sl)); gap: 10px; padding: 6px 12px; }
+        .is-touch #cruiser-hud .ch-v { font-size: 15px; }
+        .is-touch #cruiser-hud .ch-bar { width: 80px; }
+        .is-touch #cruiser-hud .ch-cell { min-width: 52px; }
         .is-touch #toast-wrap { top: calc(96px + var(--st)); }
 
         /* ================= TOUCH CONTROLS ================= */
@@ -478,6 +496,11 @@
         </div>
         <div id="toast-wrap"><div id="toast" class="glass"><div id="toast-speaker">RICK SANCHEZ</div><div id="toast-text">"Wubba Lubba Dub Dub!"</div></div></div>
         <div id="cruiser-badge" class="glass hidden">● UZAY KRUVAZÖRÜ — UÇUŞ MODU</div>
+        <div id="cruiser-hud" class="glass hidden">
+            <div class="ch-cell"><span class="ch-v" id="ch-speed">0</span><span class="ch-k">km/s</span></div>
+            <div class="ch-cell"><span class="ch-v" id="ch-alt">0.0</span><span class="ch-k">irtifa</span></div>
+            <div class="ch-boostwrap"><span class="ch-k">TURBO</span><div class="ch-bar"><div id="ch-boost"></div></div></div>
+        </div>
     </div>
 
     <!-- ================= TOUCH CONTROLS ================= -->
@@ -499,11 +522,11 @@
     <div id="start-screen" class="overlay">
         <div class="panel start-card">
             <div class="start-portal"></div>
-            <div class="eyebrow">Update 6 · Merkez Sonlu Eğri</div>
+            <div class="eyebrow">Update 7 · Merkez Sonlu Eğri</div>
             <h1 class="h-display start-title">PORTAL SİLAHI<br><span>ÇOKLU EVREN KAŞİFİ</span></h1>
-            <p class="start-sub">15 detaylı paralel evreni keşfet, gerçek Rick &amp; Morty portalları aç, Uzay Kruvazörü ile boyutlar arası uç.</p>
+            <p class="start-sub">25 detaylı paralel evreni keşfet, gerçek Rick &amp; Morty portalları aç, Uzay Kruvazörü ile boyutlar arası uç.</p>
             <div class="start-meta">
-                <span class="tag">15 EVREN</span><span class="tag">UZAY KRUVAZÖRÜ</span><span class="tag">DOKUNMATİK DESTEK</span>
+                <span class="tag">25 EVREN</span><span class="tag">UZAY KRUVAZÖRÜ</span><span class="tag">DOKUNMATİK DESTEK</span>
             </div>
             <div class="start-actions">
                 <button class="btn btn-primary" id="btn-start"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 001.5.86l10.5-6.5a1 1 0 000-1.72L9.5 4.64A1 1 0 008 5.5z"/></svg>OYNA</button>
@@ -633,7 +656,7 @@
             <div class="map-head">
                 <div>
                     <div class="eyebrow">Çoklu Evren Koordinat Sistemi</div>
-                    <h2 class="h-display" id="map-title">15 Paralel Evren</h2>
+                    <h2 class="h-display" id="map-title">25 Paralel Evren</h2>
                 </div>
                 <div class="chips" id="map-chips"></div>
                 <button class="btn btn-sm" id="btn-map-close">Kapat <span class="kbd desktop-only">Tab</span></button>
@@ -793,6 +816,87 @@
             sky: { top: 0xffffff, mid: 0xf7f2e6, bot: 0xece5d2, stars: 0 },
             fog: { color: 0xf4efe2, density: 0.0095 }, hemi: [0xffffff, 0xd8d0c0, 1.25],
             amb: { type: 'pad', f: 330, wave: 'sine', cut: 700, vol: 0.02 }
+        },
+        // ---------------- UPDATE 7 ----------------
+        {
+            code: 'GF-PRISON', name: 'Galaktik Federasyon Hapishanesi', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Uzay boşluğuna açılan dev hapishane: iki katlı lazer parmaklıklı hücreler, devriye gezen Gromflomit muhafızlar, dönen projektörlü kule ve C-137 hücresindeki Rick.",
+            gravity: 22, jump: 10.4, speed: 9.8, floor: 'metal', bounds: 40,
+            sky: { top: 0x01020a, mid: 0x0c1534, bot: 0x020308, stars: 1.5 },
+            fog: { color: 0x0a1226, density: 0.008 }, hemi: [0xdfe8ff, 0x1a2030, 1.0], sun: { color: 0xffffff, intensity: 0.55, pos: [20, 60, 30] },
+            amb: { type: 'pad', f: 73, wave: 'sawtooth', cut: 240, vol: 0.05 }
+        },
+        {
+            code: 'R-SEWER', name: 'Turşu Rick Kanalizasyonu', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Turşu Rick'in fare-zırhını yaptığı kanalizasyon: tuğla tünel, yeşil atık kanalı, şelale gibi boşalan borular, ızgaralardan sızan ışık, koşuşturan fareler.",
+            gravity: 23, jump: 10.6, speed: 9.4, floor: 'wet', baseFloor: -1.0,
+            sky: { top: 0x0a0c06, mid: 0x1a2010, bot: 0x050604, stars: 0 },
+            fog: { color: 0x1c2614, density: 0.032 }, hemi: [0xb8d89a, 0x101608, 0.75],
+            amb: { type: 'water', vol: 0.09 }
+        },
+        {
+            code: 'P-SQUANCH', name: 'Squanch Gezegeni (Düğün Gecesi)', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Squanchy'nin memleketinde Kuş Adam'ın düğün partisi: mantar evler, ışık zincirleri, renk değiştiren dans pisti, DJ kabini, şenlik ateşi ve dans eden Squanchy'ler.",
+            gravity: 20, jump: 11, speed: 10, floor: 'grass',
+            sky: { top: 0x150830, mid: 0xff7a5a, bot: 0x241030, stars: 0.7, sun: { dir: [-0.3, 0.1, -0.95], color: 0xffb35a, size: 0.06 } },
+            fog: { color: 0x5a2a58, density: 0.0085 }, hemi: [0xffc8a0, 0x3a1840, 0.85], sun: { color: 0xffb070, intensity: 0.75, pos: [-30, 20, -80] },
+            amb: { type: 'arcade', f: 131, vol: 0.035 }
+        },
+        {
+            code: 'B-01', name: 'Backrooms Seviye 1 (Depo)', cat: 'liminal', tag: 'BACKROOMS',
+            desc: "Yaşanabilir bölge: uçsuz bucaksız beton depo, su birikintileri, erzak dolu raflar, zincirle sarkan floresanlar, tavan boruları ve Seviye 2'ye inen yangın kapısı.",
+            gravity: 24, jump: 9.6, speed: 9.4, floor: 'concrete', indoor: true, bounds: 60,
+            sky: { top: 0x2a2a28, mid: 0x3a3a38, bot: 0x1a1a18, stars: 0 },
+            fog: { color: 0x3a3a38, density: 0.028 }, hemi: [0xe8e6dc, 0x2a2a28, 0.9],
+            amb: { type: 'hum', vol: 0.04 }
+        },
+        {
+            code: 'B-02', name: 'Backrooms Seviye 2 (Boru Rüyaları)', cat: 'liminal', tag: 'BACKROOMS',
+            desc: "Dar, sıcak ve karanlık bakım tünellerinden oluşan gerçek bir labirent: duvar boyu inleyen paslı borular, buhar, turuncu kafesli ampuller ve basınç göstergesi.",
+            gravity: 24, jump: 9.4, speed: 8.8, floor: 'metal', indoor: true, spawn: [0, 0, 0],
+            sky: { top: 0x140604, mid: 0x200a06, bot: 0x0a0302, stars: 0 },
+            fog: { color: 0x2a0e06, density: 0.05 }, hemi: [0xff9a6a, 0x1a0804, 0.5],
+            amb: { type: 'pad', f: 45, wave: 'sawtooth', cut: 170, vol: 0.07 }
+        },
+        {
+            code: 'B-FUN', name: 'Backrooms Seviye =) (Parti)', cat: 'liminal', tag: 'BACKROOMS',
+            desc: "Bitmeyen bir doğum günü partisi: balonlar, konfeti halısı, disko topu, pastalar ve hediyeler... ve sana dönüp gülümsemeyi bırakmayan sarı Partygoer'lar =)",
+            gravity: 22, jump: 10, speed: 9.4, floor: 'carpet', indoor: true, bounds: 40,
+            sky: { top: 0xffd8e8, mid: 0xffc0d8, bot: 0xd890b0, stars: 0 },
+            fog: { color: 0xe8b8d0, density: 0.011 }, hemi: [0xffffff, 0xff9ac8, 1.05],
+            amb: { type: 'arcade', f: 262, vol: 0.025 }
+        },
+        {
+            code: 'T-APERTURE', name: 'Aperture Science Test Odası 19', cat: 'game', tag: 'PORTAL',
+            desc: "Beyaz panelli test odası: asit çukuru ve sert ışık köprüsü, büyük kırmızı düğme, Arkadaş Küpü, seni takip eden taretler, GLaDOS'un gözü ve 'THE CAKE IS A LIE'.",
+            gravity: 22, jump: 10.6, speed: 9.6, floor: 'metal', indoor: true, bounds: 25,
+            sky: { top: 0x1c2024, mid: 0x2c3034, bot: 0x1c2024, stars: 0 },
+            fog: { color: 0xc8d2da, density: 0.008 }, hemi: [0xffffff, 0x8a9aa8, 1.1],
+            amb: { type: 'pad', f: 110, wave: 'sine', cut: 500, vol: 0.035 }
+        },
+        {
+            code: 'M-1985', name: 'Mantar Krallığı', cat: 'game', tag: 'PLATFORM',
+            desc: "Damalı çimen, '?' blokları (alttan zıpla!), warp boruları, Goomba'lar (üstüne zıpla!), dönen altınlar, sert blok merdiveni, bayrak direği ve kale.",
+            gravity: 26, jump: 13.2, speed: 10.2, floor: 'grass',
+            sky: { top: 0x4a86f8, mid: 0xa8d0ff, bot: 0x7fb8ff, stars: 0 },
+            fog: { color: 0xa8d0ff, density: 0.006 }, hemi: [0xffffff, 0x5aa83a, 1.0], sun: { color: 0xffffff, intensity: 1.0, pos: [30, 60, 40] },
+            amb: { type: 'arcade', f: 262, vol: 0.025 }
+        },
+        {
+            code: 'N-1980', name: 'Neon Labirent (Pac-Man)', cat: 'game', tag: 'ATARİ',
+            desc: "Birinci şahıs Pac-Man: neon mavi labirent, toplanabilir haplar ve güç hapları, peşine düşen dört hayalet, yan tüneller ve bonus kiraz. Tümünü ye!",
+            gravity: 24, jump: 9, speed: 10.6, floor: 'pixel', spawn: [0, 0, 0],
+            sky: { top: 0x000000, mid: 0x05051a, bot: 0x000000, stars: 0.9 },
+            fog: { color: 0x02020c, density: 0.012 }, hemi: [0x7a8aff, 0x000000, 0.65],
+            amb: { type: 'arcade', f: 220, vol: 0.025 }
+        },
+        {
+            code: 'H-04', name: 'Halo Halka Dünyası', cat: 'game', tag: 'HALO',
+            desc: "Gökyüzüne doğru kıvrılan dev bir halka: çam ormanlı tepeler, gökyüzünü delen Öncü ışık sütunu, düşmüş Covenant gemisi, Warthog, enerji kılıcı ve dev gaz devi.",
+            gravity: 20, jump: 11, speed: 10.4, floor: 'grass',
+            sky: { top: 0x2a6ad8, mid: 0xbfe0ff, bot: 0x9cc6e8, stars: 0, sun: { dir: [0.4, 0.5, -0.75], color: 0xffffff, size: 0.025 } },
+            fog: { color: 0xbfe0ff, density: 0.0035 }, hemi: [0xffffff, 0x5a7a3a, 0.95], sun: { color: 0xfff4e0, intensity: 1.1, pos: [40, 70, -50] },
+            amb: { type: 'wind', vol: 0.05 }
         }
     ];
     UNIVERSES.forEach((u, i) => { u.id = i; });
@@ -800,7 +904,8 @@
         all: { label: 'Tümü' },
         rick: { label: 'Rick & Morty', badge: '#4dff6a' },
         liminal: { label: 'Liminal', badge: '#ffc53d' },
-        scifi: { label: 'Bilim Kurgu', badge: '#3ce8ff' }
+        scifi: { label: 'Bilim Kurgu', badge: '#3ce8ff' },
+        game: { label: 'Oyunlar', badge: '#ff6fe0' }
     };
 
     // ============================================================================
@@ -880,27 +985,81 @@
             this.humFilter.connect(this.humGain);
             o1.start(); o2.start(); o3.start();
         }
+        // Layered anti-gravity cruiser engine:
+        //  1) resonant detuned hover drone  2) turbine whine that climbs with speed
+        //  3) speed-dependent wind rush     4) sub-bass hover throb (LFO)  5) boost afterburner layer
         setupEngine() {
-            this.engGain = this.gain(0); this.engGain.connect(this.engBus);
-            this.engFilter = this.filter('lowpass', 180, 0.7);
-            this.engOsc = [this.osc('sine', 68), this.osc('sine', 102), this.osc('triangle', 204)];
-            const sh = this.gain(0.15);
-            this.engOsc[0].connect(this.engFilter); this.engOsc[1].connect(this.engFilter);
-            this.engOsc[2].connect(sh); sh.connect(this.engFilter);
-            this.engFilter.connect(this.engGain);
-            this.engOsc.forEach(o => o.start());
+            const E = this.eng = {};
+            E.master = this.gain(0); E.master.connect(this.engBus);
+            // 1) hover drone
+            E.droneF = this.filter('lowpass', 220, 7);
+            E.d1 = this.osc('sawtooth', 52); E.d2 = this.osc('sawtooth', 52.7); E.d3 = this.osc('square', 26);
+            const d3g = this.gain(0.25);
+            E.d1.connect(E.droneF); E.d2.connect(E.droneF); E.d3.connect(d3g); d3g.connect(E.droneF);
+            E.droneG = this.gain(0.32); E.droneF.connect(E.droneG); E.droneG.connect(E.master);
+            // 2) turbine whine
+            E.t1 = this.osc('sine', 320); E.t2 = this.osc('triangle', 482);
+            E.turbF = this.filter('bandpass', 700, 3);
+            E.t1.connect(E.turbF); E.t2.connect(E.turbF);
+            E.turbG = this.gain(0); E.turbF.connect(E.turbG); E.turbG.connect(E.master);
+            // 3) wind rush
+            E.wind = this.noiseSrc(); E.windF = this.filter('bandpass', 500, 0.8);
+            E.wind.connect(E.windF); E.windG = this.gain(0); E.windF.connect(E.windG); E.windG.connect(E.master);
+            // 4) sub throb
+            E.sub = this.osc('sine', 38); E.subG = this.gain(0.35);
+            E.subLfo = this.osc('sine', 5.5); const lg = this.gain(0.18); E.subLfo.connect(lg); lg.connect(E.subG.gain);
+            E.sub.connect(E.subG); E.subG.connect(E.master);
+            // 5) afterburner
+            E.burn = this.noiseSrc(); E.burnF = this.filter('highpass', 1800, 0.7);
+            E.burnSaw = this.osc('sawtooth', 110); const bsF = this.filter('lowpass', 900, 2);
+            E.burnG = this.gain(0);
+            E.burn.connect(E.burnF); E.burnF.connect(E.burnG); E.burnSaw.connect(bsF); bsF.connect(E.burnG); E.burnG.connect(E.master);
+            [E.d1, E.d2, E.d3, E.t1, E.t2, E.wind, E.sub, E.subLfo, E.burn, E.burnSaw].forEach(o => o.start());
         }
-        updateEngine(speed, active, boost) {
-            if (!this.ok()) return;
-            const t = this.ctx.currentTime;
-            if (!active) { this.engGain.gain.setTargetAtTime(0, t, 0.12); return; }
-            this.engGain.gain.setTargetAtTime(0.05 + speed * 0.06, t, 0.1);
-            const f = (68 + speed * 36) * (boost ? 1.22 : 1);
-            this.engOsc[0].frequency.setTargetAtTime(f, t, 0.08);
-            this.engOsc[1].frequency.setTargetAtTime(f * 1.5, t, 0.08);
-            this.engOsc[2].frequency.setTargetAtTime(f * 3, t, 0.08);
-            this.engFilter.frequency.setTargetAtTime(160 + speed * 220, t, 0.08);
+        // speed 0..1, throttle 0..1, boost bool, turn -1..1 (yaw rate), climb -1..1
+        updateEngine(speed, active, boost, throttle = 0, turn = 0, climb = 0) {
+            if (!this.ok() || !this.eng) return;
+            const E = this.eng, t = this.ctx.currentTime;
+            if (!active) { E.master.gain.setTargetAtTime(0, t, 0.15); return; }
+            const load = Math.min(1, throttle * 0.6 + speed * 0.5 + Math.abs(climb) * 0.2);
+            E.master.gain.setTargetAtTime(0.22, t, 0.2);
+            const base = 46 + speed * 30 + load * 10 + (boost ? 14 : 0);
+            E.d1.frequency.setTargetAtTime(base, t, 0.12);
+            E.d2.frequency.setTargetAtTime(base * 1.013 + Math.abs(turn) * 2, t, 0.12);
+            E.d3.frequency.setTargetAtTime(base * 0.5, t, 0.12);
+            E.droneF.frequency.setTargetAtTime(180 + load * 520 + speed * 300, t, 0.1);
+            E.droneG.gain.setTargetAtTime(0.22 + load * 0.16, t, 0.1);
+            const tf = 260 + speed * 900 + (boost ? 500 : 0) + Math.abs(turn) * 60;
+            E.t1.frequency.setTargetAtTime(tf, t, 0.15);
+            E.t2.frequency.setTargetAtTime(tf * 1.505, t, 0.15);
+            E.turbF.frequency.setTargetAtTime(tf * 1.2, t, 0.15);
+            E.turbG.gain.setTargetAtTime(0.012 + speed * 0.05 + (boost ? 0.03 : 0), t, 0.15);
+            E.windF.frequency.setTargetAtTime(380 + speed * 2200, t, 0.2);
+            E.windG.gain.setTargetAtTime(speed * speed * 0.55 + Math.abs(turn) * 0.05, t, 0.2);
+            E.subLfo.frequency.setTargetAtTime(5 + speed * 9, t, 0.2);
+            E.subG.gain.setTargetAtTime(0.32 - speed * 0.12, t, 0.2);
+            E.burnSaw.frequency.setTargetAtTime(90 + speed * 70, t, 0.1);
+            E.burnG.gain.setTargetAtTime(boost ? 0.16 : 0, t, boost ? 0.06 : 0.25);
         }
+        playCruiserStart() {
+            this.init(); if (!this.ok()) return;
+            this.tone('sawtooth', 70, 420, 0.9, 0.1); this.tone('sine', 140, 900, 0.8, 0.08, 0.1);
+            this.tone('square', 1800, 2400, 0.05, 0.05, 0.85); this.tone('square', 2400, 2400, 0.05, 0.05, 0.95);
+        }
+        playCruiserStop() {
+            this.init(); if (!this.ok()) return;
+            this.tone('sawtooth', 420, 55, 0.9, 0.1); this.tone('sine', 700, 120, 0.7, 0.06);
+            this.tone('sine', 900, 600, 0.06, 0.05, 0.75);
+        }
+        playBoost() {
+            this.init(); if (!this.ok()) return;
+            const t = this.ctx.currentTime, n = this.noiseSrc(), bp = this.filter('bandpass', 600, 1.2), g = this.gain(0);
+            bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(3800, t + 0.35);
+            this.burst(g, t, 0.35, 0.02, 0.5);
+            n.connect(bp); bp.connect(g); g.connect(this.sfxBus); n.start(t); n.stop(t + 0.6);
+            this.tone('sawtooth', 160, 640, 0.35, 0.07);
+        }
+        playThud(v = 0.2) { this.tone('sine', 90, 40, 0.25, v); }
         updatePortalHum(dist, open) {
             if (!this.ok()) return;
             const t = this.ctx.currentTime;
@@ -1816,7 +1975,9 @@
     // ============================================================================
     const cruiserGroup = new THREE.Group();
     scene.add(cruiserGroup);
-    const cruiserState = { active: false, thirdPerson: false, pos: new THREE.Vector3(7.5, 1.45, 12.5), vel: new THREE.Vector3(), yaw: 0, pitch: 0, roll: 0 };
+    const cruiserState = { active: false, thirdPerson: true, pos: new THREE.Vector3(7.5, 1.45, 12.5), vel: new THREE.Vector3(), yaw: 0, pitch: 0, roll: 0 };
+    // Flight feel state: boost energy, smoothed camera, banking, FOV kick
+    const cruiserFX = { energy: 1, boosting: false, boostLock: false, camPos: new THREE.Vector3(), camLook: new THREE.Vector3(), camInit: false, prevYaw: 0, yawRate: 0, visPitch: 0, fov: 75, hudTick: 0, shake: 0 };
     cruiserGroup.position.copy(cruiserState.pos);
     let cruiserHull = null;
     const cruiserPlumes = [];
@@ -3398,7 +3559,842 @@
         addParticles({ count: 90, spread: 60, minY: 0.5, maxY: 18, color: 0x1a1a24, size: 0.12, speed: -0.4, drift: 1.5, opacity: 0.5, additive: false });
     }
 
-    const BUILDERS = [buildC137, buildCitadel, buildBlips, buildCronenberg, buildFroopy, buildAnatomy, buildBackrooms, buildPoolrooms, buildCyber, buildSynth, buildVoxel, buildTorii, buildAbyss, buildGargantua, buildSketch];
+    // ============================================================================
+    // 11B. UPDATE 7 — TEN NEW DIMENSIONS
+    // ============================================================================
+    function simpleFigure(parent, o) {
+        // Small stylised humanoid/creature used by several new worlds
+        const g = new THREE.Group();
+        const body = new THREE.Mesh(GEO.cyl, std(o.body, { roughness: 0.6 })); body.scale.set(o.w || 0.42, o.h || 1.5, (o.w || 0.42) * 0.85); body.position.y = (o.h || 1.5) / 2 + (o.legs || 0.8);
+        const head = new THREE.Mesh(GEO.sphere, o.headMat || std(o.skin || o.body, { roughness: 0.6 })); head.scale.setScalar(o.head || 0.42); head.position.y = (o.h || 1.5) + (o.legs || 0.8) + (o.head || 0.42) * 0.8;
+        g.add(body, head);
+        if (o.legs !== 0) [-0.16, 0.16].forEach(lx => { const l = new THREE.Mesh(GEO.cyl8, std(o.leg || 0x222831)); l.scale.set(0.11, o.legs || 0.8, 0.11); l.position.set(lx, (o.legs || 0.8) / 2, 0); g.add(l); });
+        if (o.eyes !== false) [-0.15, 0.15].forEach(ex => { const e = new THREE.Mesh(GEO.sphereLo, bas(o.eyeColor || 0xffffff)); e.scale.setScalar(o.eyeSize || 0.1); e.position.set(ex * (o.head || 0.42) / 0.42, head.position.y + 0.06, (o.head || 0.42) * 0.88); g.add(e); });
+        (parent || worldGroup).add(g);
+        g.userData.head = head; g.userData.body = body;
+        return g;
+    }
+
+    // ---------------------------------------------------------------- 15. GALACTIC FEDERATION PRISON
+    function buildPrison() {
+        addGround(110, std(0xffffff, { map: TEX.metalPanels(20, '#8d99ad', 'rgba(255,70,70,0.5)'), roughness: 0.3, metalness: 0.6 }));
+        const white = std(0xe8edf3, { roughness: 0.35, metalness: 0.3 });
+        const dark = std(0x2a3240, { metalness: 0.75, roughness: 0.35 });
+        [[0, -41.5, 84, 1], [0, 41.5, 84, 1], [-41.5, 0, 1, 84], [41.5, 0, 1, 84]].forEach(([x, z, w, d]) => addBox(w, 16, d, white, x, 8, z, { collide: true }));
+        addInstances(GEO.box, dark, Array.from({ length: 9 }, (_, i) => ({ x: 0, y: 16.2, z: -36 + i * 9, sx: 84, sy: 0.6, sz: 0.8 })), { shoot: false });
+        // Two tiers of cells on both sides, laser bars in front
+        const cellWalls = [], bars = [], barGlow = [];
+        for (const side of [-1, 1]) for (let tier = 0; tier < 2; tier++) {
+            const y0 = tier * 6;
+            for (let k = 0; k <= 8; k++) cellWalls.push({ x: side * 35.5, y: y0 + 2.75, z: -32 + k * 8, sx: 11, sy: 5.5, sz: 0.5 });
+            for (let k = 0; k < 8; k++) for (let b = 0; b < 6; b++) {
+                const z = -31 + k * 8 + b * 1.2;
+                bars.push({ x: side * 30.2, y: y0 + 2.75, z, sx: 0.07, sy: 5.2, sz: 0.07 });
+                if (b % 2 === 0) barGlow.push([side * 30.2, y0 + 0.4, z], [side * 30.2, y0 + 5.2, z]);
+            }
+        }
+        addInstances(GEO.box, white, cellWalls);
+        const slab = [-1, 1].map(s => addBox(11, 0.3, 66, white, s * 35.5, 5.85, 0, { shoot: true }));
+        const laserMat = bas(0xff2a2a, { transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+        const barMesh = addInstances(GEO.box, laserMat, bars, { shoot: false });
+        const barGlowPts = addGlowPoints(barGlow, 0xff3030, 1.1, 0.8);
+        const laserCols = [];
+        [-1, 1].forEach(s => { laserCols.push(addColliderBox(s * 30.2, 0, 0.5, 66, 5.5)); laserCols.push(addColliderBox(s * 30.2, 0, 0.5, 66, 11.6, 5.9)); });
+        // Catwalks + stairs to the upper tier
+        [-1, 1].forEach(s => {
+            addBox(6.5, 0.3, 70, dark, s * 26.6, 5.85, 0, { shoot: true });
+            addFloorZone(s * 26.6 - 3.25, s * 26.6 + 3.25, -35, 35, 6.0);
+            addBox(0.15, 1.1, 70, dark, s * 23.4, 6.55, 0, { shoot: false });
+            addColliderBox(s * 23.4, 0, 0.3, 70, 7.1, 5.9);
+            for (let k = 0; k < 12; k++) addBox(0.85, 0.5, 3, dark, s * (13.2 + k * 0.85), 0.25 + k * 0.5, -32.5, { platform: true });
+        });
+        // Prisoners
+        const r = mulberry32(51);
+        const skins = [0x7fbf5a, 0x9b6bd6, 0xd98a5a, 0x5ab8c9, 0xc9c95a];
+        for (let i = 0; i < 12; i++) {
+            const side = i % 2 ? 1 : -1, tier = i % 3 === 0 ? 1 : 0, k = (r() * 8) | 0;
+            if (side === -1 && tier === 0 && k === 3) continue;
+            const f = simpleFigure(null, { body: 0xf97316, skin: skins[i % 5], h: 1.3 + r() * 0.5, head: 0.4 + r() * 0.15 });
+            f.position.set(side * (34 + r() * 3), tier * 6, -28 + k * 8 + r() * 2); f.rotation.y = side > 0 ? -Math.PI / 2 : Math.PI / 2;
+        }
+        // Rick's cell (lower left, cell 3)
+        const rick = simpleFigure(null, { body: 0xf1f5f9, skin: 0xe8d4b8, h: 1.6, head: 0.42, leg: 0x8a6a3a });
+        rick.position.set(-34, 0, -4); rick.rotation.y = Math.PI / 2;
+        const hair = new THREE.Mesh(GEO.cone, std(0x9fd6ff)); hair.scale.set(0.5, 0.6, 0.5); hair.position.y = 3.3; rick.add(hair);
+        addSign('C-137', '#ff4a4a', 2.4, 0.7, -29.6, 5.0, -4, { ry: Math.PI / 2, bg: '#1a0505', tw: 256, th: 80, font: '900 54px Orbitron, sans-serif' });
+        registerInteractable(rick.userData.body, 'C-137 Hücresi: Rick ile Konuş', () => { audio.playInteract('laser'); showToast('RICK (HÜCRE C-137)', '"Rahat ol Morty, bu bir plan. Beni yakalamalarına izin verdim. Beyin tarayıcıları... virüs... bum. Klasik."', '#4dff6a'); });
+        // Central control console → toggles all laser bars
+        let lasersOn = true;
+        const cons = addBox(5, 1.2, 2, dark, 0, 0.6, -10, { collide: true });
+        addBox(4.4, 1.4, 0.1, bas(0xffffff, { map: TEX.consoleScreen(5, '#ff5a5a') }), 0, 1.9, -10.6, { shoot: false }).rotation.x = -0.3;
+        addGlow(0, 1.9, -10, 0xff4040, 3, 0.4);
+        registerInteractable(cons, 'Hapishane Kontrol Konsolu: Lazer Parmaklıkları Aç/Kapat', () => {
+            lasersOn = !lasersOn; barMesh.visible = lasersOn; barGlowPts.visible = lasersOn && gameSettings.glow; laserCols.forEach(c => { c.active = lasersOn; });
+            audio.playInteract(lasersOn ? 'laser' : 'hatch');
+            showToast('FEDERASYON GÜVENLİĞİ', lasersOn ? 'Lazer parmaklıklar yeniden aktif.' : '⚠ GÜVENLİK İHLALİ! Tüm hücreler açıldı. Mahkumlar serbest!', '#ff5a5a');
+        });
+        // Guard tower with sweeping searchlight
+        addCyl(2.4, 3, 10, dark, 0, 5, -27, { collide: true });
+        addCyl(5, 5, 3, std(0x9fd8ff, { transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.4, depthWrite: false }), 0, 11.5, -27, { shoot: false });
+        addCyl(5.6, 5.6, 0.5, dark, 0, 13.2, -27, { shoot: false });
+        const beamG = new THREE.Group(); beamG.position.set(0, 12, -27); worldGroup.add(beamG);
+        const beam = new THREE.Mesh(new THREE.ConeGeometry(4, 30, 20, 1, true), bas(0xfff6c8, { transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+        beam.position.set(0, -9, 13); beam.rotation.x = -1.1; beamG.add(beam);
+        addAnim((dt, t) => { beamG.rotation.y = Math.sin(t * 0.4) * 1.3; });
+        // Gromflomite guards (insect soldiers) patrolling
+        const guardMat = std(0x6b8f3a, { roughness: 0.5 });
+        for (let i = 0; i < 4; i++) {
+            const g = simpleFigure(null, { body: 0x1e3a5f, headMat: guardMat, h: 1.5, head: 0.5, eyes: false });
+            [-0.22, 0.22].forEach(ex => { const e = new THREE.Mesh(GEO.sphereLo, bas(0x050505)); e.scale.set(0.22, 0.3, 0.15); e.position.set(ex, 2.95, 0.38); g.add(e); });
+            [-1, 1].forEach(s => { const w = new THREE.Mesh(GEO.plane, bas(0xcfe8ff, { transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false })); w.scale.set(0.9, 1.6, 1); w.position.set(s * 0.45, 2.4, -0.35); w.rotation.y = s * 0.6; g.add(w); });
+            const gun = new THREE.Mesh(GEO.box, dark); gun.scale.set(0.15, 0.2, 1); gun.position.set(0.4, 1.9, 0.4); g.add(gun);
+            const lx = i % 2 ? 14 : -14, phase = i * 1.6;
+            addAnim((dt, t) => { const z = Math.sin(t * 0.25 + phase) * 26; const dz = Math.cos(t * 0.25 + phase); g.position.set(lx + (i > 1 ? 5 : 0), Math.abs(Math.sin(t * 4 + i)) * 0.05, z); g.rotation.y = dz > 0 ? 0 : Math.PI; });
+            if (i === 0) registerInteractable(g.userData.body, 'Gromflomit Muhafız: Konuş', () => { audio.playInteract('meeseeks'); showToast('GROMFLOMİT MUHAFIZ', '"Bzzt! Hücrene geri dön, insan! Federasyon her şeyi görür... ve faturalandırır."', '#9fd86b'); });
+        }
+        addSign('GALACTIC FEDERATION', '#9fd8ff', 30, 3.6, 0, 12.5, -40.9, { bg: '#0b1424', tw: 1024, th: 128, font: '900 76px Orbitron, sans-serif' });
+        const alarms = addGlowPoints([[-41, 14, -20], [-41, 14, 20], [41, 14, -20], [41, 14, 20], [0, 14, 41], [0, 14, -41]], 0xff2020, 4, 0.9);
+        addAnim((dt, t) => { alarms.material.opacity = 0.35 + Math.max(0, Math.sin(t * 3)) * 0.6; });
+        const planet = addSphere(40, bas(0x5a7ab8, { fog: false }), 120, 150, -220, { shoot: false });
+        addGlow(120, 150, -215, 0x8fb8ff, 120, 0.25);
+        const pl = new THREE.PointLight(0xe8f0ff, 1.2, 50, 2); pl.position.set(0, 10, 0); worldGroup.add(pl);
+        addParticles({ count: 80, spread: 70, minY: 0.5, maxY: 15, color: 0xcfe0ff, size: 0.12, speed: 0.1, drift: 1, opacity: 0.5 });
+    }
+
+    // ---------------------------------------------------------------- 16. PICKLE RICK SEWER
+    function buildSewer() {
+        ceilingY = 9;
+        const brick = TEX.make('sewerbrick', 256, (ctx, s) => {
+            ctx.fillStyle = '#2a2418'; ctx.fillRect(0, 0, s, s);
+            for (let y = 0; y < s; y += 16) for (let x = ((y / 16) % 2) * -16; x < s; x += 32) {
+                const v = 70 + Math.random() * 40 | 0; ctx.fillStyle = `rgb(${v},${v * 0.82 | 0},${v * 0.6 | 0})`; ctx.fillRect(x + 1, y + 1, 30, 14);
+            }
+            ctx.fillStyle = 'rgba(60,110,30,0.35)'; for (let i = 0; i < 18; i++) ctx.fillRect(Math.random() * s, 0, 3 + Math.random() * 6, s * (0.3 + Math.random() * 0.7));
+        }, 14, 30);
+        const tunnel = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 180, 36, 1, true, Math.PI / 2, Math.PI), std(0xffffff, { map: brick, roughness: 0.85, side: THREE.BackSide }));
+        tunnel.rotation.x = Math.PI / 2; tunnel.position.set(0, 0, -20); worldGroup.add(tunnel); shootableMeshes.push(tunnel);
+        addColliderBox(-8.7, -20, 0.6, 180); addColliderBox(8.7, -20, 0.6, 180);
+        [70, -110].forEach(z => addBox(18, 9, 1, std(0xffffff, { map: brick, roughness: 0.85 }), 0, 4.5, z, { collide: true }));
+        // Walkways (raised) with the sludge channel between them
+        const conc = std(0x5d5a4e, { map: TEX.noiseGray(10, 60), roughness: 0.92 });
+        addBox(11, 1.0, 180, conc, -3.5, -0.5, -20, { platform: true });
+        addBox(2.2, 1.0, 180, conc, 7.9, -0.5, -20, { platform: true });
+        addBox(5, 0.1, 180, std(0x1a1c10, { roughness: 1 }), 4.45, -1.05, -20);
+        const sludge = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 180), std(0x6fbf2a, { transparent: true, opacity: 0.88, roughness: 0.15, metalness: 0.2, emissive: 0x1f4a05, emissiveIntensity: 0.7 }));
+        sludge.rotation.x = -Math.PI / 2; sludge.position.set(4.4, -0.45, -20); worldGroup.add(sludge); shootableMeshes.push(sludge);
+        addAnim((dt, t) => { sludge.material.emissiveIntensity = 0.6 + Math.sin(t * 1.5) * 0.15; });
+        // Pipes along the walls
+        const pipe = std(0x5a4a3a, { metalness: 0.6, roughness: 0.5 });
+        [[-7.9, 3.2, 0.45], [-7.6, 4.4, 0.3], [7.9, 4.0, 0.4], [7.5, 5.4, 0.28]].forEach(([x, y, r]) => addCyl(r, r, 180, pipe, x, y, -20, { rx: Math.PI / 2, shoot: false }));
+        // Outlet pipes pouring sludge into the channel
+        const fallTex = TEX.make('sludgefall', 64, (ctx, s) => { ctx.fillStyle = '#4f9f1a'; ctx.fillRect(0, 0, s, s); for (let i = 0; i < 40; i++) { ctx.fillStyle = `rgba(200,255,120,${Math.random() * 0.5})`; ctx.fillRect(Math.random() * s, Math.random() * s, 2, 8 + Math.random() * 14); } }, 1, 2);
+        const falls = [];
+        for (let i = 0; i < 6; i++) {
+            const z = 40 - i * 26;
+            addCyl(0.75, 0.75, 1.6, pipe, 8.1, 2.6, z, { rz: Math.PI / 2, shoot: false });
+            const f = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 3.1), bas(0xffffff, { map: fallTex, transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
+            f.position.set(7.15, 1.0, z); f.rotation.y = Math.PI / 2; worldGroup.add(f); falls.push(f);
+        }
+        addAnim((dt, t) => { fallTex.offset.y = -t * 1.5; });
+        // Grates + light shafts
+        const shaftMat = bas(0xd8ffb0, { transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+        for (let z = 30; z >= -100; z -= 26) {
+            const s = new THREE.Mesh(new THREE.ConeGeometry(2.4, 9, 12, 1, true), shaftMat); s.position.set(-1, 4.4, z); worldGroup.add(s);
+            addBox(2.4, 0.15, 2.4, std(0x1a1a1a, { metalness: 0.8 }), -1, 8.85, z, { shoot: false });
+            addGlow(-1, 8.6, z, 0xe8ffc0, 5, 0.5);
+        }
+        // Caged wall lamps
+        const lamps = []; for (let z = 50; z >= -100; z -= 12) lamps.push([-8.1, 6, z], [8.1, 6, z - 6]);
+        addGlowPoints(lamps, 0xffc870, 2.2, 0.8);
+        [[0, 5, 0], [0, 5, -40]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xc8ff8a, 1.3, 30, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        // Junk piles
+        const rr = mulberry32(88);
+        const junk = []; for (let i = 0; i < 40; i++) { const side = rr() < 0.7 ? -1 : 1; junk.push({ x: side < 0 ? -7.2 + rr() * 1.4 : 8.2, y: 0.25, z: 60 - rr() * 160, s: 0.3 + rr() * 0.5, ry: rr() * 3, color: [0x5a4a3a, 0x3a5a4a, 0x7a6a5a, 0x8a3a2a][i % 4] }); }
+        addInstances(GEO.box, std(0xffffff, { roughness: 0.9 }), junk, { shoot: false });
+        // Rats scurrying
+        for (let i = 0; i < 10; i++) {
+            const rat = new THREE.Group();
+            const b = new THREE.Mesh(GEO.sphereLo, std(0x5a5550)); b.scale.set(0.22, 0.18, 0.4); b.position.y = 0.18;
+            const tail = new THREE.Mesh(GEO.cyl8, std(0xd89a9a)); tail.scale.set(0.025, 0.6, 0.025); tail.rotation.x = Math.PI / 2 + 0.3; tail.position.set(0, 0.15, -0.6);
+            rat.add(b, tail); worldGroup.add(rat);
+            const x = i % 2 ? -8.1 + rr() * 0.6 : 7.4, sp = 4 + rr() * 5, off = rr() * 200;
+            addAnim((dt, t) => { const z = 60 - ((t * sp + off) % 170); rat.position.set(x, 0, z); rat.rotation.y = Math.PI; });
+        }
+        // Pickle Rick's rat-mech lair
+        const lair = new THREE.Group(); lair.position.set(-4, 0, -42); worldGroup.add(lair);
+        const pick = new THREE.Mesh(GEO.cyl, std(0xffffff, { map: TEX.pickle(), roughness: 0.4 })); pick.scale.set(0.55, 1.8, 0.55); pick.position.y = 2.3; lair.add(pick);
+        [[-0.6, 0.6], [0.6, 0.6], [-0.6, -0.6], [0.6, -0.6]].forEach(([lx, lz], i) => { const leg = new THREE.Mesh(GEO.cyl8, std(0x6a6058)); leg.scale.set(0.12, 1.7, 0.12); leg.position.set(lx, 0.9, lz); leg.rotation.z = lx * 0.4; leg.rotation.x = lz * 0.4; lair.add(leg); });
+        const skull = new THREE.Mesh(GEO.sphereLo, std(0xe8e0cc)); skull.scale.set(0.5, 0.4, 0.7); skull.position.set(0, 3.5, 0.3); lair.add(skull);
+        addInstances(GEO.ico, std(0x6a5a40, { flatShading: true, roughness: 0.9 }), Array.from({ length: 10 }, (_, i) => ({ x: -4 + Math.cos(i) * 2.5, y: 0.4, z: -42 + Math.sin(i * 1.7) * 2.5, s: 0.4 + (i % 3) * 0.25 })), { shoot: false });
+        addGlow(-4, 2.3, -41, 0x7dff3a, 4, 0.3);
+        addColliderBox(-4, -42, 2.4, 2.4);
+        registerInteractable(pick, 'Fare-Turşu Rick: Konuş', () => { audio.playInteract('laser'); showToast('TURŞU RICK', '"Fare parçalarından bir dış iskelet yaptım Morty! Hamamböceği beyni + fare kası + turşu dehası = TANRI!"', '#7dff3a'); });
+        // Valve controlling the outlet flow
+        const valve = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.12, 8, 20), std(0xc0392b, { metalness: 0.6, roughness: 0.4 }));
+        valve.position.set(-7.9, 1.7, -8); valve.rotation.y = Math.PI / 2; worldGroup.add(valve);
+        let flowing = true;
+        registerInteractable(valve, 'Akış Vanası: Çevir', () => { flowing = !flowing; falls.forEach(f => { f.visible = flowing; }); valve.rotation.x += Math.PI / 2; audio.playInteract('hatch'); showToast('KANALİZASYON', flowing ? 'Akış yeniden açıldı.' : 'Atık akışı durduruldu. Koku... hâlâ burada.', '#7dff3a'); });
+        addSign('SECTOR 7 · SEWER DEPT.', '#d8ffb0', 6, 0.9, -8.5, 5.0, 10, { ry: Math.PI / 2, bg: '#10140a', tw: 1024, th: 140, font: '900 70px Orbitron, sans-serif' });
+        addParticles({ count: 120, spread: 30, minY: 0, maxY: 8.5, color: 0x9fdc6a, size: 0.35, speed: -5, opacity: 0.5, streak: true });
+        addParticles({ count: 60, spread: 30, minY: 0.5, maxY: 4, color: 0x222222, size: 0.12, speed: 0.1, drift: 2.2, opacity: 0.8, additive: false });
+    }
+
+    // ---------------------------------------------------------------- 17. PLANET SQUANCH
+    function buildSquanch() {
+        addGround(260, std(0xffffff, { map: TEX.make('squanchgrass', 256, (ctx, s) => TEX.speckle(ctx, s, '#5b3a8c', 9000, 60, 120, [20, -10, 50], 3), 34, 34), roughness: 0.95 }));
+        const caps = [0xe0483c, 0x2ab3a6, 0xf28c28, 0x8a5cf0];
+        const houses = [];
+        for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2 + 0.3, d = 26 + (i % 3) * 7; houses.push([Math.cos(a) * d, Math.sin(a) * d - 6, i]); }
+        houses.forEach(([x, z, i]) => {
+            if (Math.abs(x) < 7 && z > -2) return;
+            const h = 4.5 + (i % 3);
+            addCyl(2.4, 2.8, h, std(0xf4e6c8, { roughness: 0.8 }), x, h / 2, z, { collide: true });
+            const cap = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), std(caps[i % 4], { roughness: 0.5 }));
+            cap.scale.set(5.2, 3.4, 5.2); cap.position.set(x, h - 0.4, z); worldGroup.add(cap); shootableMeshes.push(cap);
+            addInstances(GEO.sphereLo, bas(0xfff3c4), Array.from({ length: 6 }, (_, k) => ({ x: x + Math.cos(i + k) * 3.35, y: h * 0.8 - 0.3 * (k % 2), z: z + Math.sin(i + k) * 3.35, s: 0.45 })), { shoot: false });
+            addInstances(GEO.sphereLo, bas(0xffffff), Array.from({ length: 8 }, (_, k) => ({ x: x + Math.cos(k * 0.8) * 4.6, y: h + 0.9 + (k % 3) * 0.4, z: z + Math.sin(k * 0.8) * 4.6, s: 0.35 })), { shoot: false });
+            addBox(1.3, 2.4, 0.2, std(0x6a3a1f), x - Math.sign(x || 1) * 0, 1.2, z + 2.75, { shoot: false });
+        });
+        // Wedding arch with flowers
+        const arch = new THREE.Mesh(new THREE.TorusGeometry(4, 0.3, 8, 40, Math.PI), std(0xf8f0e0, { roughness: 0.5 }));
+        arch.position.set(0, 0, -16); worldGroup.add(arch);
+        addInstances(GEO.ico, std(0xffffff, { roughness: 0.6, flatShading: true }), Array.from({ length: 26 }, (_, k) => { const a = k / 25 * Math.PI; return { x: Math.cos(a) * 4, y: Math.sin(a) * 4, z: -16, s: 0.35, color: [0xff7ab8, 0xfff07a, 0xffffff, 0xff9a5a][k % 4] }; }), { shoot: false });
+        addColliderBox(-4, -16, 0.8, 0.8); addColliderBox(4, -16, 0.8, 0.8);
+        // String lights on poles
+        const poles = []; for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; poles.push([Math.cos(a) * 14, Math.sin(a) * 14 - 6]); }
+        addInstances(GEO.cyl8, std(0x4a2a1a), poles.map(([x, z]) => ({ x, y: 3, z, sx: 0.15, sy: 6, sz: 0.15 })), { collide: true, cw: 3, cd: 3 });
+        const bulbs = [[], [], []];
+        poles.forEach(([x, z], i) => { const [x2, z2] = poles[(i + 1) % poles.length]; for (let k = 1; k < 10; k++) { const f = k / 10; bulbs[k % 3].push([lerp(x, x2, f), 5.9 - Math.sin(f * Math.PI) * 1.4, lerp(z, z2, f)]); } });
+        addGlowPoints(bulbs[0], 0xffd27a, 1.2, 0.95); addGlowPoints(bulbs[1], 0xff7ad9, 1.2, 0.95); addGlowPoints(bulbs[2], 0x7affe1, 1.2, 0.95);
+        // Animated dance floor
+        const tiles = [];
+        for (let a = 0; a < 6; a++) for (let b = 0; b < 6; b++) tiles.push({ x: 9 + a * 1.6, y: 0.05, z: -12 + b * 1.6, sx: 1.5, sy: 0.1, sz: 1.5, color: 0xff4fd8 });
+        const floor = addInstances(GEO.box, bas(0xffffff), tiles, { shoot: true });
+        const tileCols = [0xff4fd8, 0x3ce8ff, 0xffe14d, 0x4dff6a, 0x9a5cff];
+        let tT = 0;
+        addAnim((dt, t) => { tT += dt; if (tT < 0.3) return; tT = 0; const beat = Math.floor(t * 3.3); for (let i = 0; i < tiles.length; i++) { _c.setHex(tileCols[(i + beat + ((i / 6) | 0)) % 5]); floor.setColorAt(i, _c); } floor.instanceColor.needsUpdate = true; });
+        const discoL = new THREE.PointLight(0xff4fd8, 1.6, 26, 2); discoL.position.set(13, 4, -8); worldGroup.add(discoL);
+        addAnim((dt, t) => { discoL.color.setHSL((t * 0.15) % 1, 1, 0.6); });
+        // DJ booth
+        const dj = addBox(4, 1.3, 1.4, std(0x1a1a24, { metalness: 0.5 }), 13, 0.65, -15.2, { collide: true });
+        [[10.4, -15.2], [15.6, -15.2]].forEach(([x, z]) => { addBox(1.4, 2.6, 1.2, std(0x111111), x, 1.3, z, { collide: true }); addCyl(0.45, 0.45, 0.05, bas(0x3ce8ff), x, 1.7, z + 0.62, { rx: Math.PI / 2, shoot: false }); });
+        addSign('SQUANCH FM', '#ff4fd8', 3.6, 0.7, 13, 2.0, -14.48, { bg: '#0a0410', tw: 512, th: 100, font: '900 60px Orbitron, sans-serif' });
+        registerInteractable(dj, 'DJ Kabini: Şarkı İste', () => { audio.playInteract('meeseeks'); showToast('DJ SQUANCHY', '♪ "Bu gece herkes squanch\'lıyor! Sıradaki: Get Schwifty (Squanch Remix)!" ♪', '#ff4fd8'); });
+        // Bonfire
+        const logs = std(0x5a3a1f, { roughness: 0.9 });
+        [0, 1, 2].forEach(k => addCyl(0.22, 0.22, 2.6, logs, -12, 0.25, -7, { rz: Math.PI / 2, ry: k * 1.05, shoot: false }));
+        const flameMat = bas(0xff8a2a, { transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false });
+        const flames = [0, 1, 2].map(k => { const f = new THREE.Mesh(GEO.cone, flameMat); f.position.set(-12 + (k - 1) * 0.35, 1.0, -7 + (k % 2) * 0.3); worldGroup.add(f); return f; });
+        const fireGlow = addGlow(-12, 1.4, -7, 0xff8a2a, 6, 0.6);
+        const fireL = new THREE.PointLight(0xff8a3a, 2.2, 24, 2); fireL.position.set(-12, 2, -7); worldGroup.add(fireL);
+        addColliderBox(-12, -7, 2.4, 2.4, 2);
+        addAnim((dt, t) => { flames.forEach((f, k) => f.scale.set(0.6, 1.4 + Math.sin(t * 9 + k * 2) * 0.35, 0.6)); const fl = 0.85 + Math.sin(t * 13) * 0.1 + Math.sin(t * 29) * 0.05; fireL.intensity = 2.2 * fl; fireGlow.material.opacity = 0.55 * fl; });
+        // Wedding cake
+        const cake = new THREE.Group(); cake.position.set(-4, 0, -9); worldGroup.add(cake);
+        const tbl = new THREE.Mesh(GEO.cyl, std(0xf4f0e6)); tbl.scale.set(1.4, 1.1, 1.4); tbl.position.y = 0.55; cake.add(tbl);
+        [[0.9, 0.5, 0xffffff], [0.65, 0.45, 0xffc2dc], [0.4, 0.4, 0xffffff]].forEach(([r, h, c], k) => { const tier = new THREE.Mesh(GEO.cyl, std(c, { roughness: 0.6 })); tier.scale.set(r, h, r); tier.position.y = 1.35 + k * 0.45; cake.add(tier); });
+        addColliderBox(-4, -9, 2.8, 2.8, 1.1);
+        registerInteractable(tbl, 'Düğün Pastası: Bir Dilim Al', () => { audio.playInteract('generic'); showToast('SQUANCHY', '"Kuş Adam\'ın düğün pastası! Squanch\'ın... yani tadının keyfini çıkar. Ama Tammy\'ye dikkat et."', '#ffc2dc'); });
+        // Squanchies (cat-people) dancing
+        for (let i = 0; i < 8; i++) {
+            const f = simpleFigure(null, { body: [0xd9a05a, 0x9a6a3a, 0xe8c08a, 0x7a5a3a][i % 4], h: 1.1, head: 0.5, legs: 0.6, eyeColor: 0xfff07a });
+            [-0.3, 0.3].forEach(ex => { const ear = new THREE.Mesh(GEO.cone, std(0xd9a05a)); ear.scale.set(0.16, 0.38, 0.16); ear.position.set(ex, 2.75, 0); f.add(ear); });
+            const onFloor = i < 5, bx = onFloor ? 10 + (i % 3) * 2.2 : -12 + Math.cos(i) * 3.6, bz = onFloor ? -11 + ((i / 3) | 0) * 3 : -7 + Math.sin(i) * 3.6;
+            addAnim((dt, t) => { f.position.set(bx, Math.abs(Math.sin(t * 6.6 + i)) * 0.35, bz); f.rotation.y = onFloor ? Math.sin(t * 2 + i) * 1.2 : Math.atan2(-12 - bx, -7 - bz); f.rotation.z = Math.sin(t * 6.6 + i) * 0.1; });
+            if (i === 0) registerInteractable(f.userData.body, 'Squanchy: Selam Ver', () => { audio.playInteract('meeseeks'); showToast('SQUANCHY', '"Squanch! Squanch squanchy squanch! (Partiye hoş geldin, dostum. Biraz squanch\'la!)"', '#ffd27a'); });
+        }
+        addSphere(9, bas(0xffd8b0, { fog: false }), -90, 70, -200, { shoot: false }); addGlow(-90, 70, -195, 0xffb070, 40, 0.3);
+        addSphere(5, bas(0xb8a8ff, { fog: false }), 70, 95, -210, { shoot: false }); addGlow(70, 95, -205, 0xb8a8ff, 26, 0.3);
+        addParticles({ count: 90, spread: 70, minY: 1, maxY: 30, color: 0xffb060, size: 0.45, speed: 0.6, drift: 1.2, opacity: 0.85 });
+    }
+
+    // ---------------------------------------------------------------- 18. BACKROOMS LEVEL 1
+    function buildLevel1() {
+        ceilingY = 8;
+        addGround(140, std(0x6b6a66, { map: TEX.noiseGray(34, 34), roughness: 0.88 }));
+        addBox(140, 0.4, 140, std(0x3a3a38, { map: TEX.noiseGray(30, 30), roughness: 0.95 }), 0, 8.2, 0);
+        const r = mulberry32(101);
+        for (let i = 0; i < 18; i++) { const p = new THREE.Mesh(new THREE.CircleGeometry(1.5 + r() * 2.5, 20), std(0x1a1c20, { roughness: 0.04, metalness: 0.9, transparent: true, opacity: 0.75 })); p.rotation.x = -Math.PI / 2; p.scale.set(1, 0.6 + r() * 0.6, 1); p.position.set((r() - 0.5) * 100, 0.015, (r() - 0.5) * 100); worldGroup.add(p); }
+        const concrete = std(0x8a8984, { map: TEX.noiseGray(2, 6), roughness: 0.9 });
+        const pillars = []; for (let x = -54; x <= 54; x += 12) for (let z = -54; z <= 54; z += 12) if (!(Math.abs(x) < 7 && Math.abs(z) < 9)) pillars.push({ x, y: 4, z, sx: 1.6, sy: 8, sz: 1.6 });
+        addInstances(GEO.box, concrete, pillars, { collide: true });
+        [[0, -61, 124, 1], [0, 61, 124, 1], [-61, 0, 1, 124], [61, 0, 1, 124]].forEach(([x, z, w, d]) => addBox(w, 8, d, concrete, x, 4, z, { collide: true }));
+        // Shelving racks loaded with boxes
+        const frames = [], shelves = [], boxes = [];
+        for (let i = 0; i < 22; i++) {
+            const x = -48 + (i % 6) * 18 + 6, z = -46 + Math.floor(i / 6) * 24 + 6;
+            if (Math.abs(x) < 9 && Math.abs(z) < 12) continue;
+            const ry = (i % 2) * Math.PI / 2, along = ry ? [0, 1] : [1, 0];
+            [-3.8, 3.8].forEach(o => frames.push({ x: x + along[0] * o, y: 2.5, z: z + along[1] * o, sx: 0.15, sy: 5, sz: 0.15 }));
+            [0.3, 1.9, 3.5].forEach(y => shelves.push({ x, y, z, sx: ry ? 1.5 : 8, sy: 0.1, sz: ry ? 8 : 1.5 }));
+            for (let k = 0; k < 9; k++) { const o = -3.2 + (k % 5) * 1.6 + r() * 0.3, y = [0.75, 2.35, 3.95][k % 3]; boxes.push({ x: x + along[0] * o, y, z: z + along[1] * o, sx: 1.1, sy: 0.8, sz: 1.0, ry: r() * 0.3, color: [0xb08a5a, 0x9a7a4a, 0xc8a070, 0x7a6a5a][k % 4] }); }
+            addColliderBox(x, z, ry ? 1.6 : 8.2, ry ? 8.2 : 1.6, 5);
+        }
+        const rackMat = std(0x3a5a8a, { metalness: 0.6, roughness: 0.45 });
+        addInstances(GEO.box, rackMat, frames); addInstances(GEO.box, std(0xb8b8b0, { metalness: 0.5, roughness: 0.5 }), shelves); addInstances(GEO.box, std(0xffffff, { roughness: 0.9 }), boxes);
+        // Hanging fluorescent fixtures + ceiling pipes
+        const fixtures = []; for (let x = -48; x <= 48; x += 12) for (let z = -48; z <= 48; z += 12) if (r() > 0.25) fixtures.push({ x: x + 6, y: 6.9, z: z + 6, sx: 2.6, sy: 0.12, sz: 0.4 });
+        addInstances(GEO.box, bas(0xeef6ff), fixtures, { shoot: false });
+        addInstances(GEO.cyl8, std(0x222222), fixtures.flatMap(f => [{ x: f.x - 1, y: 7.5, z: f.z, sx: 0.02, sy: 1.2, sz: 0.02 }, { x: f.x + 1, y: 7.5, z: f.z, sx: 0.02, sy: 1.2, sz: 0.02 }]), { shoot: false });
+        addGlowPoints(fixtures.map(f => [f.x, 6.7, f.z]), 0xe8f2ff, 4, 0.35);
+        const flick = addBox(2.6, 0.12, 0.4, bas(0xeef6ff), 0, 6.9, -6, { shoot: false });
+        addAnim(() => { flick.visible = Math.random() > 0.12; });
+        addInstances(GEO.cyl, std(0x6a6a6a, { metalness: 0.7, roughness: 0.4 }), [-30, -10, 10, 30].map(z => ({ x: 0, y: 7.5, z, rz: Math.PI / 2, sx: 0.3, sy: 120, sz: 0.3 })), { shoot: false });
+        [[0, 6.5, 0], [-24, 6.5, -24], [24, 6.5, 20]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xe8f0ff, 1.1, 28, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        // Almond water supply crate
+        const crate = addBox(1.6, 1.1, 1.2, std(0x8a6a3a, { roughness: 0.8 }), 3.5, 0.55, -5, { collide: true });
+        addInstances(GEO.cyl, std(0xeef6ff, { transparent: true, opacity: 0.8, roughness: 0.1 }), [0, 1, 2, 3].map(k => ({ x: 3.0 + k * 0.33, y: 1.35, z: -5, sx: 0.12, sy: 0.5, sz: 0.12 })), { shoot: false });
+        registerInteractable(crate, 'Badem Suyu Kasası: Al', () => { audio.playInteract('generic'); showToast('SEVİYE 1 (YAŞANABİLİR BÖLGE)', '"Erzak kasası dolu! Burada güvendesin... ışıklar söndüğünde değilsen."', '#bfe3ff'); });
+        addSign("IT'S SAFE HERE", '#ffd27a', 5, 1, -6.7, 3, -4, { ry: Math.PI / 2, bg: '#2a2a28', tw: 512, th: 100, font: '900 56px Orbitron, sans-serif' });
+        const door = addBox(2.4, 3.6, 0.25, std(0x8a1a1a, { metalness: 0.4, roughness: 0.5 }), 0, 1.8, -60.4, { shoot: false });
+        addSign('LEVEL 2', '#ff5a3a', 2.2, 0.6, 0, 4.1, -60.2, { bg: '#1a0805', tw: 256, th: 80, font: '900 48px Orbitron, sans-serif' });
+        addGlow(0, 4.1, -59.6, 0xff5a3a, 3, 0.6);
+        registerInteractable(door, 'Yangın Kapısı: Seviye 2\'ye İn', () => teleportToUniverse(UNIVERSES.findIndex(u => u.code === 'B-02')));
+        addParticles({ count: 140, spread: 50, minY: 0.3, maxY: 7.5, color: 0xd8d8d0, size: 0.1, speed: 0.06, drift: 0.9, opacity: 0.55 });
+    }
+
+    // ---------------------------------------------------------------- 19. BACKROOMS LEVEL 2
+    function buildLevel2() {
+        ceilingY = 4.2;
+        const N = 15, C = 4.5, off = -(N - 1) / 2 * C;
+        const r = mulberry32(222);
+        const vis = new Uint8Array(N * N), right = new Uint8Array(N * N).fill(1), down = new Uint8Array(N * N).fill(1);
+        const stack = [[7, 7]]; vis[7 * N + 7] = 1;
+        const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        while (stack.length) {
+            const [cx, cz] = stack[stack.length - 1];
+            const nb = dirs.map(([dx, dz]) => [cx + dx, cz + dz, dx, dz]).filter(([nx, nz]) => nx >= 0 && nz >= 0 && nx < N && nz < N && !vis[nx * N + nz]);
+            if (!nb.length) { stack.pop(); continue; }
+            const [nx, nz, dx, dz] = nb[(r() * nb.length) | 0];
+            if (dx === 1) right[cx * N + cz] = 0; else if (dx === -1) right[nx * N + nz] = 0; else if (dz === 1) down[cx * N + cz] = 0; else down[nx * N + nz] = 0;
+            vis[nx * N + nz] = 1; stack.push([nx, nz]);
+        }
+        for (let i = 0; i < N * N; i++) { if (r() < 0.1) right[i] = 0; if (r() < 0.1) down[i] = 0; }
+        const walls = [], pipesA = [], pipesB = [];
+        for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+            const x = off + cx * C, z = off + cz * C;
+            if (right[cx * N + cz] && cx < N - 1) { walls.push({ x: x + C / 2, y: 2.1, z, sx: 0.5, sy: 4.2, sz: C + 0.5 }); pipesA.push({ x: x + C / 2 - 0.42, y: 3.3, z, rx: Math.PI / 2, sx: 0.14, sy: C, sz: 0.14 }); pipesB.push({ x: x + C / 2 + 0.4, y: 3.75, z, rx: Math.PI / 2, sx: 0.1, sy: C, sz: 0.1 }); }
+            if (down[cx * N + cz] && cz < N - 1) { walls.push({ x, y: 2.1, z: z + C / 2, sx: C + 0.5, sy: 4.2, sz: 0.5 }); pipesA.push({ x, y: 3.3, z: z + C / 2 - 0.42, rz: Math.PI / 2, sx: 0.14, sy: C, sz: 0.14 }); pipesB.push({ x, y: 3.75, z: z + C / 2 + 0.4, rz: Math.PI / 2, sx: 0.1, sy: C, sz: 0.1 }); }
+        }
+        const half = N * C / 2;
+        [[0, -half, N * C + 1, 0.6], [0, half, N * C + 1, 0.6], [-half, 0, 0.6, N * C + 1], [half, 0, 0.6, N * C + 1]].forEach(([x, z, w, d]) => walls.push({ x, y: 2.1, z, sx: w, sy: 4.2, sz: d }));
+        worldBounds = half - 0.5;
+        const wallMat = std(0x55504a, { map: TEX.noiseGray(1, 1), roughness: 0.9 });
+        addInstances(GEO.box, wallMat, walls, { collide: true });
+        addInstances(GEO.cyl8, std(0x8a4a2a, { metalness: 0.6, roughness: 0.5 }), pipesA, { shoot: false });
+        addInstances(GEO.cyl8, std(0x707070, { metalness: 0.7, roughness: 0.4 }), pipesB, { shoot: false });
+        addGround(N * C + 4, std(0x3a3632, { map: TEX.noiseGray(20, 20), roughness: 0.95 }));
+        addBox(N * C + 4, 0.3, N * C + 4, std(0x24201c, { roughness: 1 }), 0, 4.35, 0, { shoot: false });
+        const bulbs = [];
+        for (let cx = 0; cx < N; cx += 2) for (let cz = (cx / 2) % 2; cz < N; cz += 2) bulbs.push([off + cx * C, 3.9, off + cz * C]);
+        addGlowPoints(bulbs, 0xff7a2a, 2.4, 0.85);
+        addInstances(GEO.sphereLo, bas(0xffb070), bulbs.map(([x, y, z]) => ({ x, y, z, s: 0.14 })), { shoot: false });
+        [[0, 3.6, 0], [off + 3 * C, 3.6, off + 11 * C], [off + 11 * C, 3.6, off + 3 * C]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xff8a4a, 1.2, 16, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        // Pressure gauge near spawn
+        const gauge = addCyl(0.35, 0.35, 0.1, std(0xe8e0cc, { metalness: 0.4 }), 0, 2.1, -1.9, { rx: Math.PI / 2, shoot: false });
+        const needle = addBox(0.03, 0.28, 0.02, bas(0xff2020), 0, 2.2, -1.82, { shoot: false });
+        addAnim((dt, t) => { needle.rotation.z = Math.sin(t * 0.7) * 0.6 + Math.sin(t * 7) * 0.05 - 0.3; });
+        registerInteractable(gauge, 'Basınç Göstergesi: Oku', () => { audio.playInteract('hatch'); showToast('SEVİYE 2 (BORU RÜYALARI)', '"Sıcaklık 42°C ve yükseliyor. Borular inliyor... burada uzun süre kalma."', '#ff8a4a'); });
+        const ex = off + (N - 1) * C, ez = off + 0 * C;
+        const door = addBox(0.25, 3.4, 2.2, std(0xd8c84a, { metalness: 0.3 }), ex + 1.9, 1.7, ez, { shoot: false });
+        addGlow(ex + 1.6, 3.6, ez, 0xff4fd8, 2.4, 0.8);
+        registerInteractable(door, 'Bakım Kapısı: Ne Var Arkasında? =)', () => teleportToUniverse(UNIVERSES.findIndex(u => u.code === 'B-FUN')));
+        addParticles({ count: 150, spread: 30, minY: 0, maxY: 4, color: 0xfff0e0, size: 0.6, speed: 0.5, drift: 0.8, opacity: 0.12, additive: false });
+        addParticles({ count: 60, spread: 26, minY: 0, maxY: 4, color: 0xff7a2a, size: 0.08, speed: 0.4, drift: 1.4, opacity: 0.8 });
+    }
+
+    // ---------------------------------------------------------------- 20. BACKROOMS LEVEL FUN =)
+    function buildLevelFun() {
+        ceilingY = 6;
+        addGround(84, std(0xffffff, { map: TEX.make('funcarpet', 256, (ctx, s) => { ctx.fillStyle = '#b8203a'; ctx.fillRect(0, 0, s, s); const cs = ['#ffe14d', '#3ce8ff', '#4dff6a', '#ff9be8', '#ffffff']; for (let i = 0; i < 160; i++) { ctx.fillStyle = cs[i % 5]; ctx.save(); ctx.translate(Math.random() * s, Math.random() * s); ctx.rotate(Math.random() * 3); ctx.fillRect(-4, -1.5, 8, 3); ctx.restore(); } }, 18, 18), roughness: 0.95 }));
+        const wallTex = TEX.make('funwall', 256, (ctx, s) => { const cs = ['#fff3a8', '#ffc2dc', '#c2f0ff', '#fff3a8']; for (let x = 0; x < s; x += 32) { ctx.fillStyle = cs[(x / 32) % 4]; ctx.fillRect(x, 0, 32, s); } ctx.fillStyle = 'rgba(255,79,216,0.25)'; for (let i = 0; i < 10; i++) { ctx.beginPath(); ctx.ellipse(Math.random() * s, Math.random() * s * 0.7, 9, 12, 0, 0, Math.PI * 2); ctx.fill(); } ctx.fillStyle = '#e04a8a'; ctx.fillRect(0, s - 12, s, 12); }, 1, 1);
+        const wall = std(0xffffff, { map: wallTex, roughness: 0.8 });
+        addBox(84, 0.3, 84, std(0xfff8f0, { roughness: 0.9, emissive: 0x3a2a30, emissiveIntensity: 0.4 }), 0, 6.15, 0, { shoot: false });
+        [[0, -41, 84, 1], [0, 41, 84, 1], [-41, 0, 1, 84], [41, 0, 1, 84]].forEach(([x, z, w, d]) => addBox(w, 6, d, wall, x, 3, z, { collide: true }));
+        // Partition walls with doorways
+        [[-14, -14, 10], [14, -14, 10], [-14, 14, 10], [14, 14, 10]].forEach(([x, z, len]) => { addBox(len, 6, 0.4, wall, x - Math.sign(x) * 0, 3, z, { collide: true }); addBox(0.4, 6, len, wall, x + Math.sign(x) * 5, 3, z - Math.sign(z) * 5, { collide: true }); });
+        // Balloons
+        const r = mulberry32(333), bal = [], strings = [];
+        const balCols = [0xff3a5a, 0xffe14d, 0x3ca8ff, 0x4dff6a, 0xff7ad9, 0xb07aff];
+        for (let i = 0; i < 46; i++) { const x = (r() - 0.5) * 76, z = (r() - 0.5) * 76, y = 4.7 + r() * 0.8; bal.push({ x, y, z, sx: 0.45, sy: 0.55, sz: 0.45, color: balCols[i % 6] }); strings.push(x, y - 0.55, z, x + (r() - 0.5) * 0.3, y - 2.6, z); }
+        const balGroup = new THREE.Group(); worldGroup.add(balGroup);
+        const bm = new THREE.InstancedMesh(GEO.sphere, std(0xffffff, { roughness: 0.2, metalness: 0.1 }), bal.length);
+        bal.forEach((b, i) => { _m4.compose(_p.set(b.x, b.y, b.z), _q.identity(), _s.set(b.sx, b.sy, b.sz)); bm.setMatrixAt(i, _m4); _c.setHex(b.color); bm.setColorAt(i, _c); });
+        bm.frustumCulled = false; balGroup.add(bm);
+        const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(strings, 3));
+        balGroup.add(new THREE.LineSegments(sg, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 })));
+        addAnim((dt, t) => { balGroup.position.y = Math.sin(t * 0.8) * 0.08; });
+        // Party tables, cakes, presents, hats
+        const tables = [[-24, -24], [24, -24], [-24, 24], [24, 24], [0, -26], [8, -6]];
+        addInstances(GEO.cyl, std(0xffffff, { roughness: 0.5 }), tables.map(([x, z]) => ({ x, y: 0.9, z, sx: 1.6, sy: 0.08, sz: 1.6 })), { collide: true, cw: 2, cd: 2, ch: 6 });
+        addInstances(GEO.cyl8, std(0xd8d8d8), tables.map(([x, z]) => ({ x, y: 0.45, z, sx: 0.12, sy: 0.9, sz: 0.12 })), { shoot: false });
+        addInstances(GEO.cyl, std(0xffffff, { roughness: 0.6 }), tables.flatMap(([x, z]) => [{ x, y: 1.15, z, sx: 0.55, sy: 0.4, sz: 0.55, color: 0xfff0f5 }, { x, y: 1.45, z, sx: 0.4, sy: 0.25, sz: 0.4, color: 0xff7ab8 }]), { shoot: false });
+        addInstances(GEO.box, std(0xffffff, { roughness: 0.5 }), Array.from({ length: 24 }, (_, i) => ({ x: (r() - 0.5) * 70, y: 0.35, z: (r() - 0.5) * 70, s: 0.5 + r() * 0.4, ry: r() * 3, color: balCols[i % 6] })), { shoot: false });
+        addInstances(GEO.cone, std(0xffffff), tables.flatMap(([x, z], i) => [0, 1, 2].map(k => ({ x: x + Math.cos(k * 2.1) * 1.1, y: 1.15, z: z + Math.sin(k * 2.1) * 1.1, sx: 0.15, sy: 0.4, sz: 0.15, color: balCols[(i + k) % 6] }))), { shoot: false });
+        addSign('HAPPY BIRTHDAY!', '#ff3a8a', 16, 2.2, 0, 4.3, -40.4, { bg: '#fff3a8', tw: 1024, th: 140, font: '900 86px "Comic Sans MS", "Segoe Print", cursive' });
+        // Disco ball + moving light spots
+        const disco = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1, 2), std(0xdde4ee, { metalness: 0.5, roughness: 0.15, flatShading: true, emissive: 0x6a6a7a }));
+        disco.position.set(0, 5.1, -8); worldGroup.add(disco);
+        const spots = new THREE.Group(); spots.position.set(0, 0.03, -8); worldGroup.add(spots);
+        const spotCols = [0xff4fd8, 0x3ce8ff, 0xffe14d, 0x4dff6a];
+        for (let i = 0; i < 16; i++) { const sp = new THREE.Mesh(GEO.plane, bas(spotCols[i % 4], { map: TEX.glow(), transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false })); sp.rotation.x = -Math.PI / 2; sp.scale.set(1.6, 1.6, 1); const a = i / 16 * Math.PI * 2, d = 3 + (i % 3) * 3.5; sp.position.set(Math.cos(a) * d, 0, Math.sin(a) * d); spots.add(sp); }
+        addAnim((dt, t) => { disco.rotation.y = t * 0.6; spots.rotation.y = t * 0.6; });
+        [[-10, 5, -8, 0xff4fd8], [10, 5, -8, 0x3ce8ff]].forEach(([x, y, z, c]) => { const l = new THREE.PointLight(c, 1.2, 30, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        // Partygoers — they always face you =)
+        const faceTex = TEX.make('partyface', 256, (ctx, s) => {
+            ctx.fillStyle = '#ffe14d'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#111';
+            ctx.beginPath(); ctx.ellipse(s * 0.66, s * 0.4, 12, 22, 0, 0, Math.PI * 2); ctx.ellipse(s * 0.84, s * 0.4, 12, 22, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(s * 0.75, s * 0.48, 40, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        });
+        const goers = [];
+        [[-18, -10], [18, -2], [-6, -30], [26, -30], [-30, 6]].forEach(([x, z], i) => {
+            const f = simpleFigure(null, { body: 0xffe14d, headMat: std(0xffffff, { map: faceTex, roughness: 0.6 }), h: 2.2, head: 0.55, legs: 1.0, leg: 0xffd21a, eyes: false, w: 0.32 });
+            f.position.set(x, 0, z); f.userData.head.rotation.y = -Math.PI / 2;
+            addColliderBox(x, z, 0.9, 0.9, 4);
+            goers.push(f);
+            if (i === 0) registerInteractable(f.userData.body, 'Partygoer: =)', () => { audio.playInteract('meeseeks'); showToast('PARTYGOER', '"Merhaba arkadaşım =) Bizimle parti yapmak ister misin? =) =) =)"', '#ffe14d'); });
+        });
+        let warned = false;
+        addAnim(() => {
+            for (const f of goers) {
+                f.lookAt(player.pos.x, 0, player.pos.z);
+                if (!warned && f.position.distanceTo(_vN.set(player.pos.x, 0, player.pos.z)) < 4) { warned = true; audio.playInteract('laser'); showToast('ASYNC UYARISI', '"Partygoer\'lara yaklaşma! Seviye =) ölümcüldür. Pastayı da sakın yeme."', '#ff3a5a'); }
+            }
+        });
+        const cakeT = addCyl(0.9, 0.9, 0.6, std(0xfff0f5, { roughness: 0.6 }), 8, 1.25, -6, { shoot: false });
+        registerInteractable(cakeT, 'Doğum Günü Pastası: Ye?', () => { audio.playInteract('hatch'); showToast('SEVİYE =)', '"Pasta çok güzel kokuyor... ama yiyen herkes bir Partygoer\'a dönüşüyor. Emin misin?"', '#ff7ab8'); });
+        [0xff3a5a, 0x3ca8ff, 0xffe14d].forEach(c => addParticles({ count: 50, spread: 50, minY: 0.2, maxY: 5.8, color: c, size: 0.18, speed: -0.5, drift: 1.5, opacity: 0.9, additive: false }));
+    }
+
+    // ---------------------------------------------------------------- 21. APERTURE SCIENCE
+    function buildAperture() {
+        ceilingY = 18;
+        const whiteTex = TEX.make('apwhite', 256, (ctx, s) => { ctx.fillStyle = '#e9eef2'; ctx.fillRect(0, 0, s, s); for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) { const v = 228 + Math.random() * 16 | 0; ctx.fillStyle = `rgb(${v},${v + 3},${v + 6})`; ctx.fillRect(x * 64 + 2, y * 64 + 2, 60, 60); } ctx.strokeStyle = '#9aa4ac'; ctx.lineWidth = 2; for (let i = 0; i <= s; i += 64) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, s); ctx.moveTo(0, i); ctx.lineTo(s, i); ctx.stroke(); } }, 12, 12);
+        const darkTex = TEX.make('apdark', 256, (ctx, s) => { ctx.fillStyle = '#2c3034'; ctx.fillRect(0, 0, s, s); for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) { const v = 44 + Math.random() * 10 | 0; ctx.fillStyle = `rgb(${v},${v + 2},${v + 4})`; ctx.fillRect(x * 128 + 3, y * 128 + 3, 122, 122); } }, 8, 4);
+        // Floor is built around the acid pit (x -10..10, z -19..-10) so the pit is a real hole
+        const fl = std(0xffffff, { map: whiteTex, roughness: 0.35, metalness: 0.1 });
+        [[0, -22.5, 52, 7], [0, 8, 52, 36], [-18, -14.5, 16, 9], [18, -14.5, 16, 9]].forEach(([x, z, w, d]) => {
+            const m = new THREE.Mesh(GEO.plane, fl); m.scale.set(w, d, 1); m.rotation.x = -Math.PI / 2; m.position.set(x, 0, z); worldGroup.add(m); shootableMeshes.push(m);
+        });
+        const wWhite = std(0xffffff, { map: TEX.make('apwhite', 256, null, 6, 2), roughness: 0.35 });
+        const wDark = std(0xffffff, { map: darkTex, roughness: 0.6, metalness: 0.3 });
+        [[0, -26, 52, 1, 0], [0, 26, 52, 1, 0], [-26, 0, 1, 52, 1], [26, 0, 1, 52, 1]].forEach(([x, z, w, d]) => { addBox(w, 8, d, wWhite, x, 4, z, { collide: true }); addBox(w, 10, d, wDark, x, 13, z, { collide: false }); });
+        addBox(52, 0.5, 52, wDark, 0, 18.25, 0, { shoot: false });
+        addInstances(GEO.box, bas(0xf4fbff), [-16, -8, 0, 8, 16].map(x => ({ x, y: 17.95, z: 0, sx: 0.5, sy: 0.1, sz: 46 })), { shoot: false });
+        // Observation room
+        addBox(14, 4, 0.2, std(0x9fe0ff, { transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.4, depthWrite: false }), -8, 12.5, -25.4, { shoot: false });
+        addGlow(-8, 12.5, -24.5, 0xbfe9ff, 18, 0.18);
+        addSign('19', '#f2f2f2', 5, 5, 14, 5, -25.45, { bg: '#2c3034', tw: 256, th: 256, font: '900 200px Orbitron, sans-serif' });
+        addSign('APERTURE SCIENCE', '#e9eef2', 12, 1.6, 0, 9.4, 25.45, { ry: Math.PI, bg: '#1c2024', tw: 1024, th: 136, font: '900 76px Orbitron, sans-serif' });
+        // GLaDOS-style chassis hanging from the ceiling
+        const gl = new THREE.Group(); gl.position.set(-14, 13.5, -14); worldGroup.add(gl);
+        const arm = new THREE.Mesh(GEO.cyl, std(0x3a3e44, { metalness: 0.8 })); arm.scale.set(0.5, 4.5, 0.5); arm.position.y = 2.2; gl.add(arm);
+        const headG = new THREE.Mesh(GEO.sphere, std(0xe9eef2, { roughness: 0.3 })); headG.scale.set(1.4, 0.9, 2.2); gl.add(headG);
+        const eye = new THREE.Mesh(GEO.sphereLo, bas(0xffd21a)); eye.scale.setScalar(0.32); eye.position.set(0, -0.1, 2.05); gl.add(eye);
+        addGlow(0, -0.1, 2.3, 0xffc21a, 2.4, 0.9, gl);
+        addAnim((dt, t) => { gl.lookAt(player.pos.x, player.pos.y, player.pos.z); gl.rotation.z = Math.sin(t * 0.7) * 0.15; });
+        // Acid pit + hard-light bridge toggled by the big red button
+        const pit = addFloorZone(-10, 10, -19, -10, -3.2, true);
+        const acid = new THREE.Mesh(new THREE.PlaneGeometry(20, 9), std(0x7fdc2a, { transparent: true, opacity: 0.9, roughness: 0.1, emissive: 0x2a5a05, emissiveIntensity: 0.8 }));
+        acid.rotation.x = -Math.PI / 2; acid.position.set(0, -1.6, -14.5); worldGroup.add(acid);
+        addBox(20, 3.2, 0.3, wDark, 0, -1.6, -10.1, { shoot: false }); addBox(20, 3.2, 0.3, wDark, 0, -1.6, -18.9, { shoot: false });
+        addBox(0.3, 3.2, 9, wDark, -10, -1.6, -14.5, { shoot: false }); addBox(0.3, 3.2, 9, wDark, 10, -1.6, -14.5, { shoot: false });
+        const pitCover = new THREE.Mesh(GEO.plane, bas(0x000000)); // blocks the white floor over the pit
+        pitCover.scale.set(20, 9, 1); pitCover.rotation.x = -Math.PI / 2; pitCover.position.set(0, -3.1, -14.5); worldGroup.add(pitCover);
+        const bridge = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 9.6), bas(0x5ad8ff, { transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }));
+        bridge.position.set(0, 0, -14.5); bridge.visible = false; worldGroup.add(bridge);
+        const bridgeZone = addFloorZone(-1.5, 1.5, -19.3, -9.7, 0); bridgeZone.active = false;
+        addAnim((dt, t) => {
+            acid.material.emissiveIntensity = 0.7 + Math.sin(t * 2) * 0.15;
+            bridge.material.opacity = 0.4 + Math.sin(t * 6) * 0.08;
+            const feet = player.pos.y - player.height;
+            if (!cruiserState.active && feet < -1.3 && player.pos.z < -9.8 && player.pos.z > -19.2 && Math.abs(player.pos.x) < 10) {
+                player.pos.set(0, player.height, 4.2); player.vel.set(0, 0, 0); audio.playInteract('hatch');
+                showToast('GLaDOS', '"Asit havuzuna düştün. Test sonucu: korkunç bir insansın. Bunu not ediyoruz."', '#ffd21a');
+            }
+        });
+        // Big red button
+        const btn = new THREE.Group(); btn.position.set(-5, 0, -6); worldGroup.add(btn);
+        const ped = new THREE.Mesh(GEO.cyl, std(0xe9eef2, { roughness: 0.3 })); ped.scale.set(0.5, 1.1, 0.5); ped.position.y = 0.55;
+        const dome = new THREE.Mesh(new THREE.SphereGeometry(0.42, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2), std(0xd8202a, { roughness: 0.3, emissive: 0x400000 }));
+        dome.position.y = 1.1; btn.add(ped, dome);
+        addColliderBox(-5, -6, 1, 1, 1.1);
+        let bridgeOn = false;
+        registerInteractable(ped, 'Büyük Kırmızı Düğme: Bas', () => {
+            bridgeOn = !bridgeOn; bridge.visible = bridgeOn; bridgeZone.active = bridgeOn; dome.position.y = 1.02;
+            setTimeout(() => { dome.position.y = 1.1; }, 200);
+            audio.playInteract(bridgeOn ? 'laser' : 'hatch');
+            showToast('GLaDOS', bridgeOn ? '"Sert ışık köprüsü aktif. Tebrikler, bir düğmeye basabildin. Çok gururluyuz."' : '"Köprü kapatıldı. Bilim için."', '#ffd21a');
+        });
+        // Weighted Companion Cube
+        const cubeTex = TEX.make('companion', 256, (ctx, s) => {
+            ctx.fillStyle = '#9aa2a8'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#c8ced2'; ctx.fillRect(40, 40, s - 80, s - 80);
+            ctx.fillStyle = '#5a6066'; [[0, 0], [s - 56, 0], [0, s - 56], [s - 56, s - 56]].forEach(([x, y]) => ctx.fillRect(x, y, 56, 56));
+            ctx.fillStyle = '#e8eaec'; ctx.beginPath(); ctx.arc(s / 2, s / 2, 52, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ff6fb5'; ctx.beginPath(); ctx.moveTo(s / 2, s / 2 + 28); ctx.bezierCurveTo(s / 2 - 50, s / 2 - 4, s / 2 - 22, s / 2 - 44, s / 2, s / 2 - 16); ctx.bezierCurveTo(s / 2 + 22, s / 2 - 44, s / 2 + 50, s / 2 - 4, s / 2, s / 2 + 28); ctx.fill();
+        });
+        const cube = addBox(1.4, 1.4, 1.4, std(0xffffff, { map: cubeTex, roughness: 0.5 }), 4, 0.7, -6, { collide: true, ry: 0.3 });
+        registerInteractable(cube, 'Ağırlıklı Arkadaş Küpü: Sarıl', () => { audio.playInteract('generic'); showToast('GLaDOS', '"Ağırlıklı Arkadaş Küpü seni asla terk etmeyecek. Ama sen onu yakma fırınına atacaksın. Herkes atar."', '#ff6fb5'); });
+        // Turrets that track you with red lasers
+        const turrets = [];
+        [[-16, -20], [16, -20], [18, 8]].forEach(([x, z], i) => {
+            const g = new THREE.Group(); g.position.set(x, 0, z); worldGroup.add(g);
+            const body = new THREE.Mesh(GEO.sphere, std(0xf4f6f8, { roughness: 0.25 })); body.scale.set(0.45, 0.95, 0.38); body.position.y = 1.4; g.add(body);
+            [-1, 1].forEach(s => { const leg = new THREE.Mesh(GEO.cyl8, std(0x2a2e32)); leg.scale.set(0.05, 1.2, 0.05); leg.position.set(s * 0.3, 0.5, -0.25); leg.rotation.z = s * 0.3; g.add(leg); });
+            const leg3 = new THREE.Mesh(GEO.cyl8, std(0x2a2e32)); leg3.scale.set(0.05, 1.1, 0.05); leg3.position.set(0, 0.5, 0.35); leg3.rotation.x = -0.35; g.add(leg3);
+            const e = new THREE.Mesh(GEO.sphereLo, bas(0xff2020)); e.scale.setScalar(0.08); e.position.set(0, 1.55, 0.37); g.add(e);
+            const laser = new THREE.Mesh(GEO.box, bas(0xff2020, { transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
+            laser.scale.set(0.02, 0.02, 20); laser.position.set(0, 1.55, 10.4); g.add(laser);
+            addColliderBox(x, z, 1, 1, 2.4);
+            turrets.push(g);
+            if (i === 0) registerInteractable(body, 'Taret: Merhaba De', () => { audio.playInteract('laser'); showToast('TARET', '"Orada mısın? ...Seni görüyorum. Hedef kayboldu. Merhaba arkadaşım?"', '#ff4040'); });
+        });
+        addAnim((dt) => turrets.forEach(g => { const tgt = Math.atan2(player.pos.x - g.position.x, player.pos.z - g.position.z); g.rotation.y += Math.atan2(Math.sin(tgt - g.rotation.y), Math.cos(tgt - g.rotation.y)) * Math.min(1, dt * 1.5); }));
+        // Exit elevator with emancipation grill
+        addCyl(2.2, 2.2, 7, std(0xbfe9ff, { transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.5, depthWrite: false }), 0, 3.5, -22.5, { shoot: false });
+        addCyl(2.4, 2.4, 0.4, std(0x3a3e44, { metalness: 0.8 }), 0, 0.2, -22.5, { shoot: false });
+        const grill = new THREE.Mesh(GEO.plane, bas(0x5ad8ff, { transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+        grill.scale.set(4.4, 6, 1); grill.position.set(0, 3, -20.1); worldGroup.add(grill);
+        addAnim((dt, t) => { grill.material.opacity = 0.2 + Math.sin(t * 8) * 0.06; });
+        const lift = addCyl(2, 2, 0.2, bas(0x9fe8ff), 0, 0.45, -22.5, { shoot: false });
+        registerInteractable(lift, 'Asansör: Sonraki Test Odası', () => { let i; do { i = (Math.random() * UNIVERSES.length) | 0; } while (i === currentUniverseIndex); teleportToUniverse(i); });
+        // Rattmann scrawl
+        const doodle = TEX.make('cakelie', 512, (ctx, w, h) => { ctx.clearRect(0, 0, w, h); ctx.fillStyle = '#d8501a'; ctx.font = 'bold 60px "Segoe Print", "Comic Sans MS", cursive'; ctx.save(); ctx.translate(30, 140); ctx.rotate(-0.08); ctx.fillText('THE CAKE IS A LIE', 0, 0); ctx.restore(); }, 1, 1, { w: 512, h: 256 });
+        const dm = new THREE.Mesh(GEO.plane, bas(0xffffff, { map: doodle, transparent: true })); dm.scale.set(6, 3, 1); dm.position.set(25.4, 3.5, 18); dm.rotation.y = -Math.PI / 2; worldGroup.add(dm);
+        [[8, 12, 8], [-10, 12, 10]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xffffff, 0.8, 34, 2); l.position.set(x, y, z); worldGroup.add(l); });
+    }
+
+    // ---------------------------------------------------------------- 22. MUSHROOM KINGDOM
+    function buildMushroom() {
+        addGround(220, std(0xffffff, { map: TEX.make('mariograss', 64, (ctx, s) => { ctx.fillStyle = '#5ac83a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#4cb22e'; ctx.fillRect(0, 0, s / 2, s / 2); ctx.fillRect(s / 2, s / 2, s / 2, s / 2); }, 55, 55, { nearest: true }), roughness: 0.9 }));
+        const qTex = TEX.make('qblock', 64, (ctx, s) => { ctx.fillStyle = '#f4a018'; ctx.fillRect(0, 0, s, s); ctx.strokeStyle = '#8a4a08'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, s - 4, s - 4); ctx.fillStyle = '#8a4a08'; [[8, 8], [s - 10, 8], [8, s - 10], [s - 10, s - 10]].forEach(([x, y]) => ctx.fillRect(x - 2, y - 2, 4, 4)); ctx.fillStyle = '#ffffff'; ctx.font = 'bold 40px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', s / 2, s / 2 + 2); }, 1, 1, { nearest: true });
+        const usedTex = TEX.make('qused', 64, (ctx, s) => { ctx.fillStyle = '#9a6a3a'; ctx.fillRect(0, 0, s, s); ctx.strokeStyle = '#5a3a1a'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, s - 4, s - 4); }, 1, 1, { nearest: true });
+        const brickTex = TEX.make('mbrick', 64, (ctx, s) => { ctx.fillStyle = '#c8581a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#3a1a08'; for (let y = 0; y < s; y += 16) { ctx.fillRect(0, y, s, 2); for (let x = ((y / 16) % 2) * 16; x < s; x += 32) ctx.fillRect(x, y, 2, 16); } }, 1, 1, { nearest: true });
+        const hardTex = TEX.make('mhard', 64, (ctx, s) => { ctx.fillStyle = '#b06a3a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#e8a070'; ctx.fillRect(0, 0, s, 4); ctx.fillRect(0, 0, 4, s); ctx.fillStyle = '#5a3018'; ctx.fillRect(0, s - 4, s, 4); ctx.fillRect(s - 4, 0, 4, s); }, 1, 1, { nearest: true });
+        const B = 1.6;
+        let coins = 0;
+        // Floating block row (hit from below or press G)
+        const blocks = [];
+        [[-4.8, 'b'], [-3.2, 'q'], [-1.6, 'b'], [0, 'q'], [1.6, 'b'], [3.2, 'q'], [4.8, 'b']].forEach(([x, type]) => {
+            const z = -7, bottom = 4.4;
+            const m = new THREE.Mesh(GEO.box, lam(0xffffff, { map: type === 'q' ? qTex : brickTex })); m.scale.setScalar(B); place(m, x, bottom + B / 2, z);
+            addColliderBox(x, z, B, B, bottom + B, bottom);
+            addFloorZone(x - B / 2, x + B / 2, z - B / 2, z + B / 2, bottom + B);
+            const st = { m, x, z, bottom, used: type !== 'q', bump: 0, type };
+            blocks.push(st);
+            const hit = () => {
+                st.bump = 0.25;
+                if (!st.used) { st.used = true; m.material.map = usedTex; m.material.needsUpdate = true; coins++; audio.playInteract('coin'); showToast('MANTAR KRALLIĞI', `🪙 Altın! Toplam: ${coins}`, '#ffd21a', 1600); }
+                else audio.playThud(0.15);
+            };
+            registerInteractable(m, type === 'q' ? '? Bloğu: Vur (veya alttan zıpla)' : 'Tuğla Blok: Vur', hit);
+            st.hit = hit;
+        });
+        addAnim((dt) => {
+            const head = player.pos.y + 0.2;
+            blocks.forEach(b => {
+                if (b.bump > 0) { b.bump -= dt; b.m.position.y = b.bottom + B / 2 + Math.sin(Math.max(0, b.bump) / 0.25 * Math.PI) * 0.35; }
+                if (!cruiserState.active && player.vel.y > 0 && head > b.bottom - 0.05 && head < b.bottom + 0.6 && Math.abs(player.pos.x - b.x) < B / 2 + 0.2 && Math.abs(player.pos.z - b.z) < B / 2 + 0.2) {
+                    player.pos.y = b.bottom - 0.25; player.vel.y = -2; b.hit();
+                }
+            });
+        });
+        // Warp pipes
+        const pipeMat = std(0x2ab82a, { roughness: 0.35, metalness: 0.1 });
+        [[10, -14, 2.2], [-12, -18, 3.4], [20, -30, 4.6], [-22, 4, 2.2]].forEach(([x, z, h], i) => {
+            addCyl(1.5, 1.5, h, pipeMat, x, h / 2, z, { collide: true });
+            const rim = addCyl(1.85, 1.85, 0.9, pipeMat, x, h + 0.45, z, { collide: true });
+            addFloorZone(x - 1.6, x + 1.6, z - 1.6, z + 1.6, h + 0.9);
+            addCyl(1.35, 1.35, 0.05, bas(0x062a06), x, h + 0.92, z, { shoot: false });
+            if (i === 0) registerInteractable(rim, 'Warp Borusu: İçine Gir!', () => { audio.playTeleport(); let k; do { k = (Math.random() * UNIVERSES.length) | 0; } while (k === currentUniverseIndex); teleportToUniverse(k); });
+        });
+        // Hard-block staircase to the flag
+        const stairs = [];
+        for (let s = 0; s < 6; s++) for (let h = 0; h <= s; h++) stairs.push({ x: -6 + s * B, y: h * B + B / 2, z: -40, s: B });
+        addInstances(GEO.box, lam(0xffffff, { map: hardTex }), stairs, { shoot: true });
+        for (let s = 0; s < 6; s++) { addColliderBox(-6 + s * B, -40, B, B, (s + 1) * B); addFloorZone(-6 + s * B - B / 2, -6 + s * B + B / 2, -40 - B / 2, -40 + B / 2, (s + 1) * B); }
+        // Flagpole + castle
+        addCyl(0.12, 0.12, 14, std(0x9ad89a, { metalness: 0.4 }), 6, 7, -44, { collide: true });
+        addSphere(0.4, std(0x2ab82a), 6, 14.2, -44, { shoot: false });
+        const flag = new THREE.Mesh(new THREE.CircleGeometry(1.2, 3), bas(0xffffff, { side: THREE.DoubleSide })); flag.position.set(5.2, 12.6, -44); worldGroup.add(flag);
+        addBox(1.6, 1.6, 1.6, lam(0xffffff, { map: hardTex }), 6, 0.8, -44, { collide: true });
+        registerInteractable(flag, 'Bayrak Direği: Kursu Bitir!', () => {
+            [523, 659, 784, 1046].forEach((f, i) => audio.tone('square', f, f, 0.18, 0.08, i * 0.15));
+            showToast('COURSE CLEAR!', `Mantar Krallığı tamamlandı! Toplanan altın: ${coins}. Prenses... başka bir kalede.`, '#ffd21a');
+        });
+        addAnim((dt, t) => { flag.rotation.y = Math.sin(t * 2) * 0.2; });
+        const castleTex = TEX.make('mcastle', 64, (ctx, s) => { ctx.fillStyle = '#8a8a8a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#5a5a5a'; for (let y = 0; y < s; y += 16) { ctx.fillRect(0, y, s, 2); for (let x = ((y / 16) % 2) * 16; x < s; x += 32) ctx.fillRect(x, y, 2, 16); } }, 6, 3, { nearest: true });
+        const castle = lam(0xffffff, { map: castleTex });
+        addBox(16, 9, 10, castle, 0, 4.5, -60, { collide: true });
+        addBox(8, 5, 6, castle, 0, 11.5, -60, { collide: true });
+        addInstances(GEO.box, castle, Array.from({ length: 8 }, (_, i) => ({ x: -7 + i * 2, y: 9.6, z: -55.2, s: 1.1 })), { shoot: false });
+        addBox(3, 4.5, 0.2, bas(0x050505), 0, 2.25, -54.9, { shoot: false });
+        // Goombas patrolling
+        const goombas = [];
+        [[-8, 0, 6], [6, -20, 8], [-16, -28, 5], [14, 6, 7]].forEach(([x, z, range], i) => {
+            const g = new THREE.Group(); worldGroup.add(g);
+            const cap = new THREE.Mesh(GEO.sphere, std(0x8a4a1a, { roughness: 0.6 })); cap.scale.set(0.9, 0.7, 0.9); cap.position.y = 1.0;
+            const stem = new THREE.Mesh(GEO.cyl, std(0xf0d8a8)); stem.scale.set(0.45, 0.5, 0.45); stem.position.y = 0.45;
+            g.add(cap, stem);
+            [-0.25, 0.25].forEach(ex => { const e = new THREE.Mesh(GEO.sphereLo, bas(0xffffff)); e.scale.set(0.16, 0.22, 0.1); e.position.set(ex, 1.1, 0.78); const p = new THREE.Mesh(GEO.sphereLo, bas(0x111111)); p.scale.set(0.08, 0.12, 0.05); p.position.set(ex, 1.08, 0.86); g.add(e, p); });
+            [-0.3, 0.3].forEach(fx => { const f = new THREE.Mesh(GEO.sphereLo, std(0x2a1a0a)); f.scale.set(0.25, 0.15, 0.32); f.position.set(fx, 0.12, 0); g.add(f); });
+            const st = { g, x, z, range, phase: i * 1.3, squashed: 0 };
+            goombas.push(st);
+        });
+        addAnim((dt, t) => goombas.forEach(st => {
+            if (st.squashed > 0) { st.squashed -= dt; st.g.scale.y = 0.2; if (st.squashed <= 0) st.g.scale.y = 1; return; }
+            const s = Math.sin(t * 0.6 + st.phase), dx = Math.cos(t * 0.6 + st.phase);
+            st.g.position.set(st.x + s * st.range, 0, st.z); st.g.rotation.y = dx > 0 ? Math.PI / 2 : -Math.PI / 2;
+            st.g.children[0].rotation.z = Math.sin(t * 8) * 0.08;
+            if (cruiserState.active) return;
+            const d = Math.hypot(player.pos.x - st.g.position.x, player.pos.z - st.g.position.z), feet = player.pos.y - player.height;
+            if (d < 1.3) {
+                if (player.vel.y < 0 && feet > 0.6) { st.squashed = 3; player.vel.y = 12; player.onGround = false; audio.playBounce(); coins++; showToast('MANTAR KRALLIĞI', `Goomba ezildi! +1 · Altın: ${coins}`, '#c8581a', 1400); }
+                else if (feet < 0.6) { _tmp.set(player.pos.x - st.g.position.x, 0, player.pos.z - st.g.position.z).normalize(); player.vel.x = _tmp.x * 14; player.vel.z = _tmp.z * 14; player.vel.y = 6; player.onGround = false; audio.playThud(0.25); }
+            }
+        }));
+        // Spinning coins
+        const coinItems = [];
+        for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2; coinItems.push({ x: Math.cos(a) * 14, y: 1.4 + Math.abs(Math.sin(a * 2)) * 1.6, z: Math.sin(a) * 14 - 10, taken: false }); }
+        const coinMesh = new THREE.InstancedMesh(GEO.cyl, std(0xffd21a, { metalness: 0.7, roughness: 0.25, emissive: 0x4a3000 }), coinItems.length);
+        coinMesh.frustumCulled = false; worldGroup.add(coinMesh);
+        const coinEuler = new THREE.Euler(0, 0, 0, 'YXZ');
+        addAnim((dt, t) => {
+            coinItems.forEach((c, i) => {
+                if (!c.taken && !cruiserState.active && Math.hypot(player.pos.x - c.x, player.pos.z - c.z) < 1.3 && Math.abs((player.pos.y - 1.2) - c.y) < 1.8) { c.taken = true; coins++; audio.playInteract('coin'); }
+                coinEuler.set(Math.PI / 2, t * 3 + i, 0); _q.setFromEuler(coinEuler);
+                _m4.compose(_p.set(c.x, c.y, c.z), _q, _s.set(c.taken ? 0 : 0.6, 0.12, c.taken ? 0 : 0.6)); coinMesh.setMatrixAt(i, _m4);
+            });
+            coinMesh.instanceMatrix.needsUpdate = true;
+        });
+        // Hills with eyes, bushes, clouds
+        [[-40, -70, 18, 0x4cb22e], [35, -80, 24, 0x5ac83a], [70, -30, 14, 0x4cb22e], [-70, -20, 20, 0x5ac83a]].forEach(([x, z, s, c]) => {
+            addSphere(s, std(c, { roughness: 0.8 }), x, -s * 0.2, z, { sy: 0.8, shoot: false });
+            [-0.18, 0.18].forEach(ex => addSphere(s * 0.06, bas(0x111111), x + ex * s, s * 0.45, z + s * 0.6, { sy: 1.8, shoot: false }));
+        });
+        addInstances(GEO.sphereLo, std(0x3aa82a, { roughness: 0.8 }), [[-14, 12], [16, 14], [-30, -10], [28, -14], [0, 18]].flatMap(([x, z]) => [{ x, y: 0.6, z, s: 1.3 }, { x: x + 1.4, y: 0.5, z, s: 1.0 }, { x: x - 1.4, y: 0.5, z, s: 1.0 }]), { shoot: false });
+        const clouds = new THREE.Group(); worldGroup.add(clouds);
+        const cl = []; for (let i = 0; i < 10; i++) { const cx = (i - 5) * 26, cz = -70 + (i % 3) * 30; [-3, 0, 3].forEach((dx, k) => cl.push({ x: cx + dx, y: 34 + (k === 1 ? 1.5 : 0), z: cz, s: k === 1 ? 4 : 3 })); }
+        const cmesh = new THREE.InstancedMesh(GEO.sphereLo, std(0xffffff, { emissive: 0xffffff, emissiveIntensity: 0.4 }), cl.length);
+        cl.forEach((c, i) => { _m4.compose(_p.set(c.x, c.y, c.z), _q.identity(), _s.setScalar(c.s)); cmesh.setMatrixAt(i, _m4); }); cmesh.frustumCulled = false; clouds.add(cmesh);
+        addAnim((dt, t) => { clouds.position.x = Math.sin(t * 0.03) * 30; });
+    }
+
+    // ---------------------------------------------------------------- 23. NEON MAZE (PAC-MAN)
+    function buildPacman(u) {
+        const L = [
+            '###################',
+            '#........#........#',
+            '#o##.###.#.###.##o#',
+            '#.................#',
+            '#.##.#.#####.#.##.#',
+            '#....#...#...#....#',
+            '####.###.#.###.####',
+            '   #.#.......#.#   ',
+            '####.#.##-##.#.####',
+            '.......#GGG#.......',
+            '####.#.#####.#.####',
+            '   #.#.......#.#   ',
+            '####.#.#####.#.####',
+            '#........#........#',
+            '#.##.###.#.###.##.#',
+            '#o.#.....P.....#.o#',
+            '##.#.#.#####.#.#.##',
+            '#....#...#...#....#',
+            '#.######.#.######.#',
+            '#.................#',
+            '###################'
+        ];
+        const ROWS = L.length, COLS = L[0].length, C = 4;
+        const ox = -(COLS - 1) / 2 * C, oz = -(ROWS - 1) / 2 * C;
+        const at = (c, r) => (r < 0 || r >= ROWS || c < 0 || c >= COLS) ? '#' : L[r][c];
+        const wall = (c, r) => at(c, r) === '#';
+        addGround(140, std(0xffffff, { map: TEX.make('pacfloor', 128, (ctx, s) => { ctx.fillStyle = '#020210'; ctx.fillRect(0, 0, s, s); ctx.strokeStyle = 'rgba(40,60,255,0.35)'; ctx.lineWidth = 2; ctx.strokeRect(0, 0, s, s); }, 35, 35), roughness: 0.4, metalness: 0.3 }));
+        const blocks = [], edges = [];
+        let spawn = [0, 0];
+        for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+            const x = ox + c * C, z = oz + r * C, ch = L[r][c];
+            if (ch === 'P') spawn = [x, z];
+            if (ch !== '#') continue;
+            blocks.push({ x, y: 1.4, z, sx: C, sy: 2.8, sz: C });
+            if (!wall(c - 1, r)) edges.push({ x: x - C / 2, y: 2.85, z, sx: 0.14, sy: 0.14, sz: C });
+            if (!wall(c + 1, r)) edges.push({ x: x + C / 2, y: 2.85, z, sx: 0.14, sy: 0.14, sz: C });
+            if (!wall(c, r - 1)) edges.push({ x, y: 2.85, z: z - C / 2, sx: C, sy: 0.14, sz: 0.14 });
+            if (!wall(c, r + 1)) edges.push({ x, y: 2.85, z: z + C / 2, sx: C, sy: 0.14, sz: 0.14 });
+        }
+        u.spawn = [spawn[0], spawn[1], -Math.PI / 2];
+        worldBounds = (COLS + 2) * C / 2;
+        addInstances(GEO.box, std(0x0a0a3a, { roughness: 0.4, metalness: 0.4, emissive: 0x05052a }), blocks, { collide: true });
+        addInstances(GEO.box, bas(0x3a5aff), edges, { shoot: false });
+        addInstances(GEO.box, bas(0x2a3ad8), edges.map(e => Object.assign({}, e, { y: 0.07 })), { shoot: false });
+        addSign('-', '#ff9ad8', 2, 0.3, ox + 9 * C, 1.4, oz + 8 * C, { bg: '#ff9ad8', tw: 64, th: 16 });
+        // Pellets
+        const pellets = [], pelletIdx = new Map();
+        for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) { const ch = L[r][c]; if (ch === '.' || ch === 'o') { pelletIdx.set(r * COLS + c, pellets.length); pellets.push({ c, r, power: ch === 'o', eaten: false }); } }
+        const pm = new THREE.InstancedMesh(GEO.sphereLo, bas(0xffd8b0), pellets.length);
+        const setPellet = (i) => { const p = pellets[i]; const s = p.eaten ? 0 : (p.power ? 0.55 : 0.22); _m4.compose(_p.set(ox + p.c * C, 1.3, oz + p.r * C), _q.identity(), _s.setScalar(s)); pm.setMatrixAt(i, _m4); };
+        pellets.forEach((p, i) => setPellet(i)); pm.frustumCulled = false; worldGroup.add(pm);
+        const powerGlow = addGlowPoints(pellets.filter(p => p.power).map(p => [ox + p.c * C, 1.3, oz + p.r * C]), 0xffd8b0, 2.4, 0.8);
+        let eatenCount = 0, frightened = 0, waka = 0, score = 0;
+        // Ghosts
+        const gCols = [0xff2a2a, 0xff9ad8, 0x3ce8ff, 0xffa83a];
+        const ghosts = gCols.map((col, i) => {
+            const g = new THREE.Group(); worldGroup.add(g);
+            const mat = std(col, { roughness: 0.35, emissive: col, emissiveIntensity: 0.35 });
+            const head = new THREE.Mesh(new THREE.SphereGeometry(1.1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), mat); head.position.y = 1.7;
+            const skirt = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.15, 1.3, 20, 1, true), mat); skirt.position.y = 1.05;
+            g.add(head, skirt);
+            [-0.4, 0.4].forEach(ex => { const e = new THREE.Mesh(GEO.sphereLo, bas(0xffffff)); e.scale.set(0.3, 0.38, 0.2); e.position.set(ex, 1.9, 0.95); const p = new THREE.Mesh(GEO.sphereLo, bas(0x1a2aff)); p.scale.setScalar(0.14); p.position.set(ex, 1.9, 1.12); g.add(e, p); });
+            const home = [8 + (i % 3), 9];
+            const st = { g, mat, col, c: i === 0 ? 9 : home[0], r: i === 0 ? 7 : 9, tc: 0, tr: 0, dc: 0, dr: -1, speed: 5 + i * 0.4, glow: addGlow(0, 1.5, 0, col, 3.5, 0.35, g) };
+            st.tc = st.c; st.tr = st.r;
+            g.position.set(ox + st.c * C, 0, oz + st.r * C);
+            return st;
+        });
+        const pickNext = (st) => {
+            const opts = [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dc, dr]) => !(dc === -st.dc && dr === -st.dr) && !wall(st.c + dc, st.r + dr) && !(at(st.c + dc, st.r + dr) === ' ' && false));
+            const valid = opts.length ? opts : [[-st.dc, -st.dr]];
+            let best = valid[(Math.random() * valid.length) | 0];
+            if (!frightened && Math.random() < 0.55) {
+                const pc = (player.pos.x - ox) / C, pr = (player.pos.z - oz) / C;
+                let bd = 1e9; valid.forEach(([dc, dr]) => { const d = Math.hypot(st.c + dc - pc, st.r + dr - pr); if (d < bd) { bd = d; best = [dc, dr]; } });
+            }
+            st.dc = best[0]; st.dr = best[1]; st.tc = st.c + st.dc; st.tr = st.r + st.dr;
+        };
+        ghosts.forEach(pickNext);
+        addAnim((dt, t) => {
+            if (frightened > 0) frightened -= dt;
+            powerGlow.material.opacity = 0.5 + Math.sin(t * 6) * 0.3;
+            // Pellet eating
+            if (!cruiserState.active) {
+                const pc = Math.round((player.pos.x - ox) / C), pr = Math.round((player.pos.z - oz) / C);
+                const idx = pelletIdx.get(pr * COLS + pc);
+                if (idx !== undefined && !pellets[idx].eaten && Math.hypot(player.pos.x - (ox + pc * C), player.pos.z - (oz + pr * C)) < 1.4) {
+                    const p = pellets[idx]; p.eaten = true; setPellet(idx); pm.instanceMatrix.needsUpdate = true; eatenCount++; score += p.power ? 50 : 10;
+                    waka ^= 1; audio.tone('square', waka ? 520 : 380, waka ? 380 : 520, 0.07, 0.05);
+                    if (p.power) { frightened = 8; audio.tone('sawtooth', 200, 900, 0.4, 0.08); showToast('NEON LABİRENT', 'GÜÇ HAPI! Hayaletler 8 saniye boyunca savunmasız!', '#3a5aff', 1800); }
+                    if (eatenCount === pellets.length) {
+                        pellets.forEach((q, i) => { q.eaten = false; setPellet(i); }); pm.instanceMatrix.needsUpdate = true; eatenCount = 0;
+                        [523, 659, 784, 1046, 1318].forEach((f, i) => audio.tone('square', f, f, 0.15, 0.07, i * 0.12));
+                        showToast('LEVEL CLEAR!', `Tüm hapları yedin! Skor: ${score}`, '#ffd21a');
+                    }
+                }
+                // wrap through side tunnels
+                if (player.pos.x < ox - C * 0.8) player.pos.x = ox + (COLS - 0.3) * C - C * 0.6;
+                else if (player.pos.x > ox + (COLS - 0.2) * C) player.pos.x = ox - C * 0.3;
+            }
+            ghosts.forEach((st, gi) => {
+                const sp = (frightened > 0 ? st.speed * 0.55 : st.speed) * dt;
+                const tx = ox + st.tc * C, tz = oz + st.tr * C;
+                const dx = tx - st.g.position.x, dz = tz - st.g.position.z, d = Math.hypot(dx, dz);
+                if (d <= sp) { st.g.position.set(tx, 0, tz); st.c = st.tc; st.r = st.tr; pickNext(st); }
+                else { st.g.position.x += dx / d * sp; st.g.position.z += dz / d * sp; st.g.rotation.y = Math.atan2(dx, dz); }
+                st.g.position.y = Math.sin(t * 5 + gi) * 0.12;
+                const fr = frightened > 0;
+                st.mat.color.setHex(fr ? (frightened < 2 && Math.sin(t * 20) > 0 ? 0xffffff : 0x2a3aff) : st.col);
+                st.mat.emissive.setHex(fr ? 0x101a80 : st.col);
+                if (!cruiserState.active && Math.hypot(player.pos.x - st.g.position.x, player.pos.z - st.g.position.z) < 1.6) {
+                    if (fr) {
+                        score += 200; audio.tone('sine', 900, 200, 0.3, 0.12);
+                        st.c = 9; st.r = 9; st.tc = 9; st.tr = 9; st.dc = 0; st.dr = -1; st.g.position.set(ox + 9 * C, 0, oz + 9 * C);
+                        showToast('NEON LABİRENT', `Hayalet yendi! +200 · Skor: ${score}`, '#3ce8ff', 1400);
+                    } else {
+                        audio.tone('sawtooth', 700, 80, 0.8, 0.12);
+                        player.pos.set(u.spawn[0], player.height, u.spawn[1]); player.vel.set(0, 0, 0);
+                        showToast('YAKALANDIN!', 'Bir hayalet seni yakaladı. Başlangıca döndün. Güç haplarını (büyük toplar) kullan!', '#ff2a2a');
+                    }
+                }
+            });
+        });
+        // Bonus cherry
+        const cherry = new THREE.Group(); cherry.position.set(ox + 9 * C, 0, oz + 11 * C); worldGroup.add(cherry);
+        [-0.35, 0.35].forEach(x => { const b = new THREE.Mesh(GEO.sphere, std(0xe0202a, { roughness: 0.3 })); b.scale.setScalar(0.42); b.position.set(x, 1.2, 0); cherry.add(b); });
+        const stem = new THREE.Mesh(GEO.cyl8, std(0x3a8a2a)); stem.scale.set(0.05, 0.9, 0.05); stem.position.set(0, 1.8, 0); cherry.add(stem);
+        addAnim((dt, t) => { cherry.rotation.y = t; cherry.position.y = Math.sin(t * 2) * 0.15; });
+        registerInteractable(cherry.children[0], 'Bonus Kiraz: Ye', () => { score += 100; audio.playInteract('coin'); showToast('BONUS!', `Kiraz +100 · Skor: ${score}`, '#e0202a', 1600); });
+        addParticles({ count: 80, spread: 80, minY: 3, maxY: 30, color: 0x3a5aff, size: 0.2, speed: 0.2, drift: 1, opacity: 0.5 });
+    }
+
+    // ---------------------------------------------------------------- 24. HALO RINGWORLD
+    function buildHalo() {
+        const H = (x, z) => {
+            const d = Math.hypot(x, z - 3), flat = clamp((d - 9) / 22, 0, 1);
+            const edge = Math.max(0, Math.abs(z) - 62) * 0.9 + Math.max(0, Math.abs(x) - 70) * 0.9;
+            return flat * (Math.sin(x * 0.045) * 3.0 + Math.cos(z * 0.05) * 2.4 + Math.sin((x + z) * 0.09) * 1.1 + 2.6) + edge;
+        };
+        floorFn = H;
+        const tg = new THREE.PlaneGeometry(200, 200, 110, 110); tg.rotateX(-Math.PI / 2);
+        const tp = tg.attributes.position;
+        for (let i = 0; i < tp.count; i++) tp.setY(i, H(tp.getX(i), tp.getZ(i)));
+        tg.computeVertexNormals();
+        const terrain = new THREE.Mesh(tg, std(0x5f8a3a, { map: TEX.grass(46), roughness: 0.95 }));
+        worldGroup.add(terrain); shootableMeshes.push(terrain);
+        // The ring band arcing up into the sky (bottom section removed — that's where we stand)
+        const ringTex = TEX.make('haloband', 512, (ctx, w, h) => {
+            ctx.fillStyle = '#4f7a3a'; ctx.fillRect(0, 0, w, h);
+            for (let i = 0; i < 160; i++) { const c = ['#3d6a2e', '#6a9a48', '#2a6aa8', '#2f7ab8', '#8a7a5a', '#e8eef2'][i % 6]; ctx.fillStyle = c; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.ellipse(Math.random() * w, Math.random() * h, 20 + Math.random() * 60, 6 + Math.random() * 20, Math.random(), 0, Math.PI * 2); ctx.fill(); }
+            ctx.globalAlpha = 1; ctx.fillStyle = '#8a929a'; ctx.fillRect(0, 0, w, 10); ctx.fillRect(0, h - 10, w, 10);
+        }, 12, 1, { w: 512, h: 128 });
+        const R = 175, skip = THREE.MathUtils.degToRad(38);
+        const band = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 52, 160, 1, true, -Math.PI / 2 + skip, Math.PI * 2 - skip * 2), new THREE.MeshLambertMaterial({ map: ringTex, side: THREE.DoubleSide }));
+        band.rotation.z = Math.PI / 2; band.position.set(0, R - 2, 0); worldGroup.add(band);
+        [-1, 1].forEach(s => {
+            const rim = new THREE.Mesh(new THREE.RingGeometry(R - 9, R + 1, 160, 1, -Math.PI / 2 + skip, Math.PI * 2 - skip * 2), std(0x9aa2aa, { metalness: 0.8, roughness: 0.35, side: THREE.DoubleSide }));
+            rim.rotation.y = Math.PI / 2; rim.rotation.x = Math.PI / 2 * 0; rim.position.set(s * 26, R - 2, 0); worldGroup.add(rim);
+        });
+        // Gas giant "Threshold"
+        const gasTex = TEX.make('gasgiant', 256, (ctx, s) => { for (let y = 0; y < s; y += 4) { const v = Math.sin(y * 0.08) * 0.5 + 0.5; ctx.fillStyle = `rgb(${180 + v * 60 | 0},${120 + v * 50 | 0},${170 - v * 60 | 0})`; ctx.fillRect(0, y, s, 4); } });
+        const gas = new THREE.Mesh(GEO.sphere, new THREE.MeshBasicMaterial({ map: gasTex, fog: false })); gas.scale.setScalar(80); gas.position.set(-150, 150, -230); gas.rotation.z = 0.3; worldGroup.add(gas);
+        addGlow(-150, 150, -225, 0xffc8e8, 200, 0.2);
+        // Forerunner structure with light beam
+        const fore = std(0xb8c0c8, { metalness: 0.85, roughness: 0.25 });
+        const fx = 38, fz = -46, fy = H(fx, fz);
+        addBox(10, 18, 10, fore, fx, fy + 9, fz, { collide: true });
+        addBox(6, 10, 14, fore, fx, fy + 22, fz, { rz: 0.25, shoot: true });
+        addBox(14, 2, 4, fore, fx, fy + 29, fz, { rz: -0.15, shoot: true });
+        addInstances(GEO.box, bas(0x5ad8ff), [0, 1, 2, 3].map(k => ({ x: fx + 5.05, y: fy + 3 + k * 4, z: fz, sx: 0.1, sy: 0.25, sz: 8 })), { shoot: false });
+        const lb = new THREE.Mesh(GEO.cyl, bas(0x8ae8ff, { transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); lb.scale.set(1.2, 300, 1.2); lb.position.set(fx, fy + 160, fz); worldGroup.add(lb);
+        addGlow(fx, fy + 31, fz, 0x8ae8ff, 16, 0.6);
+        // Crashed Covenant cruiser
+        const cov = std(0x6a3a9a, { metalness: 0.7, roughness: 0.25 });
+        const cx = -48, cz = -30, cy = H(cx, cz);
+        addSphere(9, cov, cx, cy + 2, cz, { sx: 2.2, sy: 0.7, sz: 1, rz: 0.2, collide: true });
+        addSphere(4, cov, cx + 14, cy + 4, cz - 2, { sx: 1.6, sy: 0.6, sz: 1, shoot: true });
+        addGlowPoints([[cx - 10, cy + 4, cz + 6], [cx + 4, cy + 7, cz + 5], [cx + 16, cy + 5, cz + 2]], 0xc06aff, 4, 0.8);
+        // Pine forest
+        const r = mulberry32(117), pines = [], trunks = [];
+        for (let i = 0; i < 70; i++) { const x = (r() - 0.5) * 170, z = (r() - 0.5) * 150; if (Math.hypot(x, z - 3) < 16 || Math.hypot(x - fx, z - fz) < 12 || Math.hypot(x - cx, z - cz) < 22) continue; const y = H(x, z), s = 1 + r() * 0.8; trunks.push({ x, y: y + 1.5 * s, z, sx: 0.35 * s, sy: 3 * s, sz: 0.35 * s }); pines.push({ x, y: y + 5 * s, z, sx: 2.4 * s, sy: 6 * s, sz: 2.4 * s }, { x, y: y + 7.5 * s, z, sx: 1.6 * s, sy: 4 * s, sz: 1.6 * s }); }
+        addInstances(GEO.cyl8, std(0x4a3222), trunks, { collide: true, cw: 2, cd: 2, ch: 0.5 });
+        addInstances(GEO.cone, std(0x2a5a2e, { roughness: 0.9, flatShading: true }), pines, { shoot: true });
+        addInstances(GEO.ico, std(0x7a7a72, { flatShading: true, roughness: 0.95 }), Array.from({ length: 30 }, () => { const x = (r() - 0.5) * 160, z = (r() - 0.5) * 140; return { x, y: H(x, z) + 0.3, z, s: 0.6 + r() * 1.6, ry: r() * 3 }; }), { shoot: true });
+        // Warthog
+        const hog = new THREE.Group(); const hy = H(8, -6); hog.position.set(8, hy, -6); hog.rotation.y = -0.5; worldGroup.add(hog);
+        const olive = std(0x5a6a3a, { metalness: 0.4, roughness: 0.5 });
+        const hb = new THREE.Mesh(GEO.box, olive); hb.scale.set(2.6, 1, 5); hb.position.y = 1.4; hog.add(hb);
+        const hood = new THREE.Mesh(GEO.box, olive); hood.scale.set(2.4, 0.5, 1.8); hood.position.set(0, 1.9, -1.6); hood.rotation.x = 0.2; hog.add(hood);
+        [[-1.5, 1.6], [1.5, 1.6], [-1.5, -1.6], [1.5, -1.6]].forEach(([x, z]) => { const w = new THREE.Mesh(GEO.cyl, std(0x1a1a1a, { roughness: 0.9 })); w.scale.set(0.75, 0.5, 0.75); w.rotation.z = Math.PI / 2; w.position.set(x, 0.75, z); hog.add(w); });
+        const roll = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.08, 6, 16, Math.PI), std(0x2a2a2a, { metalness: 0.7 })); roll.position.set(0, 2, 0.4); hog.add(roll);
+        const tur = new THREE.Mesh(GEO.cyl8, std(0x2a2a2a, { metalness: 0.7 })); tur.scale.set(0.12, 2.2, 0.12); tur.rotation.x = Math.PI / 2; tur.position.set(0, 3, 1.8); hog.add(tur);
+        addColliderBox(8, -6, 4.5, 4.5, hy + 2);
+        registerInteractable(hb, 'Warthog: Gaza Bas!', () => { speedBoostTimer = 8; audio.playInteract('boom'); showToast('MASTER CHIEF', '"Warthog sürüşü aktif! 8 saniye boyunca 2 kat hız. Sola sapma, Cortana bakıyor."', '#9ab86a'); });
+        // Forerunner terminal + energy sword
+        const ty = H(-6, -8);
+        const term = addBox(1.6, 2.2, 0.3, fore, -6, ty + 1.1, -8, { ry: 0.4, collide: true });
+        addBox(1.2, 1.2, 0.05, bas(0x5ad8ff, { transparent: true, opacity: 0.8 }), -6 + 0.07, ty + 1.5, -7.85, { ry: 0.4, shoot: false });
+        addGlow(-6, ty + 1.5, -7.6, 0x5ad8ff, 2.4, 0.5);
+        registerInteractable(term, 'Öncü Terminali: Erişim', () => { audio.playInteract('laser'); showToast('343 GUILTY SPARK', '"Selamlar! Ben bu tesisin Gözetmeniyim. Halkayı ateşlememe yardım eder misin? Sadece... galaksiyi temizleyecek."', '#5ad8ff'); });
+        const sy = H(0, -14);
+        addCyl(0.6, 0.8, 1.2, fore, 0, sy + 0.6, -14, { collide: true });
+        const sword = new THREE.Group(); sword.position.set(0, sy + 2.1, -14); worldGroup.add(sword);
+        [-1, 1].forEach(s => { const blade = new THREE.Mesh(GEO.cone, bas(0x7ad8ff, { transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false })); blade.scale.set(0.12, 1.6, 0.05); blade.position.set(s * 0.18, 0.4, 0); blade.rotation.z = -s * 0.12; sword.add(blade); });
+        addGlow(0, sy + 2.3, -14, 0x7ad8ff, 3.2, 0.7);
+        addAnim((dt, t) => { sword.rotation.y = t * 1.2; sword.position.y = sy + 2.1 + Math.sin(t * 2) * 0.12; });
+        registerInteractable(sword.children[0], 'Enerji Kılıcı: Al', () => { audio.playInteract('laser'); showToast('ENERJİ KILICI', '"Vwoom! Covenant Elit\'lerinin kılıcı. Rick buna \'şirin bir ışın kılıcı taklidi\' diyor."', '#7ad8ff'); });
+        addParticles({ count: 120, spread: 80, minY: 1, maxY: 20, color: 0xfff6c8, size: 0.16, speed: 0.3, drift: 2, opacity: 0.6 });
+    }
+
+    const BUILDERS = [buildC137, buildCitadel, buildBlips, buildCronenberg, buildFroopy, buildAnatomy, buildBackrooms, buildPoolrooms, buildCyber, buildSynth, buildVoxel, buildTorii, buildAbyss, buildGargantua, buildSketch,
+        buildPrison, buildSewer, buildSquanch, buildLevel1, buildLevel2, buildLevelFun, buildAperture, buildMushroom, buildPacman, buildHalo];
 
     function buildUniverse(index) {
         clearCurrentWorld();
@@ -3408,7 +4404,7 @@
         worldBounds = u.bounds || 85; worldRadius = u.radius || 0; baseFloorY = u.baseFloor || 0;
         worldGroup.add(new THREE.HemisphereLight(u.hemi[0], u.hemi[1], u.hemi[2]));
         if (u.sun) { const d = new THREE.DirectionalLight(u.sun.color, u.sun.intensity); d.position.set(...u.sun.pos); worldGroup.add(d); }
-        BUILDERS[index]();
+        BUILDERS[index](u);
         audio.setAmbience(u.amb);
     }
 
@@ -3465,25 +4461,29 @@
             currentUniverseIndex = index;
             if (targetUniverseIndex === currentUniverseIndex) targetUniverseIndex = (index + 1) % UNIVERSES.length;
             buildUniverse(index);
-            const spawnZ = 4.2;
+            const [sx, sz, syaw] = UNIVERSES[index].spawn || [0, 4.2, 0];
+            const bx = Math.sin(syaw), bz = Math.cos(syaw);
             if (cruiserState.active) {
-                cruiserState.pos.set(0, Math.min(6.5, ceilingY - 1.8), 12);
-                cruiserState.vel.set(0, 0, -6);
-                cruiserState.yaw = 0; cruiserState.pitch = 0;
+                cruiserState.pos.set(sx + bx * 8, Math.min(getFloorHeightAt(sx, sz) + 6.5, ceilingY - 1.8), sz + bz * 8);
+                cruiserState.vel.set(-bx * 8, 0, -bz * 8);
+                cruiserState.yaw = syaw; cruiserState.pitch = 0;
                 cruiserGroup.position.copy(cruiserState.pos);
-                openPortal(new THREE.Vector3(0, cruiserState.pos.y, 18), cruiserState.pos, { big: true, exit: true, life: 1.0, silent: true });
+                cruiserFX.camInit = false;
+                openPortal(new THREE.Vector3(sx + bx * 14, cruiserState.pos.y, sz + bz * 14), cruiserState.pos, { big: true, exit: true, life: 1.0, silent: true });
             } else {
-                const fy = getFloorHeightAt(0, spawnZ);
-                player.pos.set(0, fy + player.height, spawnZ);
+                const fy = getFloorHeightAt(sx, sz);
+                player.pos.set(sx, fy + player.height, sz);
                 player.vel.set(0, 0, 0);
-                player.yaw = 0; player.pitch = 0;
-                camera.rotation.set(0, 0, 0);
+                player.yaw = syaw; player.pitch = 0;
+                camera.rotation.set(0, syaw, 0, 'YXZ');
                 camera.position.copy(player.pos);
-                const cfy = getFloorHeightAt(7.5, 12.5);
-                cruiserState.pos.set(7.5, cfy + 1.45, 12.5); cruiserState.yaw = 0;
-                cruiserGroup.position.copy(cruiserState.pos); cruiserGroup.rotation.set(0, 0, 0);
-                const efy = getFloorHeightAt(0, spawnZ + 2.2, fy + 1);
-                openPortal(new THREE.Vector3(0, efy + 2.4, spawnZ + 2.2), player.pos, { exit: true, life: 1.0, silent: true });
+                const cx = sx + Math.cos(syaw) * 7.5 + bx * 8.3, cz = sz - Math.sin(syaw) * 7.5 + bz * 8.3;
+                const cfy = getFloorHeightAt(cx, cz);
+                cruiserState.pos.set(cx, cfy + 1.45, cz); cruiserState.yaw = syaw;
+                cruiserGroup.position.copy(cruiserState.pos); cruiserGroup.rotation.set(0, syaw, 0);
+                const ex = sx + bx * 2.2, ez = sz + bz * 2.2;
+                const efy = getFloorHeightAt(ex, ez, fy + 1);
+                openPortal(new THREE.Vector3(ex, efy + 2.4, ez), player.pos, { exit: true, life: 1.0, silent: true });
             }
             try { renderer.compile(scene, camera); } catch (e) {}
             updateHUD();
@@ -3492,7 +4492,7 @@
                 ov.classList.remove('on');
                 teleporting = false;
                 const u = UNIVERSES[index];
-                showToast(u.code + ' · ' + u.tag, u.name, u.cat === 'liminal' ? '#ffc53d' : (u.cat === 'scifi' ? '#3ce8ff' : '#4dff6a'), 2600);
+                showToast(u.code + ' · ' + u.tag, u.name, CATEGORY_INFO[u.cat].badge, 2600);
             }));
         }, 170);
     }
@@ -3585,14 +4585,19 @@
     }
     function toggleCruiser() {
         cruiserState.active = !cruiserState.active;
-        audio.playInteract('hatch');
         $('cruiser-badge').classList.toggle('hidden', !cruiserState.active);
+        $('cruiser-hud').classList.toggle('hidden', !cruiserState.active);
         setCruiserTouchUI(cruiserState.active);
         if (cruiserState.active) {
+            audio.playCruiserStart();
             gunGroup.visible = false;
-            cruiserState.yaw = player.yaw; cruiserState.pitch = 0;
-            showToast('KRUVAZÖR YAPAY ZEKASI', IS_TOUCH ? 'Uçuş aktif! Joystick ile uç, YÜKSEL/ALÇAL ile irtifa, PORTAL ile dev portal aç.' : 'Uçuş aktif! WASD + Space/Ctrl uçuş · Tık: dev portal · B: kamera · G: in', '#3ce8ff');
+            cruiserState.yaw = cruiserGroup.rotation.y; cruiserState.pitch = 0;
+            cruiserState.vel.set(0, 0, 0);
+            cruiserFX.camInit = false; cruiserFX.energy = Math.max(cruiserFX.energy, 0.5);
+            showToast('KRUVAZÖR YAPAY ZEKASI', IS_TOUCH ? 'Uçuş aktif! Joystick ile uç, sonuna itince TURBO. YÜKSEL/ALÇAL ile irtifa, PORTAL ile dev portal.' : 'Uçuş aktif! WASD uçuş · Space/Ctrl irtifa · Shift TURBO · Tık: dev portal · B: kamera · G: in', '#3ce8ff');
         } else {
+            audio.playCruiserStop();
+            camera.fov = gameSettings.fov; camera.updateProjectionMatrix();
             gunGroup.visible = true;
             _tmp.set(4.6, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), cruiserState.yaw);
             player.pos.copy(cruiserState.pos).add(_tmp);
@@ -4128,12 +5133,34 @@
         if ((frameCount & 1) === 0 && isPlaying) updateInteractHover();
     }
 
+    const CRUISE_MAX = 26, BOOST_MAX = 50, CRUISER_R = 3.4;
+    const _cFwd = new THREE.Vector3(), _cDes = new THREE.Vector3(), _cOff = new THREE.Vector3();
+    function cruiserCollide(pos, vel) {
+        let hitSpeed = 0;
+        const top = pos.y + 1.2, bot = pos.y - 1.0;
+        for (let i = 0; i < colliders.length; i++) {
+            const c = colliders[i];
+            if (!c.active || c.maxY <= bot || (c.minY !== undefined && c.minY >= top)) continue;
+            if (pos.x + CRUISER_R > c.minX && pos.x - CRUISER_R < c.maxX && pos.z + CRUISER_R > c.minZ && pos.z - CRUISER_R < c.maxZ) {
+                const oL = (pos.x + CRUISER_R) - c.minX, oR = c.maxX - (pos.x - CRUISER_R);
+                const oF = (pos.z + CRUISER_R) - c.minZ, oB = c.maxZ - (pos.z - CRUISER_R);
+                const m = Math.min(oL, oR, oF, oB);
+                // Prefer hopping over low obstacles instead of slamming into them
+                if (c.maxY - bot < 1.6) { pos.y += (c.maxY - bot) * 0.5; continue; }
+                if (m === oL) { pos.x = c.minX - CRUISER_R; hitSpeed = Math.max(hitSpeed, vel.x); vel.x = -Math.abs(vel.x) * 0.25; }
+                else if (m === oR) { pos.x = c.maxX + CRUISER_R; hitSpeed = Math.max(hitSpeed, -vel.x); vel.x = Math.abs(vel.x) * 0.25; }
+                else if (m === oF) { pos.z = c.minZ - CRUISER_R; hitSpeed = Math.max(hitSpeed, vel.z); vel.z = -Math.abs(vel.z) * 0.25; }
+                else { pos.z = c.maxZ + CRUISER_R; hitSpeed = Math.max(hitSpeed, -vel.z); vel.z = Math.abs(vel.z) * 0.25; }
+            }
+        }
+        if (worldRadius > 0 && pos.y < 3) {
+            const d = Math.hypot(pos.x, pos.z);
+            if (d > worldRadius + 2 && pos.y < 1.2) pos.y = 1.2;
+        }
+        return hitSpeed;
+    }
     function updateCruiser(dt, t) {
-        const boost = keys['ShiftLeft'] || keys['ShiftRight'] || touch.sprint;
-        const flySpeed = boost ? 36 : 21;
-        cruiserPlumes.forEach((p, i) => { p.scale.y = lerp(p.scale.y, (boost ? 1.85 : 1) + Math.sin(t * 18 + i) * 0.15, Math.min(1, dt * 10)); });
-        _vF.set(0, 0, -1).applyAxisAngle(_vUp, cruiserState.yaw);
-        _vR.set(1, 0, 0).applyAxisAngle(_vUp, cruiserState.yaw);
+        const F = cruiserFX;
         let ix = 0, iz = 0, iy = 0;
         if (isPlaying) {
             if (keys['KeyW'] || keys['ArrowUp']) iz += 1;
@@ -4141,34 +5168,107 @@
             if (keys['KeyD'] || keys['ArrowRight']) ix += 1;
             if (keys['KeyA'] || keys['ArrowLeft']) ix -= 1;
             ix += touch.mx; iz -= touch.my;
-            if (keys['Space']) iy += 0.9;
-            if (keys['ControlLeft'] || keys['ControlRight']) iy -= 0.9;
+            if (keys['Space']) iy += 1;
+            if (keys['ControlLeft'] || keys['ControlRight']) iy -= 1;
         }
-        _vM.set(0, 0, 0).addScaledVector(_vF, iz).addScaledVector(_vR, ix);
-        _vM.y += iy + Math.sin(cruiserState.pitch) * 0.85 * iz;
-        if (_vM.lengthSq() > 0.0025) {
-            const mag = Math.min(1, _vM.length());
-            cruiserState.vel.lerp(_vM.normalize().multiplyScalar(flySpeed * mag), Math.min(1, dt * 5));
-        } else cruiserState.vel.multiplyScalar(Math.pow(0.06, dt));
+        ix = clamp(ix, -1, 1); iz = clamp(iz, -1, 1);
+        const throttle = Math.min(1, Math.hypot(ix, iz, iy));
+
+        // Boost energy: drains while boosting, recharges when released; locks out when empty
+        const wantBoost = (keys['ShiftLeft'] || keys['ShiftRight'] || touch.sprint) && throttle > 0.1;
+        if (F.boostLock && F.energy > 0.3) F.boostLock = false;
+        const boosting = wantBoost && !F.boostLock && F.energy > 0;
+        if (boosting && !F.boosting) audio.playBoost();
+        F.boosting = boosting;
+        F.energy = clamp(F.energy + (boosting ? -0.3 : 0.16) * dt, 0, 1);
+        if (F.energy <= 0) F.boostLock = true;
+
+        // Desired velocity: forward follows where you look (yaw + pitch), strafe and lift are separate axes
+        const cp = Math.cos(cruiserState.pitch), sp = Math.sin(cruiserState.pitch);
+        _cFwd.set(-Math.sin(cruiserState.yaw) * cp, sp, -Math.cos(cruiserState.yaw) * cp);
+        _vR.set(Math.cos(cruiserState.yaw), 0, -Math.sin(cruiserState.yaw));
+        const maxV = boosting ? BOOST_MAX : CRUISE_MAX;
+        _cDes.set(0, 0, 0).addScaledVector(_cFwd, iz * maxV).addScaledVector(_vR, ix * maxV * 0.7);
+        _cDes.y += iy * maxV * 0.55;
+        // Exponential response: punchy acceleration, soft glide when you let go, firm braking when reversing
+        const reversing = cruiserState.vel.dot(_cDes) < 0;
+        const k = throttle > 0.05 ? (boosting ? 3.4 : reversing ? 3.0 : 2.1) : 0.9;
+        cruiserState.vel.lerp(_cDes, 1 - Math.exp(-k * dt));
+
+        // Gentle hover spring keeps the saucer floating above terrain
+        const ground = getFloorHeightAt(cruiserState.pos.x, cruiserState.pos.z);
+        const hoverY = ground + 1.6;
+        if (cruiserState.pos.y < hoverY + 0.6 && iy <= 0) cruiserState.vel.y += (hoverY - cruiserState.pos.y) * 6 * dt;
+
         cruiserState.pos.addScaledVector(cruiserState.vel, dt);
+        const hit = cruiserCollide(cruiserState.pos, cruiserState.vel);
+        if (hit > 9) { audio.playThud(Math.min(0.35, hit * 0.012)); F.shake = Math.min(1, hit / 30); }
         const minY = getFloorHeightAt(cruiserState.pos.x, cruiserState.pos.z) + 1.45;
-        cruiserState.pos.y = clamp(cruiserState.pos.y, minY, Math.max(minY, Math.min(72, ceilingY - 1.8)));
-        cruiserState.pos.x = clamp(cruiserState.pos.x, -85, 85);
-        cruiserState.pos.z = clamp(cruiserState.pos.z, -85, 85);
+        const maxY = Math.max(minY, Math.min(90, ceilingY - 1.8));
+        if (cruiserState.pos.y < minY) { cruiserState.pos.y = minY; if (cruiserState.vel.y < -6) { audio.playThud(0.15); F.shake = 0.4; } cruiserState.vel.y = Math.max(0, cruiserState.vel.y) * 0.3; }
+        if (cruiserState.pos.y > maxY) { cruiserState.pos.y = maxY; cruiserState.vel.y = Math.min(0, cruiserState.vel.y); }
+        cruiserState.pos.x = clamp(cruiserState.pos.x, -90, 90);
+        cruiserState.pos.z = clamp(cruiserState.pos.z, -90, 90);
+
+        // Visual attitude: bank into turns and strafes, nose dips when accelerating
+        let dy = cruiserState.yaw - F.prevYaw; F.prevYaw = cruiserState.yaw;
+        F.yawRate = lerp(F.yawRate, clamp(dy / Math.max(dt, 1e-3), -4, 4), 1 - Math.exp(-8 * dt));
+        const speed = cruiserState.vel.length();
+        const speedN = Math.min(1, speed / BOOST_MAX);
+        const fwdSpeed = cruiserState.vel.dot(_cFwd);
+        const targetRoll = clamp(-F.yawRate * 0.22 * (0.4 + speedN) - ix * 0.28, -0.75, 0.75);
+        cruiserState.roll = lerp(cruiserState.roll, targetRoll, 1 - Math.exp(-5 * dt));
+        F.visPitch = lerp(F.visPitch, cruiserState.pitch * 0.55 - iz * 0.08 * (boosting ? 1.6 : 1) + cruiserState.vel.y * 0.006, 1 - Math.exp(-4 * dt));
         cruiserGroup.position.copy(cruiserState.pos);
-        cruiserGroup.position.y += Math.sin(t * 3.8) * 0.08;
-        cruiserState.roll = lerp(cruiserState.roll, -clamp(ix, -1, 1) * 0.22, Math.min(1, dt * 6));
-        cruiserGroup.rotation.set(cruiserState.pitch * 0.45, cruiserState.yaw, cruiserState.roll, 'YXZ');
+        cruiserGroup.position.y += Math.sin(t * 3.2) * 0.1 * (1 - speedN);
+        cruiserGroup.rotation.set(F.visPitch, cruiserState.yaw, cruiserState.roll, 'YXZ');
+
+        // Thruster plumes stretch with throttle; boost turns them white-hot pink
+        const plumeLen = 0.7 + throttle * 0.8 + (boosting ? 1.4 : 0);
+        cruiserPlumes.forEach((p, i) => {
+            p.scale.y = lerp(p.scale.y, plumeLen + Math.sin(t * 22 + i * 2) * 0.12, 1 - Math.exp(-10 * dt));
+            p.material.color.setHex(boosting ? 0xff6fe0 : 0x3ce8ff);
+        });
+
+        // Camera: spring-damped chase cam (or cockpit) + speed FOV kick + boost/impact shake
+        F.shake = Math.max(0, F.shake - dt * 2.2);
+        const shakeAmt = F.shake * 0.35 + (boosting ? 0.05 : 0) * speedN;
         if (cruiserState.thirdPerson) {
-            _tmp.set(0, 3.6, 9.8).applyAxisAngle(_vUp, cruiserState.yaw);
-            camera.position.copy(cruiserGroup.position).add(_tmp);
-            camera.rotation.set(cruiserState.pitch - 0.12, cruiserState.yaw, 0, 'YXZ');
+            const tight = ceilingY < 40 ? 0.62 : 1;
+            _cOff.set(0, (3.2 + speedN * 0.6) * tight, (10 + speedN * 4) * tight);
+            _cOff.applyAxisAngle(_vR.set(1, 0, 0), -cruiserState.pitch * 0.6).applyAxisAngle(_vUp, cruiserState.yaw);
+            const desired = _tmp.copy(cruiserGroup.position).add(_cOff);
+            desired.y = Math.min(desired.y, ceilingY - 0.4);
+            if (!F.camInit) { F.camPos.copy(camera.position); F.camLook.copy(cruiserGroup.position); F.camInit = true; }
+            F.camPos.lerp(desired, 1 - Math.exp(-7 * dt));
+            F.camLook.lerp(_vM.copy(cruiserGroup.position).addScaledVector(_cFwd, 10).add(_vN.set(0, 1.4, 0)), 1 - Math.exp(-12 * dt));
+            camera.position.copy(F.camPos);
+            camera.lookAt(F.camLook);
+            camera.rotation.z += cruiserState.roll * 0.25;
         } else {
+            F.camInit = false;
             camera.position.copy(cruiserGroup.position); camera.position.y += 1.05;
-            camera.rotation.set(cruiserState.pitch, cruiserState.yaw, cruiserState.roll * 0.35, 'YXZ');
+            camera.rotation.set(cruiserState.pitch, cruiserState.yaw, cruiserState.roll * 0.45, 'YXZ');
         }
+        if (shakeAmt > 0.001) {
+            camera.position.x += (Math.random() - 0.5) * shakeAmt;
+            camera.position.y += (Math.random() - 0.5) * shakeAmt;
+        }
+        const fovTarget = gameSettings.fov + speedN * 16 + (boosting ? 7 : 0);
+        F.fov = lerp(camera.fov, fovTarget, 1 - Math.exp(-4 * dt));
+        if (Math.abs(F.fov - camera.fov) > 0.05) { camera.fov = F.fov; camera.updateProjectionMatrix(); }
+
         player.pos.copy(cruiserState.pos);
-        audio.updateEngine(Math.min(1, cruiserState.vel.length() / 30), true, boost);
+        audio.updateEngine(speedN, true, boosting, throttle, clamp(F.yawRate / 2, -1, 1), clamp(cruiserState.vel.y / 15, -1, 1));
+
+        // Flight HUD (throttled DOM writes)
+        if (++F.hudTick % 6 === 0) {
+            $('ch-speed').textContent = Math.round(Math.max(0, fwdSpeed) * 7.2);
+            $('ch-alt').textContent = Math.max(0, cruiserState.pos.y - ground - 1.45).toFixed(1);
+            $('ch-boost').style.width = (F.energy * 100).toFixed(0) + '%';
+            $('ch-boost').classList.toggle('low', F.boostLock);
+            $('cruiser-hud').classList.toggle('boost', boosting);
+        }
         if (hoveredInteractable) { hoveredInteractable = null; lastInteractLabel = ''; $('interact-prompt').classList.remove('show'); $('crosshair').classList.remove('hover'); $('tb-use').classList.remove('ready'); }
     }
 

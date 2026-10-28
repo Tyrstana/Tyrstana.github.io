@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b78c8">
-<title>Aero Drift — Güncelleme 3</title>
+<title>Aero Drift — Güncelleme 4</title>
 <style>
   :root{ --ink:#0b3a63; }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -929,7 +929,7 @@ class Batch {
     g.applyMatrix4(_m4);
     for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv') g.deleteAttribute(k);
     // group by material AND 48 m map chunk, so merged meshes stay small enough to be frustum-culled
-    const key = mat.uuid + '|' + Math.floor(x / 48) + '|' + Math.floor(z / 48);
+    const key = mat.uuid + '|' + Math.floor(x / 96) + '|' + Math.floor(z / 96);
     let e = this.map.get(key); if (!e) { e = { mat, list: [] }; this.map.set(key, e); } e.list.push(g);
   }
   build(parent) {
@@ -949,8 +949,8 @@ class Batch {
 }
 const B = new Batch();
 const GEO = {
-  box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 32), cyl12: new THREE.CylinderGeometry(1, 1, 1, 12),
-  sph: new THREE.SphereGeometry(1, 24, 16), sphLo: new THREE.SphereGeometry(1, 12, 8), hemi: new THREE.SphereGeometry(1, 40, 16, 0, Math.PI * 2, 0, Math.PI / 2),
+  box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 24), cyl12: new THREE.CylinderGeometry(1, 1, 1, 12),
+  sph: new THREE.SphereGeometry(1, 18, 12), sphLo: new THREE.SphereGeometry(1, 10, 7), hemi: new THREE.SphereGeometry(1, 40, 16, 0, Math.PI * 2, 0, Math.PI / 2),
   cone: new THREE.ConeGeometry(1, 1, 24), torus: new THREE.TorusGeometry(1, 0.06, 8, 64), capsule: new THREE.CapsuleGeometry(1, 1, 6, 16),
   plane: new THREE.PlaneGeometry(1, 1), disc: new THREE.CircleGeometry(1, 48).rotateX(-Math.PI / 2),
   cylOpen: new THREE.CylinderGeometry(1, 1, 1, 48, 1, true)
@@ -1068,7 +1068,7 @@ function addInteract(x, y, z, r, label, fn, o = {}) { const it = Object.assign({
 
 /* ---------- terrain ---------- */
 function buildTerrain() {
-  const SIZE = 2400, SEG = 360;
+  const SIZE = 2400, SEG = 280;
   const g = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG); g.rotateX(-Math.PI / 2);
   const p = g.attributes.position, cols = new Float32Array(p.count * 3);
   const c = new THREE.Color(), g1 = new THREE.Color(0x4fae25), g2 = new THREE.Color(0x9be343), sand = new THREE.Color(0xeee2a8), wet = new THREE.Color(0x3aa58e), far = new THREE.Color(0x6cc23a), pave = new THREE.Color(0xcfdde6);
@@ -1177,7 +1177,7 @@ function buildGrass() {
 }
 
 function buildFlowers() {
-  const g = new THREE.IcosahedronGeometry(0.16, 1);
+  const g = new THREE.IcosahedronGeometry(0.16, 0);
   const N = 2600, m = new THREE.InstancedMesh(g, new THREE.MeshStandardMaterial({ roughness: 0.5, emissive: 0x222222 }), N);
   const palette = [0xffffff, 0xfff27a, 0xff9ad5, 0xb7a6ff, 0xffd1e8, 0x9fe6ff].map(c => new THREE.Color(c));
   const mat = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new V3();
@@ -1198,7 +1198,7 @@ function buildFlowers() {
 function buildTrees() {
   const N = 140;
   const trunkG = new THREE.CylinderGeometry(0.32, 0.55, 1, 8).translate(0, 0.5, 0);
-  const canG = new THREE.IcosahedronGeometry(1, 3);
+  const canG = new THREE.IcosahedronGeometry(1, 2), rimG = new THREE.IcosahedronGeometry(1, 1);
   const trunks = new THREE.InstancedMesh(trunkG, M.trunk, N);
   const cans = new THREE.InstancedMesh(canG, new THREE.MeshPhysicalMaterial({ roughness: 0.45, clearcoat: 0.4, envMapIntensity: 0.7 }), N * 3);
   trunks.castShadow = cans.castShadow = true; trunks.receiveShadow = cans.receiveShadow = true;
@@ -1221,7 +1221,7 @@ function buildTrees() {
     i++;
   }
   scene.add(trunks, cans);
-  const RN = 760, rim = new THREE.InstancedMesh(canG, new THREE.MeshStandardMaterial({ roughness: 0.7 }), RN);
+  const RN = 760, rim = new THREE.InstancedMesh(rimG, new THREE.MeshStandardMaterial({ roughness: 0.7 }), RN);
   for (let k = 0; k < RN; k++) {
     const a = rand() * Math.PI * 2, r = rr(560, 760), x = Math.cos(a) * r, z = Math.sin(a) * r, s = rr(4, 9);
     if (Math.hypot(x - SKYLINE.x, z - SKYLINE.z) < 0) continue;
@@ -1232,7 +1232,7 @@ function buildTrees() {
 }
 
 function buildClouds() {
-  const g = new THREE.IcosahedronGeometry(1, 3);
+  const g = new THREE.IcosahedronGeometry(1, 2);
   const mat = new THREE.ShaderMaterial({
     fog: true,
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { sunDir: { value: SUN_DIR } }]),
@@ -1871,10 +1871,10 @@ function buildMeadowFeatures() {
 const buddyBodyGeo = (() => {
   const ctrl = [[0, 0], [0.4, 0.02], [0.57, 0.14], [0.63, 0.32], [0.6, 0.52], [0.5, 0.72], [0.36, 0.88], [0.2, 0.99], [0.001, 1.03]].map(([r, y]) => new THREE.Vector2(r, y));
   const curve = new THREE.SplineCurve(ctrl);
-  return new THREE.LatheGeometry(curve.getPoints(28), 40);
+  return new THREE.LatheGeometry(curve.getPoints(18), 28);
 })();
-const buddyHeadGeo = new THREE.SphereGeometry(0.42, 40, 28);
-const buddyArmGeo = new THREE.SphereGeometry(1, 24, 16);
+const buddyHeadGeo = new THREE.SphereGeometry(0.42, 28, 18);
+const buddyArmGeo = new THREE.SphereGeometry(1, 14, 10);
 function buddyMaterial(color) {
   return new THREE.MeshPhysicalMaterial({ color, roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.9, emissive: color, emissiveIntensity: 0.16, iridescence: 0.25, iridescenceIOR: 1.4 });
 }
@@ -1890,7 +1890,7 @@ function makeBuddy(color) {
     piv.rotation.z = s * 0.55; return piv;
   });
   const feet = [-1, 1].map(s => { const f = new THREE.Mesh(buddyArmGeo, mat); f.scale.set(0.17, 0.1, 0.25); f.position.set(s * 0.22, 0.09, 0.04); root.add(f); return f; });
-  root.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
+  body.castShadow = head.castShadow = true;
   return { root, bodyG, headPivot, arms, feet, mat, phase: 0, wave: 0, blend: 0 };
 }
 function animateBuddy(b, dt, t, o) {
@@ -2009,7 +2009,7 @@ function buildUpdrafts() {
 /* ============================================================
    Collectibles
    ============================================================ */
-const dropGeo = (() => { const pts = []; for (let i = 0; i <= 24; i++) { const a = Math.PI - i / 24 * Math.PI; pts.push(new THREE.Vector2(Math.sin(a) * Math.sin(a / 2) * 0.78, Math.cos(a))); } return new THREE.LatheGeometry(pts, 32); })();
+const dropGeo = (() => { const pts = []; for (let i = 0; i <= 14; i++) { const a = Math.PI - i / 14 * Math.PI; pts.push(new THREE.Vector2(Math.sin(a) * Math.sin(a / 2) * 0.78, Math.cos(a))); } return new THREE.LatheGeometry(pts, 20); })();
 const dropMat = new THREE.MeshPhysicalMaterial({ color: 0x46d2ff, roughness: 0.02, clearcoat: 1, transparent: true, opacity: 0.88, emissive: 0x0a74b8, emissiveIntensity: 0.55, envMapIntensity: 2.2, iridescence: 0.35 });
 const orbMat = new THREE.MeshPhysicalMaterial({ color: 0xffc533, roughness: 0.12, metalness: 0.85, clearcoat: 1, emissive: 0xff9a00, emissiveIntensity: 0.45, envMapIntensity: 1.6 });
 const bubbleMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.02, metalness: 0.05, transparent: true, opacity: 0.26, iridescence: 1, iridescenceIOR: 1.33, iridescenceThicknessRange: [180, 720], clearcoat: 1, envMapIntensity: 3, depthWrite: false });
@@ -2073,29 +2073,39 @@ function placeRing(rg, idx) {
   rg.group.updateMatrixWorld(true);
   rg.inv.copy(rg.group.matrixWorld).invert();
 }
+/* Collectibles are drawn with InstancedMesh (one draw call per kind instead of hundreds).
+   Each item keeps a plain Object3D "group" for its transform; syncCollectibleInstances() copies them to the GPU. */
+const inst = {};
+function glowPoints(n, color, size) {
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+  const p = new THREE.Points(g, new THREE.PointsMaterial({ map: glowTex, color, size, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+  p.frustumCulled = false; scene.add(p); return p;
+}
+function instMesh(geo, mat, n, shadow = false) {
+  const m = new THREE.InstancedMesh(geo, mat, n); m.frustumCulled = false; m.castShadow = shadow;
+  m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(m); return m;
+}
 function buildCollectibles() {
+  inst.drop = instMesh(dropGeo, dropMat, 95, true); inst.dropGlow = glowPoints(95, 0x6fdcff, 2.8);
   for (let i = 0; i < 95; i++) {
-    const g = new THREE.Group(), m = new THREE.Mesh(dropGeo, dropMat);
-    m.scale.setScalar(0.72); m.castShadow = true; g.add(m, makeGlow(0x6fdcff, 2.8));
-    scene.add(g); const d = { group: g, mesh: m, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, pop: 1 };
+    const g = new THREE.Object3D(), m = new THREE.Object3D();
+    m.scale.setScalar(0.72); g.add(m);
+    const d = { group: g, mesh: m, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, pop: 1 };
     placeDrop(d); drops.push(d);
   }
-  const orbGeo = new THREE.SphereGeometry(0.75, 32, 20);
+  inst.orb = instMesh(new THREE.SphereGeometry(0.75, 24, 16), orbMat, 16, true); inst.orbGlow = glowPoints(16, 0xffc040, 5);
+  inst.halo = instMesh(new THREE.TorusGeometry(1.25, 0.06, 6, 40), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }), 16);
   for (let i = 0; i < 16; i++) {
-    const g = new THREE.Group(), m = new THREE.Mesh(orbGeo, orbMat);
-    m.castShadow = true; g.add(m, makeGlow(0xffc040, 5));
-    const halo = new THREE.Mesh(new THREE.TorusGeometry(1.25, 0.06, 8, 48), new THREE.MeshBasicMaterial({ color: 0xffe9a0, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending, depthWrite: false }));
-    g.add(halo);
-    scene.add(g); const o = { group: g, mesh: m, halo, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, pop: 1 };
+    const g = new THREE.Object3D(), m = new THREE.Object3D(), halo = new THREE.Object3D();
+    g.add(m, halo);
+    const o = { group: g, mesh: m, halo, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, pop: 1 };
     placeOrb(o); orbs.push(o);
   }
-  const bGeo = new THREE.SphereGeometry(1, 40, 24);
+  inst.bubble = instMesh(new THREE.SphereGeometry(1, 24, 16), bubbleMat, 50); inst.bubble.renderOrder = 2;
   for (let i = 0; i < 50; i++) {
-    const g = new THREE.Group(), m = new THREE.Mesh(bGeo, bubbleMat);
-    const hl = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffffff, transparent: true, opacity: 0.85, depthWrite: false }));
-    hl.scale.set(0.45, 0.3, 1); hl.position.set(-0.38, 0.45, 0.6); m.add(hl);
-    g.add(m); m.renderOrder = 2;
-    scene.add(g); const b = { group: g, mesh: m, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, r: 1, pop: 1 };
+    const g = new THREE.Object3D(), m = new THREE.Object3D();
+    g.add(m);
+    const b = { group: g, mesh: m, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6.28, r: 1, pop: 1 };
     placeBubble(b); bubbles.push(b);
   }
   const tGeo = new THREE.TorusGeometry(3.2, 0.32, 18, 64);
@@ -2103,7 +2113,7 @@ function buildCollectibles() {
   for (let i = 0; i < nRings; i++) {
     const g = new THREE.Group(), m = new THREE.Mesh(tGeo, ringMat);
     const inner = new THREE.Mesh(new THREE.CircleGeometry(3, 48), new THREE.MeshBasicMaterial({ color: 0xb8ffd8, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
-    m.castShadow = true; g.add(m, inner);
+    g.add(m, inner);
     scene.add(g); const rg = { group: g, mesh: m, inner, active: true, respawn: 0, inv: new THREE.Matrix4(), prevSide: 0 };
     placeRing(rg, i); rings.push(rg);
   }
@@ -2113,19 +2123,20 @@ function buildCollectibles() {
 let aquaFish;
 const aquaFishData = [];
 function buildCritters() {
-  const wingG = new THREE.CircleGeometry(0.32, 12).rotateX(-Math.PI / 2);
-  const cols = [0xff8ad8, 0xffe14d, 0x7cd8ff, 0xc59bff, 0xffffff, 0xff9f5a];
-  for (let i = 0; i < 30; i++) {
-    const mat = new THREE.MeshStandardMaterial({ color: cols[i % cols.length], side: THREE.DoubleSide, roughness: 0.4, emissive: cols[i % cols.length], emissiveIntensity: 0.25 });
-    const g = new THREE.Group(), wl = new THREE.Group(), wr = new THREE.Group();
-    const l1 = new THREE.Mesh(wingG, mat); l1.position.set(-0.3, 0, 0.08); l1.scale.set(1, 1, 1.2); wl.add(l1);
-    const l2 = new THREE.Mesh(wingG, mat); l2.position.set(-0.22, 0, -0.25); l2.scale.setScalar(0.7); wl.add(l2);
-    const r1 = l1.clone(); r1.position.x *= -1; const r2 = l2.clone(); r2.position.x *= -1; wr.add(r1, r2);
-    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.04, 0.35, 4, 8).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x333344 }));
-    g.add(wl, wr, body);
+  // butterflies: 3 instanced meshes (left wings, right wings, bodies) instead of 150 separate meshes
+  const wingG = new THREE.CircleGeometry(0.32, 10).rotateX(-Math.PI / 2);
+  const side = s => mergeGeometries([wingG.clone().scale(1, 1, 1.2).translate(s * 0.3, 0, 0.08), wingG.clone().scale(0.7, 0.7, 0.7).translate(s * 0.22, 0, -0.25)]);
+  const wingMat = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, roughness: 0.4, emissive: 0xffffff, emissiveIntensity: 0.12 });
+  const N = 30;
+  inst.wingL = instMesh(side(-1), wingMat, N); inst.wingR = instMesh(side(1), wingMat, N);
+  inst.bfBody = instMesh(new THREE.CapsuleGeometry(0.04, 0.35, 3, 6).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x333344 }), N);
+  const cols = [0xff8ad8, 0xffe14d, 0x7cd8ff, 0xc59bff, 0xffffff, 0xff9f5a].map(c => new THREE.Color(c));
+  for (let i = 0; i < N; i++) {
+    inst.wingL.setColorAt(i, cols[i % cols.length]); inst.wingR.setColorAt(i, cols[i % cols.length]);
+    const g = new THREE.Object3D(), wl = new THREE.Object3D(), wr = new THREE.Object3D();
+    g.add(wl, wr);
     const p = i < 8 ? new V3(CX(mr(-50, 50)), Y0, CZ(mr(-50, 50))) : randomMeadowSpot(10, 400);
     g.position.set(p.x, p.y + 2, p.z);
-    scene.add(g);
     butterflies.push({ g, wl, wr, target: p.clone(), t: Math.random() * 10, speed: mr(2.5, 4.5), city: i < 8 });
   }
   const fishMat = [0xff9a3c, 0xffd23f, 0x5fd0ff].map(c => new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.15, metalness: 0.3, clearcoat: 1, emissive: c, emissiveIntensity: 0.1 }));
@@ -2353,7 +2364,7 @@ function applyQuality() {
   const q = settings.quality, dpr = window.devicePixelRatio || 1;
   basePr = q === 'low' ? Math.min(dpr, 1) * 0.8 : q === 'mid' ? Math.min(dpr, 1.1) : Math.min(dpr, 1.5);
   resScale = 1; setRenderScale();
-  shadowEvery = q === 'high' ? 1 : 2;
+  shadowEvery = q === 'low' ? 3 : 2;
   sun.shadow.autoUpdate = false; sun.shadow.needsUpdate = true;
   $('fps').classList.toggle('hidden', !settings.fpsShow);
   const sh = q !== 'low';
@@ -2531,18 +2542,33 @@ canvas.addEventListener('mousedown', () => {
   if (!document.pointerLockElement) { lockPointer(); dragging = true; }
 });
 addEventListener('mouseup', () => dragging = false);
+// Browsers (especially Chrome on Windows) sometimes report a huge bogus movementX/Y under pointer lock,
+// which made the camera suddenly spin. Raw (unadjusted) input avoids most of them; this filter drops the rest.
+let lockSkip = 0, mouseAvg = 4;
 addEventListener('mousemove', e => {
   if (state !== 'playing') return;
   if (document.pointerLockElement === canvas || dragging) {
+    let dx = e.movementX, dy = e.movementY;
+    if (lockSkip > 0) { lockSkip--; return; }
+    const mag = Math.max(Math.abs(dx), Math.abs(dy));
+    if (mag > 120 && mag > mouseAvg * 8) return;
+    mouseAvg += (mag - mouseAvg) * 0.1;
     const s = 0.0024 * settings.sens * (P.mode === 'scope' ? 0.3 : 1);
-    yaw -= e.movementX * s;
+    yaw -= dx * s;
     const fp = CAM_MODES[camMode].fp || P.mode === 'scope';
-    pitch = clamp(pitch + e.movementY * s * (settings.invertY ? -1 : 1), fp ? -1.35 : -0.5, fp ? 1.35 : 1.35);
+    pitch = clamp(pitch + dy * s * (settings.invertY ? -1 : 1), fp ? -1.35 : -0.5, fp ? 1.35 : 1.35);
   }
 });
 addEventListener('wheel', e => { if (state === 'playing' && !CAM_MODES[camMode].fp) camDistT = clamp(camDistT + Math.sign(e.deltaY) * 1.2, 2.5, 24); }, { passive: true });
 function cycleCam() { camMode = (camMode + 1) % CAM_MODES.length; camDistT = CAM_MODES[camMode].d || camDistT; pitch = CAM_MODES[camMode].p; toast('🎥 Kamera: ' + CAM_MODES[camMode].n, 1.6); camModesUsed.add(camMode); if (camModesUsed.size >= CAM_MODES.length) unlock('views'); }
-function lockPointer() { if (IS_TOUCH) return; try { const p = canvas.requestPointerLock(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+function lockPointer() {
+  if (IS_TOUCH) return;
+  lockSkip = 2;
+  try {
+    const p = canvas.requestPointerLock({ unadjustedMovement: true });
+    if (p && p.catch) p.catch(() => { try { const p2 = canvas.requestPointerLock(); if (p2 && p2.catch) p2.catch(() => {}); } catch (e) {} });
+  } catch (e) { try { canvas.requestPointerLock(); } catch (e2) {} }
+}
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === canvas) { hadLock = true; $('crosshint').classList.add('hidden'); }
   else { if (hadLock && state === 'playing') pause(); hadLock = false; }
@@ -2937,6 +2963,8 @@ function rayCols(o, d, maxT) {
       continue;
     }
     if (c.maxY - c.minY < 1.3) continue;
+    // thin poles, lamps and tree trunks no longer yank the camera in and out while you rotate
+    if (c.t === 1 ? c.r < 1.0 : (c.maxX - c.minX < 1.2 && c.maxZ - c.minZ < 1.2)) continue;
     let bx0, bx1, bz0, bz1;
     if (c.t === 0) { bx0 = c.minX; bx1 = c.maxX; bz0 = c.minZ; bz1 = c.maxZ; } else { bx0 = c.cx - c.r; bx1 = c.cx + c.r; bz0 = c.cz - c.r; bz1 = c.cz + c.r; }
     if (bx1 < x0 || bx0 > x1 || bz1 < z0 || bz0 > z1 || c.maxY < y0 || c.minY > y1) continue;
@@ -2950,7 +2978,17 @@ function rayCols(o, d, maxT) {
   }
   return best;
 }
+// the rendered view eases toward the mouse-driven yaw/pitch over ~30 ms: hides uneven mouse event timing
+// and frame-time spikes without feeling laggy
+let vYaw = START_YAW, vPitch = 0.28;
+function smoothView(dt, snap = false) {
+  const kv = snap ? 1 : 1 - Math.exp(-30 * dt);
+  vYaw += Math.atan2(Math.sin(yaw - vYaw), Math.cos(yaw - vYaw)) * kv;
+  vPitch += (pitch - vPitch) * kv;
+}
 function updateCamera(dt) {
+  smoothView(dt);
+  const yaw = vYaw, pitch = vPitch;
   const cm = CAM_MODES[camMode];
   let targetFov = settings.fov + P.boostK * 10 + (P.gliding ? 4 : 0);
   if (P.mode === 'scope') {
@@ -2979,7 +3017,8 @@ function updateCamera(dt) {
     const want = P.mode === 'train' ? 16 : camDistT;
     const hit = rayCols(target, _rd, want);
     const allowed = Math.max(1.2, hit - 0.4);
-    if (allowed < camCur) camCur = allowed; else camCur += (allowed - camCur) * (1 - Math.exp(-4 * dt));
+    // pull in fast (no clipping) but not in a single jerk; ease back out slowly
+    if (allowed < camCur) camCur += (allowed - camCur) * (1 - Math.exp(-35 * dt)); else if (allowed > camCur + 0.05) camCur += (allowed - camCur) * (1 - Math.exp(-3 * dt));
     const des = target.clone().addScaledVector(_rd, camCur);
     const gh = surfaceAt(des.x, des.z) + 0.6;
     if (des.y < gh) des.y = gh;
@@ -3064,6 +3103,30 @@ function updateCollectibles(dt, t, playing) {
     }
     rg.prevSide = (radial < 6 && Math.abs(_inv.z) < 6) ? side : 0;
   }
+  syncCollectibleInstances();
+}
+const _zeroM = new THREE.Matrix4().makeScale(0, 0, 0);
+function syncList(list, mesh, part, glow) {
+  const gp = glow ? glow.geometry.attributes.position.array : null;
+  for (let i = 0; i < list.length; i++) {
+    const o = list[i];
+    if (o.active && o.group.visible) {
+      o.group.updateMatrixWorld(true);
+      mesh.setMatrixAt(i, part(o).matrixWorld);
+      if (gp) { gp[i * 3] = o.group.position.x; gp[i * 3 + 1] = o.group.position.y; gp[i * 3 + 2] = o.group.position.z; }
+    } else {
+      mesh.setMatrixAt(i, _zeroM);
+      if (gp) gp[i * 3 + 1] = -9999;
+    }
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+  if (glow) glow.geometry.attributes.position.needsUpdate = true;
+}
+function syncCollectibleInstances() {
+  syncList(drops, inst.drop, o => o.mesh, inst.dropGlow);
+  syncList(orbs, inst.orb, o => o.mesh, inst.orbGlow);
+  syncList(orbs, inst.halo, o => o.halo, null);
+  syncList(bubbles, inst.bubble, o => o.mesh, null);
 }
 
 const _fm = new THREE.Matrix4(), _fq = new THREE.Quaternion(), _fe = new THREE.Euler(), _fs = new V3(1, 1, 1), _fp = new V3();
@@ -3102,6 +3165,12 @@ function updateWorld(dt, t) {
     const f = Math.sin(t * 22 + bf.speed * 10);
     bf.wl.rotation.z = f; bf.wr.rotation.z = -f;
   }
+  for (let i = 0; i < butterflies.length; i++) {
+    const bf = butterflies[i];
+    bf.g.updateMatrixWorld(true);
+    inst.wingL.setMatrixAt(i, bf.wl.matrixWorld); inst.wingR.setMatrixAt(i, bf.wr.matrixWorld); inst.bfBody.setMatrixAt(i, bf.g.matrixWorld);
+  }
+  inst.wingL.instanceMatrix.needsUpdate = inst.wingR.instanceMatrix.needsUpdate = inst.bfBody.instanceMatrix.needsUpdate = true;
   for (const f of fishes) {
     f.t += dt / f.dur;
     if (f.t < 0) continue;
@@ -3214,7 +3283,7 @@ function updateNPCs(dt, t) {
       }
       r.position.y = n.zone === 'meadow' ? surfaceAt(r.position.x, r.position.z) : Y0;
     }
-    r.visible = dCam < 260;
+    r.visible = dCam < 180;
     if (dCam < 75) animateBuddy(n.b, dt, t, { speed });
     r.children[r.children.length - 1].visible = dCam < 30;
   }
@@ -3330,7 +3399,7 @@ function startGame(m) {
   stats = { drops: 0, orbs: 0, bubbles: 0, rings: 0, updrafts: 0, maxCombo: 0, glide: 0, swim: 0, airtime: 0, questsDone: 0, talks: 0, pcs: 0, wishes: 0, roofs: 0, rides: 0 };
   roofsVisited = new Set(); talkedTo.clear();
   P.pos.set(SPAWN.x, heightAt(SPAWN.x, SPAWN.z), SPAWN.z); P.vel.set(0, 0, 0); P.energy = 100; P.facing = START_YAW + Math.PI; P.onGround = true; P.mode = 'free'; P.buffs.speed = P.buffs.jump = 0; P.tired = false; P.boostK = 0; camTgt.copy(P.pos);
-  yaw = START_YAW; pitch = CAM_MODES[camMode].p; camDistT = CAM_MODES[camMode].d || 8; camCur = camDistT;
+  yaw = START_YAW; pitch = CAM_MODES[camMode].p; smoothView(0, true); camDistT = CAM_MODES[camMode].d || 8; camCur = camDistT;
   race.active = false; race.rings.forEach(r => r.visible = false);
   resetCollectibles();
   quests = []; for (let i = 0; i < 3; i++) quests.push(newQuest(quests.map(q => q.stat)));
@@ -4013,7 +4082,7 @@ function loop() {
 }
 
 // small console helper for testing: aeroDebug.tp(x, y, z)
-window.aeroDebug = { P, Sound, CITY, world, get state() { return state; }, tp: (x, y, z) => { P.pos.set(x, y, z); P.vel.set(0, 0, 0); }, look: (y, p) => { yaw = y; if (p !== undefined) pitch = p; }, cam: m => { camMode = m; } };
+window.aeroDebug = { P, Sound, CITY, world, renderer, scene, get yaw() { return yaw; }, grassGeo: () => grassGeo, get resScale() { return resScale; }, measure() { const i = renderer.info; i.autoReset = false; i.reset(); sun.shadow.needsUpdate = true; if (useBloom) composer.render(); else renderer.render(scene, camera); const r = { calls: i.render.calls, tris: i.render.triangles }; i.autoReset = true; return r; }, get state() { return state; }, tp: (x, y, z) => { P.pos.set(x, y, z); P.vel.set(0, 0, 0); }, look: (y, p) => { yaw = y; if (p !== undefined) pitch = p; }, cam: m => { camMode = m; } };
 
 (async () => {
   try {
