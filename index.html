@@ -375,8 +375,9 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 }
 
 /* ---------- player modal ---------- */
-.player{position:fixed;inset:0;z-index:150;display:none;padding:clamp(0px,2.4vw,34px)}
+.player{position:fixed;inset:0;z-index:150;display:none;overscroll-behavior:contain;padding:clamp(0px,2.4vw,34px)}
 .player.open{display:block}
+html.player-lock,html.player-lock body{overflow:hidden}
 .player-bg{position:absolute;inset:0;background:var(--overlay);backdrop-filter:blur(16px)}
 .player-win{position:relative;height:100%;display:flex;flex-direction:column;border-radius:20px;overflow:hidden;border:1px solid var(--line2);background:#000;box-shadow:var(--shadow)}
 .player-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px 12px 20px;background:var(--bg2);color:var(--fg);border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -392,7 +393,7 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .player-load.done{opacity:0}
 .player-load span{display:flex;align-items:center;gap:14px}
 .player-load span::before{content:"";width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.1);border-top-color:#ff5b2e;animation:spin .8s linear infinite}
-.install{position:absolute;inset:0;overflow:auto;padding:clamp(24px,5vw,70px);background:radial-gradient(circle at 80% 0%,rgba(200,255,77,.08),transparent 50%),var(--bg);color:var(--fg);display:none}
+.install{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:clamp(24px,5vw,70px);background:radial-gradient(circle at 80% 0%,rgba(200,255,77,.08),transparent 50%),var(--bg);color:var(--fg);display:none}
 .install.show{display:block}
 .install h3{font:800 clamp(32px,5vw,70px)/.95 var(--display);letter-spacing:-.04em;text-transform:uppercase;max-width:14ch}
 .install > p{color:var(--text2);max-width:56ch;margin-top:18px;font-size:17px}
@@ -906,14 +907,14 @@ footer a{color:var(--fg)}
 </main>
 
 <footer>
-  <span>© 2026 Emir Yalçın — elle kodlandı · Update 11</span>
+  <span>© 2026 Emir Yalçın — elle kodlandı · Update 12</span>
   <span class="egg">İpucu: klavyede <kbd>backrooms</kbd> ya da <kbd>frutiger</kbd> yaz</span>
   <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link" style="color:var(--fg)">github.com/Tyrstana ↗</a>
   <button id="toTop" data-cursor="link">Başa dön ↑</button>
 </footer>
 
 <!-- PLAYER -->
-<div class="player" id="player" role="dialog" aria-modal="true" aria-labelledby="plTitle">
+<div class="player" id="player" role="dialog" aria-modal="true" aria-labelledby="plTitle" data-lenis-prevent>
   <div class="player-bg"></div>
   <div class="player-win">
     <div class="player-bar">
@@ -2250,6 +2251,9 @@ frame.setAttribute('allow', 'fullscreen; pointer-lock; autoplay; gamepad; accele
 frame.setAttribute('allowfullscreen', '');
 frame.title = 'Oyun';
 const plLoad = $('#plLoad'), plInstall = $('#plInstall'), plApp = $('#plApp'), plStage = $('#plStage');
+// Lenis listens on window and cancels every wheel/touch while it is stopped (as it is when the
+// player is open); stopping these at the player keeps the install panels natively scrollable
+['wheel', 'touchstart', 'touchmove'].forEach(type => player.addEventListener(type, e => e.stopPropagation(), { passive: true }));
 frame.addEventListener('load', () => { if (frame.src && frame.src !== 'about:blank') plLoad.classList.add('done'); });
 let lastFocus = null;
 function openPlayer(i, ox, oy) {
@@ -2269,10 +2273,12 @@ function openPlayer(i, ox, oy) {
   dl.setAttribute('download', p.file.split('/').pop());
   plInstall.classList.toggle('show', panel === plInstall);
   plApp.classList.toggle('show', panel === plApp);
+  if (panel) panel.scrollTop = 0;
   plLoad.classList.toggle('done', !!panel);
   if (!panel) { plStage.appendChild(frame); frame.src = url; }
   player.classList.add('open');
   if (lenis) lenis.stop(); else document.body.style.overflow = 'hidden';
+  document.documentElement.classList.add('player-lock');
   GL.paused = true;
   if (window.gsap && !reduce) {
     const x = ox ?? innerWidth / 2, y = oy ?? innerHeight / 2;
@@ -2289,6 +2295,7 @@ function closePlayer() {
     if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
     GL.paused = false;
     if (lenis) lenis.start(); else document.body.style.overflow = '';
+    document.documentElement.classList.remove('player-lock');
     lastFocus && lastFocus.focus && lastFocus.focus({ preventScroll: true });
   };
   if (window.gsap && !reduce) gsap.to(player, { clipPath: `circle(0px at ${innerWidth / 2}px ${innerHeight / 2}px)`, duration: .8, ease: 'expo.inOut', onComplete: finish });
@@ -2334,7 +2341,8 @@ if (!hasGSAP) {
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 if (window.Lenis && !reduce) {
-  lenis = new Lenis({ duration: 1.25, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+  // the player (install panels, game frame) scrolls natively: Lenis must not swallow its wheel/touch
+  lenis = new Lenis({ duration: 1.25, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, prevent: node => !!(node.closest && node.closest('.player')) });
   lenis.on('scroll', e => { ScrollTrigger.update(); GL.vel = e.velocity; });
   lenis.stop();
 }
