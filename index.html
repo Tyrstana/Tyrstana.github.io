@@ -318,69 +318,41 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .proj-bar{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:0 var(--gut);margin-bottom:26px;font:400 12px/1 var(--mono);color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
 .proj-bar b{font:700 30px/1 var(--display);color:var(--fg);letter-spacing:-.03em;margin-right:6px}
 .proj-track{display:flex;gap:28px;padding:0 var(--gut);width:max-content;will-change:transform}
-.card{width:clamp(320px,36vw,560px);flex-shrink:0;border-radius:24px;background:linear-gradient(180deg,var(--surface2),var(--surface));border:1px solid var(--line);
-  overflow:hidden;position:relative;transition:border-color .4s,background .5s;cursor:none}
-.card-in{transform-style:preserve-3d}
-.card:hover{border-color:var(--line2)}
-.card-vis{position:relative;aspect-ratio:16/10;overflow:hidden;background:#000}
-.card-vis canvas{width:100%;height:100%;transition:scale 1.2s var(--ease)}
+/* ---------- project cards: editorial and quiet — image, a meta line, a title, two actions ---------- */
+.proj-track{gap:clamp(28px,3vw,48px)}
+.card{width:clamp(320px,33vw,520px);flex-shrink:0;position:relative;cursor:none;color:var(--fg)}
+.card-in{display:flex;flex-direction:column}
+.card-vis{position:relative;aspect-ratio:16/10;overflow:hidden;border-radius:14px;background:#000}
+.card-vis::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);pointer-events:none}
+.card-vis canvas{width:100%;height:100%;transition:scale 1.1s var(--ease)}
 @media (min-width:900px){.card-vis canvas{width:114%;margin-left:-7%}}
-.card:hover .card-vis canvas{scale:1.06}
-.card-idx{position:absolute;top:16px;left:16px;font:500 12px/1 var(--mono);padding:8px 12px;border-radius:100px;background:rgba(0,0,0,.6);color:#fff}
-.card-new{position:absolute;left:16px;bottom:16px;font:500 11px/1 var(--mono);padding:8px 12px;border-radius:100px;color:#000;letter-spacing:.08em;
-  background:linear-gradient(90deg,#c8ff4d,#fff,#c8ff4d);background-size:200% 100%;animation:shine 2.4s linear infinite}
-@keyframes shine{to{background-position:-200% 0}}
-.card-play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .4s}
-.card-play span{width:84px;height:84px;border-radius:50%;background:#f3efe8;color:#000;display:grid;place-items:center;transform:scale(.6);transition:transform .6s var(--ease)}
-.card-play svg{width:28px;height:28px;margin-left:4px}
-.card:hover .card-play{opacity:1}
-.card:hover .card-play span{transform:none}
-.card-body{padding:24px 26px 26px}
-.card-cat{font:400 12px/1 var(--mono);color:var(--acc);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
-.card h3{font:700 clamp(24px,2.3vw,36px)/1.02 var(--display);letter-spacing:-.03em;margin-bottom:12px}
-.card-desc{color:var(--text2);font-size:15px;line-height:1.55;min-height:4.65em}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
-.chips span{font:400 11px/1 var(--mono);padding:7px 10px;border-radius:100px;background:var(--tint2);color:var(--text2)}
-.card-foot{display:flex;gap:10px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap}
-.card-foot .btn{padding:13px 18px;font-size:12px}
-.card-shine{position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),var(--tint2),transparent 45%);opacity:0;transition:opacity .4s}
-.card:hover .card-shine{opacity:1}
-.card.end{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px;background:var(--acc);color:#000;border:0}
-.card.end h3{font-size:clamp(34px,3.6vw,58px);text-transform:uppercase;letter-spacing:-.04em;line-height:.95}
-.card.end p{margin-top:18px;max-width:30ch;font-size:16px}
-/* ---------- card v2: per-project accent, platform tag, highlights, glowing edge ---------- */
-@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
-.card{--pc:var(--acc);transition:border-color .4s,background .5s,box-shadow .6s var(--ease)}
-.card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:3;
-  background:conic-gradient(from var(--ang),transparent 0 55%,var(--pc) 72%,#fff 78%,var(--pc) 84%,transparent 100%);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
-  opacity:0;transition:opacity .5s;animation:edge 3.6s linear infinite;animation-play-state:paused}
-@keyframes edge{to{--ang:360deg}}
-.card:hover::before{opacity:1;animation-play-state:running}
-.card:not(.end):hover{border-color:transparent;box-shadow:0 34px 90px -34px color-mix(in srgb,var(--pc) 60%,transparent)}
-.card-vis{aspect-ratio:16/9.6}
-.card-vis-shade{position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,0,0,.32) 0%,transparent 24%,transparent 60%,rgba(0,0,0,.5) 100%),radial-gradient(ellipse at 50% 125%,color-mix(in srgb,var(--pc) 30%,transparent),transparent 62%)}
-.card-idx,.card-plat{border:1px solid rgba(255,255,255,.2);box-shadow:0 4px 14px rgba(0,0,0,.25)}
-.card-plat{position:absolute;top:16px;right:16px;font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 12px;border-radius:100px;background:rgba(0,0,0,.6);color:#fff}
-.card-play{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle,rgba(0,0,0,.2),rgba(0,0,0,.55))}
-.card-play span{background:var(--pc);color:#000;box-shadow:0 0 0 8px color-mix(in srgb,var(--pc) 28%,transparent),0 14px 44px color-mix(in srgb,var(--pc) 55%,transparent)}
-.card-play em{font:500 12px/1 var(--mono);font-style:normal;letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:0;transform:translateY(10px);transition:opacity .4s .08s,transform .6s var(--ease) .08s}
-.card:hover .card-play em{opacity:1;transform:none}
-.card-cat{display:flex;align-items:center;gap:9px;color:var(--pc)}
-.card-cat i{width:8px;height:8px;border-radius:50%;background:var(--pc);box-shadow:0 0 12px var(--pc);flex-shrink:0}
-:root[data-theme="light"] .card-cat,:root[data-theme="frutiger"] .card-cat{color:color-mix(in srgb,var(--pc) 62%,#000)}
-.card-desc{min-height:0;font-size:14.5px}
-.card-feats{list-style:none;display:grid;gap:7px;margin-top:14px}
-.card-feats li{display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.3;color:var(--fg)}
-.card-feats li::before{content:"✓";display:grid;place-items:center;width:18px;height:18px;border-radius:50%;flex-shrink:0;font:700 10px/1 var(--body);
-  color:var(--pc);background:color-mix(in srgb,var(--pc) 18%,transparent);border:1px solid color-mix(in srgb,var(--pc) 45%,transparent)}
-:root[data-theme="light"] .card-feats li::before,:root[data-theme="frutiger"] .card-feats li::before{color:color-mix(in srgb,var(--pc) 60%,#000)}
-.chips{margin-top:14px}
-.card:not(.end) .card-foot .btn.solid{background:var(--pc);border-color:var(--pc);color:#000}
-@media (min-width:900px) and (max-height:840px){.card-feats{display:none}.card-desc{-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}}
-@media (min-width:900px) and (max-height:700px){.chips{display:none}}
+.card:hover .card-vis canvas{scale:1.035}
+.card-body{padding:20px 2px 0}
+.card-meta{display:flex;align-items:center;gap:10px;font:400 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.card-num{color:var(--fg)}
+.card-meta .sep{width:14px;height:1px;background:var(--line2)}
+.card-plat{margin-left:auto;white-space:nowrap}
+.card-new{display:inline-flex;align-items:center;gap:6px;color:var(--fg)}
+.card-new::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.card h3{font:600 clamp(24px,2.1vw,32px)/1.08 var(--display);letter-spacing:-.025em;margin:14px 0 10px;display:flex;align-items:baseline;gap:10px}
+.card h3 .arr{font:400 .7em/1 var(--body);color:var(--mute);transition:transform .5s var(--ease),color .3s}
+.card:hover h3 .arr{transform:translate(3px,-3px);color:var(--fg)}
+.card-desc{color:var(--text2);font-size:15px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.card-tech{font:400 11px/1.4 var(--mono);letter-spacing:.04em;color:var(--mute);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-actions{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.card-actions .go{font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:11px 16px;border-radius:100px;background:var(--fg);color:var(--on-fg);transition:opacity .3s}
+.card-actions .go:hover{opacity:.82}
+.card-actions .alt{font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--line2);padding-bottom:3px;transition:color .3s,border-color .3s;white-space:nowrap}
+.card-actions .alt:hover{color:var(--fg);border-color:var(--fg)}
+.card.end{display:flex;flex-direction:column;justify-content:space-between;align-self:flex-start;aspect-ratio:16/10;padding:clamp(24px,2.4vw,36px);border-radius:14px;border:1px solid var(--line2);transition:background .4s,border-color .4s}
+.card.end:hover{background:var(--tint);border-color:var(--fg)}
+.card.end .end-k{font:400 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.card.end h3{font:600 clamp(28px,2.6vw,42px)/1.02 var(--display);letter-spacing:-.03em;margin:0;display:block}
+.card.end .end-go{font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.card.end .end-go i{font-style:normal;transition:transform .5s var(--ease)}
+.card.end:hover .end-go i{transform:translateX(6px)}
+@media (min-width:900px) and (max-height:760px){.card-desc{-webkit-line-clamp:2}}
 .proj-progress{margin:34px var(--gut) 0;height:1px;background:var(--line);position:relative}
 .proj-progress i{position:absolute;inset:0;background:var(--fg);transform-origin:left;transform:scaleX(0)}
 .proj-dots{display:none}
@@ -393,11 +365,9 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
   .proj-track{width:auto;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:14px;
     padding:4px var(--gut) 10px;scroll-padding-inline:var(--gut);overscroll-behavior-x:contain;will-change:auto}
   .proj-track::-webkit-scrollbar{display:none}
-  .card{width:min(86vw,440px);scroll-snap-align:start;cursor:auto}
-  .card-desc{min-height:0;font-size:14.5px}
-  .card-body{padding:20px 20px 22px}
-  .card-foot .btn{flex:1;min-height:46px}
-  .card.end{padding:30px}
+  .card{width:min(84vw,420px);scroll-snap-align:start;cursor:auto}
+  .card-actions .alt{display:none}
+  .card.end{aspect-ratio:auto;min-height:260px}
   .proj-progress{display:none}
   .proj-dots{display:flex;justify-content:center;gap:8px;margin-top:18px}
   .proj-dots i{width:7px;height:7px;border-radius:100px;background:var(--line2);transition:width .5s var(--ease),background .4s}
@@ -433,6 +403,10 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .step p{color:var(--text2);font-size:15px}
 .step code{font:400 13px var(--mono);background:var(--tint2);padding:2px 6px;border-radius:6px;color:var(--fg)}
 .install-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:36px}
+.cmds{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;max-width:860px}
+.cmds span{font:400 12px/1 var(--mono);padding:9px 13px;border-radius:100px;border:1px solid var(--line2);color:var(--text2)}
+.cmds span::before{content:"› ";color:var(--mute)}
+.install > p.install-note{color:var(--mute);font-size:13px;margin-top:18px}
 @media (max-width:760px){
   .steps{grid-template-columns:1fr;margin-top:28px}
   .player{padding:0}
@@ -449,13 +423,13 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(15,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(21,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(15,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(21,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -584,8 +558,8 @@ footer a{color:var(--fg)}
   color-scheme:light;
 }
 :root[data-theme="frutiger"] body{background:linear-gradient(180deg,#3cb2ff 0%,#a8e2ff 28%,#e6f8ff 58%,#cdf5ad 84%,#7fd451 100%) fixed}
-:root[data-theme="frutiger"] .card,:root[data-theme="frutiger"] .trait,:root[data-theme="frutiger"] .pill{box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 14px 40px rgba(0,90,160,.16)}
-:root[data-theme="frutiger"] .card::after,:root[data-theme="frutiger"] .trait::after{content:"";position:absolute;left:0;right:0;top:0;height:46%;pointer-events:none;border-radius:24px 24px 60% 60%/24px 24px 22px 22px;
+:root[data-theme="frutiger"] .trait,:root[data-theme="frutiger"] .pill{box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 14px 40px rgba(0,90,160,.16)}
+:root[data-theme="frutiger"] .trait::after{content:"";position:absolute;left:0;right:0;top:0;height:46%;pointer-events:none;border-radius:24px 24px 60% 60%/24px 24px 22px 22px;
   background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.08))}
 :root[data-theme="frutiger"] .btn.solid,:root[data-theme="frutiger"] .cta{background:linear-gradient(180deg,#8fdcff 0%,#29b0ff 48%,#0a8ee0 52%,#3fc0ff 100%);border-color:#0a7fc4;color:#fff;
   text-shadow:0 1px 1px rgba(0,60,110,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 22px rgba(10,156,240,.35)}
@@ -754,7 +728,7 @@ footer a{color:var(--fg)}
   <section class="hero" data-morph="0" data-gx="0" data-name="Giriş">
     <div class="hero-meta">
       <span class="avail"><i></i>Yeni projelere açık</span>
-      <span>Yaratıcı Geliştirici<br>Oyun · Simülasyon · Mod · Web</span>
+      <span>Yaratıcı Geliştirici<br>Oyun · Simülasyon · Mod · Web · Uygulama</span>
     </div>
     <!-- İsmini değiştirmek için aşağıdaki iki satırı düzenle -->
     <h1 class="hero-name" aria-label="Emir Yalçın">
@@ -806,9 +780,9 @@ footer a{color:var(--fg)}
 
   <!-- STATS -->
   <div class="stats" data-morph="1" data-gx="0">
-    <div class="stat"><div class="stat-num"><span class="count" data-to="7">0</span></div><p>Büyük proje, dört farklı alanda</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="42">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="15">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="43">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="21">0</span></div><p>Günde çıkan tüm bu iş</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
@@ -822,7 +796,7 @@ footer a{color:var(--fg)}
       <p class="fade-up">Hepsi en güncel sürümleriyle. Bir karta tıkla, oyun doğrudan burada açılsın; istersen indir, istersen yeni sekmede oyna. Kurulum yok.</p>
     </div>
     <div class="projects-pin">
-      <div class="proj-bar"><span><b id="projIdx">01</b>/ 07 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
+      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
       <div class="proj-track" id="projTrack"></div>
       <div class="proj-progress"><i></i></div>
       <div class="proj-dots" id="projDots" aria-hidden="true"></div>
@@ -834,9 +808,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">15 Gün, <em>53</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">21 Gün, <em>55</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14–28 Ekim arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 3 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -894,7 +868,8 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 06 · 25 Ekim</div><h4>Şafak</h4><p>Küllerin Saltanatı final sürümüne ulaştı, Portal Silahı Update 6'yı aldı. Boss savaşları, yeni evrenler, daha fazla kaos.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 07 · 26 Ekim</div><h4>Cila Günü</h4><p>Backrooms Update 15'i, AeroSim havayolu yönetimiyle Update 4'ü, Aetheria daha akıcı animasyonlar ve mobil uyumla Update 1'i aldı.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero estetiğine bir aşk mektubu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim — Şimdi</div><h4>Bu Site · Update 10</h4><p>Portal Silahı, Aero Drift ve Skin Stealer yeni hallerine kavuştu; proje kartları baştan çizilen detaylı sahnelerle yenilendi. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim</div><h4>Yeni Sahneler</h4><p>Portal Silahı, Aero Drift ve Skin Stealer yeni hallerine kavuştu; proje kartları baştan çizilen detaylı sahnelerle yenilendi.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 10 · 3 Kasım — Şimdi</div><h4>Pardux</h4><p>Tarayıcının dışına ilk adım: Türkçe konuşan, ekranın üstünde dinamik ada olarak yaşayan bir Windows asistanı. Site de daha sade kartlarla yenilendi. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -931,7 +906,7 @@ footer a{color:var(--fg)}
 </main>
 
 <footer>
-  <span>© 2026 Emir Yalçın — elle kodlandı · Update 10</span>
+  <span>© 2026 Emir Yalçın — elle kodlandı · Update 11</span>
   <span class="egg">İpucu: klavyede <kbd>backrooms</kbd> ya da <kbd>frutiger</kbd> yaz</span>
   <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link" style="color:var(--fg)">github.com/Tyrstana ↗</a>
   <button id="toTop" data-cursor="link">Başa dön ↑</button>
@@ -963,6 +938,20 @@ footer a{color:var(--fg)}
         <div class="install-actions"><a class="btn solid" href="projeler/skin-stealer/skinstealer-1.3.0.jar" download data-cursor="link"><span>⬇ skinstealer-1.3.0.jar indir (2 MB)</span></a>
         <a class="btn" href="projeler/skin-stealer/OKUBENI.txt" target="_blank" rel="noopener" data-cursor="link"><span>Tüm özellikler</span></a></div>
       </div>
+      <div class="install" id="plApp">
+        <h3>Pardux'u kur</h3>
+        <p>Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar; müzik, hatırlatıcı, hava durumu, döviz, mesaj ve “Hey Pardux” sesli komutları. Ses tanıma ve sesli yanıt tamamen çevrimdışı çalışır.</p>
+        <div class="steps">
+          <div class="step"><b>01</b><h4>İndir</h4><p><code>Pardux.zip</code> yaklaşık 850 MB; sesli komut için gereken modeller içinde.</p></div>
+          <div class="step"><b>02</b><h4>Klasöre çıkar</h4><p>Zip'i bir klasöre çıkar. <code>whisper</code>, <code>vosk</code>, <code>piper</code> ve <code>sounds</code> klasörleri <code>Pardux.exe</code>'nin yanında kalmalı.</p></div>
+          <div class="step"><b>03</b><h4>Alt+Space</h4><p><code>Pardux.exe</code>'yi çalıştır, kurulum yok. Alt+Space ile aç ya da “Hey Pardux” de.</p></div>
+        </div>
+        <div class="cmds"><span>müzik aç</span><span>10 dk sonra çayı hatırlat</span><span>ankara hava durumu</span><span>100 euro kaç tl</span><span>5 dakikalık zamanlayıcı</span><span>ahmet'e whatsapp'tan akşam geliyorum yaz</span></div>
+        <div class="install-actions"><a class="btn solid" href="https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip" data-cursor="link"><span>⬇ Pardux.zip indir (~850 MB)</span></a>
+        <a class="btn" href="https://github.com/Tyrstana/Tyrstana.github.io/tree/main/projeler/pardux" target="_blank" rel="noopener" data-cursor="link"><span>Kaynak kod ↗</span></a>
+        <a class="btn" href="https://github.com/Tyrstana/Tyrstana.github.io/blob/main/projeler/pardux/README.md" target="_blank" rel="noopener" data-cursor="link"><span>Tüm komutlar ↗</span></a></div>
+        <p class="install-note">Windows 10 / 11 · .NET Framework (Windows'ta yerleşik) · İnternet yalnızca hava, döviz, haber ve web aramaları için.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -987,7 +976,11 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
-  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Cam şehir ve monoray','Uçan adalar','Kendi film müziği'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 4', isNew:true, draw:'frutiger',
+  { title:'Pardux', accent:'#c8ff4d', plat:'Windows', feats:['Dinamik ada','"Hey Pardux" sesli komut','Çevrimdışı ses tanıma'], cat:'Masaüstü Asistanı', ver:'1.0', isNew:'Yeni', draw:'pardux', app:true,
+    desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
+    chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
+    source:'https://github.com/Tyrstana/Tyrstana.github.io/tree/main/projeler/pardux' },
+  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Cam şehir ve monoray','Uçan adalar','Kendi film müziği'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 4', draw:'frutiger',
     desc:'Frutiger Aero estetiğinde çayırlarda süzül, cam bir şehri keşfet. Uçan adalar, monoray, Aero OS bilgisayarları, halka yarışı ve kendi film müziği.',
     chips:['Three.js','Frutiger Aero','Müzik'], file:'projeler/aero-drift.html' },
   { title:'Backrooms: Kaset #1994', accent:'#e3c75a', plat:'PC · Mobil', feats:['VHS kaset atmosferi','Mobil ve PC kontrol','Özel müzikler'], cat:'3D Korku Oyunu', ver:'Update 16', draw:'backrooms',
@@ -1002,49 +995,42 @@ const PROJECTS = [
   { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Boss savaşları','Görev günlüğü','Nadir eşyalar ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 2', draw:'fantasy',
     desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası. Boss savaşları, görev günlüğü, nadir eşyalar, büyüler ve Küllerin Hükümdarı ile son hesaplaşma.',
     chips:['Three.js','RPG','Boss Savaşları'], file:'projeler/kullerin-saltanati.html' },
-  { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', isNew:true, draw:'portal',
+  { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', draw:'portal',
     desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Yenilenen evrenler, skor sistemi ve bolca kaos.',
     chips:['Three.js','Shader','Keşif'], file:'projeler/portal-silahi.html' },
-  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Türkçe sahte sohbet','Akıl sağlığı sistemi','Backrooms seviyeleri'], cat:'Minecraft Forge Modu', ver:'v1.3.0', isNew:true, draw:'mc', mod:true,
+  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Türkçe sahte sohbet','Akıl sağlığı sistemi','Backrooms seviyeleri'], cat:'Minecraft Forge Modu', ver:'v1.3.0', draw:'mc', mod:true,
     desc:'Oyuncu kılığına giren, Türkçe sahte sohbet yazan bir varlık. Backrooms seviyeleri, akıl sağlığı sistemi ve Smiler. İndir, mods klasörüne at.',
     chips:['Java','Forge 1.20.1','Gradle'], file:'projeler/skin-stealer/skinstealer-1.3.0.jar' }
 ];
 
-const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>';
-const dlIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 3h2v10l3.5-3.5 1.4 1.4L12 16.8 6.1 10.9l1.4-1.4L11 13zM4 19h16v2H4z"/></svg>';
 const track = $('#projTrack');
 PROJECTS.forEach((p, i) => {
   const a = document.createElement('article');
   a.className = 'card';
   a.dataset.cursor = 'label';
-  a.dataset.label = p.mod ? 'Kur' : 'Oyna';
+  a.dataset.label = p.mod ? 'Kur' : p.app ? 'İndir' : 'Oyna';
   a.dataset.idx = i;
   a.tabIndex = 0;
-  const playLabel = p.mod ? 'Kurulum' : 'Oyna';
-  a.style.setProperty('--pc', p.accent);
+  const go = p.mod ? 'Kurulum' : p.app ? 'İndir' : 'Oyna';
+  const alt = p.mod
+    ? `<a class="alt" href="${encodeURI(p.file)}" download data-cursor="link">.jar indir</a>`
+    : p.app
+      ? `<a class="alt" href="${p.source}" target="_blank" rel="noopener" data-cursor="link">Kaynak kod ↗</a>`
+      : `<a class="alt" href="${encodeURI(p.file)}" target="_blank" rel="noopener" data-cursor="link">Yeni sekme ↗</a>`;
+  const badge = p.isNew ? `<span class="card-new">${p.isNew === true ? 'Güncellendi' : p.isNew}</span>` : '';
   a.innerHTML = `
     <div class="card-in">
-    <div class="card-vis"><canvas data-draw="${p.draw}"></canvas>
-      <div class="card-vis-shade"></div>
-      <span class="card-idx">${String(i + 1).padStart(2, '0')}</span>
-      <span class="card-plat">${p.plat}</span>
-      ${p.isNew ? '<span class="card-new">✦ GÜNCELLEME</span>' : ''}
-      <div class="card-play"><span>${p.mod ? dlIcon : playIcon}</span><em>${p.mod ? 'Kurulumu gör' : 'Hemen oyna'}</em></div></div>
-    <div class="card-body">
-      <div class="card-cat"><i></i>${p.cat}</div>
-      <h3>${p.title}</h3>
-      <p class="card-desc">${p.desc}</p>
-      <ul class="card-feats">${p.feats.map(f => `<li>${f}</li>`).join('')}</ul>
-      <div class="chips">${p.chips.map(c => `<span>${c}</span>`).join('')}</div>
-      <div class="card-foot">
-        <button class="btn solid js-play" data-cursor="link"><span>${p.mod ? '⬇' : '▶'} ${playLabel}</span></button>
-        ${p.mod
-          ? `<a class="btn" href="${encodeURI(p.file)}" download data-cursor="link"><span>.jar indir</span></a>`
-          : `<a class="btn" href="${encodeURI(p.file)}" target="_blank" rel="noopener" data-cursor="link"><span>Yeni sekme ↗</span></a>`}
+      <div class="card-vis"><canvas data-draw="${p.draw}"></canvas></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-num">${String(i + 1).padStart(2, '0')}</span><span class="sep"></span><span>${p.cat}</span><span class="card-plat">${badge || p.plat}</span></div>
+        <h3>${p.title}<span class="arr">↗</span></h3>
+        <p class="card-desc">${p.desc}</p>
+        <div class="card-foot">
+          <span class="card-tech">${p.chips.join(' · ')}</span>
+          <div class="card-actions"><button class="go js-play" data-cursor="link">${go}</button>${alt}</div>
+        </div>
       </div>
-    </div>
-    </div>
-    <div class="card-shine"></div>`;
+    </div>`;
   track.appendChild(a);
 });
 const endCard = document.createElement('a');
@@ -1052,7 +1038,7 @@ endCard.className = 'card end';
 endCard.href = '#iletisim';
 endCard.dataset.cursor = 'label';
 endCard.dataset.label = 'Yaz';
-endCard.innerHTML = `<h3>Sıradaki<br>dünya<br>seninki?</h3><p>Bir fikrin varsa birlikte inşa edelim.</p>`;
+endCard.innerHTML = `<span class="end-k">Sıradaki</span><h3>Bir fikrin mi var?<br>Birlikte inşa edelim.</h3><span class="end-go">İletişime geç <i>→</i></span>`;
 track.appendChild(endCard);
 
 /* ======================================================
@@ -1073,9 +1059,15 @@ const LOG = [
   ['25 Eki', ['Portal Silahı — Update 6', 'Küllerin Saltanatı — Final', 'Küllerin Saltanatı — Final 2', 'Kişisel site — Update 2']],
   ['26 Eki', ['Backrooms — Update 15', 'Aetheria — Update 1', 'AeroSim — Update 4', 'Kişisel site — Update 3']],
   ['27 Eki', ['Aero Drift — ilk sürüm', 'Aero Drift — Güncelleme 1', 'Aero Drift — Güncelleme 2', 'Kişisel site — Update 4', 'Kişisel site — Update 5']],
-  ['28 Eki', ['Backrooms — Update 16', 'Aero Drift — Güncelleme 3, 4', 'Portal Silahı — Update 7', 'Skin Stealer — v1.3.0', 'Kişisel site — Update 6, 7, 8, 9, 10']]
+  ['28 Eki', ['Backrooms — Update 16', 'Aero Drift — Güncelleme 3, 4', 'Portal Silahı — Update 7', 'Skin Stealer — v1.3.0', 'Kişisel site — Update 6, 7, 8, 9, 10']],
+  ['29 Eki', []],
+  ['30 Eki', []],
+  ['31 Eki', []],
+  ['1 Kas', []],
+  ['2 Kas', []],
+  ['3 Kas', ['Pardux — 1.0', 'Kişisel site — Update 11']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 2];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
@@ -1666,6 +1658,80 @@ const DRAW = {
     }
   },
 
+  /* ---------- Pardux: a Windows desktop with the island and the command panel ---------- */
+  pardux(x, w, h, t, s, st) {
+    const desk = layer(st, 'desk', w, h, (c, w, h) => {
+      const s = w / 520;
+      const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#0b1426'); g.addColorStop(1, '#050811');
+      c.fillStyle = g; c.fillRect(0, 0, w, h);
+      // Windows 11 style bloom: soft overlapping petals
+      c.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 6; i++) {
+        const a = -Math.PI / 2 + (i - 2.5) * .42, cx = w * .5 + Math.cos(a) * w * .1, cy = h * .78 + Math.sin(a) * h * .1;
+        c.save(); c.translate(cx, cy); c.rotate(a + Math.PI / 2);
+        const pg = c.createLinearGradient(0, -h * .45, 0, h * .1); pg.addColorStop(0, 'rgba(70,140,255,.0)'); pg.addColorStop(.6, 'rgba(70,140,255,.16)'); pg.addColorStop(1, 'rgba(120,90,255,.05)');
+        c.fillStyle = pg; c.beginPath(); c.ellipse(0, -h * .2, w * .07, h * .34, 0, 0, 7); c.fill(); c.restore();
+      }
+      c.globalCompositeOperation = 'source-over';
+      // taskbar
+      c.fillStyle = 'rgba(20,24,36,.85)'; c.fillRect(0, h - 22 * s, w, 22 * s);
+      c.fillStyle = 'rgba(255,255,255,.08)'; c.fillRect(0, h - 22 * s, w, 1 * s);
+      ['#4aa3ff', '#ffd25a', '#9b7bff', '#34c26a', '#ff6a5a'].forEach((col, i) => {
+        const X = w / 2 + (i - 2) * 18 * s; c.fillStyle = 'rgba(255,255,255,.07)'; rrect(c, X - 7 * s, h - 18 * s, 14 * s, 14 * s, 3 * s); c.fill();
+        c.fillStyle = col; rrect(c, X - 4 * s, h - 15 * s, 8 * s, 8 * s, 2 * s); c.fill();
+      });
+      c.fillStyle = 'rgba(255,255,255,.55)'; c.font = `500 ${7 * s}px "JetBrains Mono"`; c.textAlign = 'right'; c.fillText('20:31', w * .925, h - 8 * s); c.textAlign = 'left';
+    });
+    x.drawImage(desk, 0, 0);
+    // the island: music for a while, then a timer
+    const mode = Math.floor(t / 6) % 2, k = (t % 6) / 6;
+    const morph = Math.min(1, k * 8, (1 - k) * 8);
+    const iw = (mode ? 150 : 210) * s * (.9 + .1 * morph), ih = 34 * s, ix = w / 2 - iw / 2, iy = 12 * s;
+    x.fillStyle = '#000'; rrect(x, ix, iy, iw, ih, ih / 2); x.fill();
+    x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = 1 * s; x.stroke();
+    x.globalAlpha = morph;
+    if (!mode) {
+      const ag = x.createLinearGradient(ix + 8 * s, iy + 6 * s, ix + 30 * s, iy + 28 * s); ag.addColorStop(0, '#ff6a3d'); ag.addColorStop(1, '#c23bd6');
+      x.fillStyle = ag; rrect(x, ix + 8 * s, iy + 6 * s, 22 * s, 22 * s, 6 * s); x.fill();
+      x.fillStyle = '#fff'; x.font = `600 ${8.5 * s}px Manrope`; x.fillText('Şımarık', ix + 36 * s, iy + 15 * s);
+      x.fillStyle = 'rgba(255,255,255,.55)'; x.font = `500 ${7 * s}px Manrope`; x.fillText('Tarkan', ix + 36 * s, iy + 25 * s);
+      for (let i = 0; i < 9; i++) {
+        const bh = (4 + Math.abs(Math.sin(t * 6 + i * .9)) * 14) * s;
+        x.fillStyle = 'rgba(255,140,90,.95)'; rrect(x, ix + iw - 58 * s + i * 5 * s, iy + ih / 2 - bh / 2, 2.6 * s, bh, 1.3 * s); x.fill();
+      }
+    } else {
+      const left = Math.max(0, 300 - (t % 6) * 9), mm = String(Math.floor(left / 60)).padStart(2, '0'), ss = String(Math.floor(left % 60)).padStart(2, '0');
+      x.strokeStyle = 'rgba(255,255,255,.15)'; x.lineWidth = 2.5 * s; x.beginPath(); x.arc(ix + 20 * s, iy + ih / 2, 9 * s, 0, 7); x.stroke();
+      x.strokeStyle = '#ffb547'; x.beginPath(); x.arc(ix + 20 * s, iy + ih / 2, 9 * s, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (left / 300)); x.stroke();
+      x.fillStyle = 'rgba(255,255,255,.6)'; x.font = `500 ${7.5 * s}px Manrope`; x.fillText('Çay', ix + 36 * s, iy + 21 * s);
+      x.fillStyle = '#ffb547'; x.font = `600 ${13 * s}px "JetBrains Mono"`; x.textAlign = 'right'; x.fillText(`${mm}:${ss}`, ix + iw - 14 * s, iy + 22 * s); x.textAlign = 'left';
+    }
+    x.globalAlpha = 1;
+    // command panel (acrylic) with a typed command
+    const pw = w * .5, ph = h * .5, px = w / 2 - pw / 2, py = h * .25;
+    x.save(); rrect(x, px, py, pw, ph, 14 * s); x.clip();
+    x.globalAlpha = .55; x.drawImage(x.canvas, px - 12 * s, py - 12 * s, pw + 24 * s, ph + 24 * s, px, py, pw, ph);
+    x.globalAlpha = 1; x.fillStyle = 'rgba(28,32,46,.72)'; x.fillRect(px, py, pw, ph);
+    x.restore();
+    x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 1 * s; rrect(x, px, py, pw, ph, 14 * s); x.stroke();
+    const cmds = ['müzik aç', '10 dk sonra çayı hatırlat', 'ankara hava durumu', '100 euro kaç tl'];
+    const ci = Math.floor(t / 4) % cmds.length, typed = cmds[ci].slice(0, Math.ceil(cmds[ci].length * Math.min(1, (t % 4) / 1.6)));
+    x.fillStyle = 'rgba(255,255,255,.06)'; rrect(x, px + 12 * s, py + 12 * s, pw - 24 * s, 26 * s, 8 * s); x.fill();
+    x.fillStyle = 'rgba(255,255,255,.45)'; x.font = `500 ${10 * s}px Manrope`; x.fillText('⌕', px + 20 * s, py + 29 * s);
+    x.fillStyle = '#fff'; x.font = `500 ${9.5 * s}px Manrope`; x.fillText(typed, px + 34 * s, py + 29 * s);
+    if ((t * 2 | 0) % 2) { const tw = x.measureText(typed).width; x.fillRect(px + 35 * s + tw, py + 20 * s, 1.2 * s, 12 * s); }
+    const rows = [['#1ed760', 'Spotify', 'Müziği aç'], ['#4aa3ff', 'Hatırlatıcı', 'Yeni hatırlatma'], ['#ffd25a', 'Hava', 'Anlık ve 3 günlük'], ['#9b7bff', 'Döviz', 'Güncel kur']];
+    rows.forEach((r, i) => {
+      const ry = py + 48 * s + i * 24 * s; if (ry + 20 * s > py + ph) return;
+      if (i === 0) { x.fillStyle = 'rgba(255,255,255,.08)'; rrect(x, px + 10 * s, ry - 3 * s, pw - 20 * s, 22 * s, 7 * s); x.fill(); }
+      x.fillStyle = r[0]; x.beginPath(); x.arc(px + 22 * s, ry + 8 * s, 6 * s, 0, 7); x.fill();
+      x.fillStyle = 'rgba(255,255,255,.92)'; x.font = `600 ${8.5 * s}px Manrope`; x.fillText(r[1], px + 34 * s, ry + 7 * s);
+      x.fillStyle = 'rgba(255,255,255,.5)'; x.font = `400 ${7 * s}px Manrope`; x.fillText(r[2], px + 34 * s, ry + 16 * s);
+    });
+    x.fillStyle = 'rgba(255,255,255,.4)'; x.font = `500 ${7 * s}px "JetBrains Mono"`; x.textAlign = 'center';
+    x.fillText('ALT + SPACE', w / 2, py + ph + 14 * s); x.textAlign = 'left';
+  },
+
   /* ---------- Skin Stealer: a Minecraft night with something wearing Steve ---------- */
   mc(x, w, h, t, s, st) {
     const PW = 160, PH = 100;
@@ -2009,16 +2075,6 @@ if (hoverable && !reduce) {
     });
     el.addEventListener('pointerleave', () => { el.style.transition = 'transform .8s cubic-bezier(.16,1,.3,1)'; el.style.transform = ''; });
   });
-  $$('.card:not(.end)').forEach(el => {
-    const inner = el.querySelector('.card-in');
-    el.addEventListener('pointermove', e => {
-      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-      el.style.setProperty('--mx', x * 100 + '%'); el.style.setProperty('--my', y * 100 + '%');
-      inner.style.transition = 'transform .2s linear';
-      inner.style.transform = `perspective(1000px) rotateY(${(x - .5) * 7}deg) rotateX(${(.5 - y) * 7}deg)`;
-    });
-    el.addEventListener('pointerleave', () => { inner.style.transition = 'transform .9s cubic-bezier(.16,1,.3,1)'; inner.style.transform = ''; });
-  });
   $$('.trait').forEach(el => el.addEventListener('pointermove', e => {
     const r = el.getBoundingClientRect();
     el.style.setProperty('--mx', e.clientX - r.left + 'px'); el.style.setProperty('--my', e.clientY - r.top + 'px');
@@ -2193,7 +2249,7 @@ const player = $('#player'), frame = document.createElement('iframe');
 frame.setAttribute('allow', 'fullscreen; pointer-lock; autoplay; gamepad; accelerometer; gyroscope');
 frame.setAttribute('allowfullscreen', '');
 frame.title = 'Oyun';
-const plLoad = $('#plLoad'), plInstall = $('#plInstall'), plStage = $('#plStage');
+const plLoad = $('#plLoad'), plInstall = $('#plInstall'), plApp = $('#plApp'), plStage = $('#plStage');
 frame.addEventListener('load', () => { if (frame.src && frame.src !== 'about:blank') plLoad.classList.add('done'); });
 let lastFocus = null;
 function openPlayer(i, ox, oy) {
@@ -2201,17 +2257,20 @@ function openPlayer(i, ox, oy) {
   lastFocus = document.activeElement;
   $('#plTitle').textContent = p.title;
 
+  // games play in the iframe; the mod and the desktop app get an install panel instead
+  const panel = p.mod ? plInstall : p.app ? plApp : null;
   const url = encodeURI(p.file);
   $('#plNew').href = url;
-  $('#plNew').style.display = p.mod ? 'none' : '';
-  $('#plFull').style.display = p.mod ? 'none' : '';
+  $('#plNew').style.display = panel ? 'none' : '';
+  $('#plFull').style.display = panel ? 'none' : '';
   const dl = $('#plDl');
-  dl.style.display = p.dl === false ? 'none' : '';
+  dl.style.display = p.dl === false || p.app ? 'none' : '';
   dl.href = url;
   dl.setAttribute('download', p.file.split('/').pop());
-  plInstall.classList.toggle('show', !!p.mod);
-  plLoad.classList.toggle('done', !!p.mod);
-  if (!p.mod) { plStage.appendChild(frame); frame.src = url; }
+  plInstall.classList.toggle('show', panel === plInstall);
+  plApp.classList.toggle('show', panel === plApp);
+  plLoad.classList.toggle('done', !!panel);
+  if (!panel) { plStage.appendChild(frame); frame.src = url; }
   player.classList.add('open');
   if (lenis) lenis.stop(); else document.body.style.overflow = 'hidden';
   GL.paused = true;
