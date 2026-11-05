@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://tyrstana.github.io/">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Emir Yalçın — Dünya İnşa Eden Geliştirici</title>
+<title>Emir Yalçın · Oyun ve Uygulama Geliştiricisi</title>
 <script>
   // theme before first paint: saved choice, otherwise the system setting
   (function () {
@@ -15,10 +15,15 @@
     var d = document.documentElement;
     d.dataset.theme = t;
     d.classList.add('js-init');
+    // saved settings (accent colour, effect switches) before first paint
+    var p = {};
+    try { p = JSON.parse(localStorage.getItem('prefs') || '{}'); } catch (e) {}
+    if (p.accent && /^#[0-9a-f]{6}$/i.test(p.accent)) d.style.setProperty('--acc', p.accent);
+    ['nogl', 'nosmooth', 'nocursor', 'nograin'].forEach(function (k) { if (p[k]) d.classList.add(k); });
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   })();
 </script>
-<meta name="description" content="Oyunlar, simülasyonlar, Minecraft modları ve tarayıcıda yaşayan deneyimler üreten yaratıcı geliştirici. Tüm projeler tarayıcıda oynanabilir.">
+<meta name="description" content="Emir Yalçın'ın projeleri: tarayıcıda oynanan oyunlar ve simülasyonlar, bir Minecraft modu ve bir Windows asistanı.">
 <meta name="theme-color" content="#07070b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -281,7 +286,7 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .marquee{padding:0;border-block:1px solid var(--line);overflow:hidden;background:var(--band)}
 .marquee-inner{display:flex;width:max-content;padding:26px 0;will-change:transform}
 .marquee-inner span{font:700 clamp(28px,5vw,68px)/1 var(--display);text-transform:uppercase;letter-spacing:-.03em;padding-right:44px;display:flex;align-items:center;gap:44px;white-space:nowrap}
-.marquee-inner span::after{content:"✦";color:var(--acc);font-size:.5em}
+.marquee-inner span::after{content:"/";color:var(--mute);font-weight:400}
 .marquee-inner span:nth-child(even){color:transparent;-webkit-text-stroke:1px var(--fg)}
 @media (max-width:860px){.marquee-inner{padding:18px 0}.marquee-inner span{padding-right:28px;gap:28px}}
 
@@ -408,6 +413,69 @@ html.player-lock,html.player-lock body{overflow:hidden}
 .cmds span{font:400 12px/1 var(--mono);padding:9px 13px;border-radius:100px;border:1px solid var(--line2);color:var(--text2)}
 .cmds span::before{content:"› ";color:var(--mute)}
 .install > p.install-note{color:var(--mute);font-size:13px;margin-top:18px}
+/* mod panel: header, tabs, feature groups */
+.mod-panel .mp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.mod-panel .mp-head h3{font:600 clamp(34px,4.4vw,60px)/1 var(--display);letter-spacing:-.035em;text-transform:none;max-width:none;margin-top:12px}
+.mod-panel .mp-head p{color:var(--text2);max-width:62ch;margin-top:14px;font-size:16px}
+.mod-panel .mp-k{font:400 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.mp-tabs{display:flex;gap:24px;margin:22px 0 30px}
+.mp-tabs button{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:8px 0;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
+.mp-tabs button.on,.mp-tabs button:hover{color:var(--fg);border-color:var(--fg)}
+.mp-grid{columns:2 340px;column-gap:44px}
+.mp-group{break-inside:avoid;padding:0 0 26px;margin-bottom:26px;border-bottom:1px solid var(--line)}
+.mp-group h4{font:600 19px/1.2 var(--display);letter-spacing:-.01em;margin-bottom:12px}
+.mp-group ul{list-style:none;display:grid;gap:9px}
+.mp-group li{position:relative;padding-left:18px;color:var(--text2);font-size:15px;line-height:1.55}
+.mp-group li::before{content:"";position:absolute;left:0;top:.72em;width:7px;height:1px;background:var(--mute)}
+.mp-group li b{color:var(--fg);font-weight:600}
+
+/* ---------- settings drawer ---------- */
+.settings{position:fixed;inset:0;z-index:140;pointer-events:none;visibility:hidden}
+.settings.open{pointer-events:auto;visibility:visible}
+.st-bg{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .5s}
+.settings.open .st-bg{opacity:1}
+.st-panel{position:absolute;top:0;right:0;bottom:0;width:min(380px,100vw);background:var(--surface2);color:var(--fg);border-left:1px solid var(--line);
+  padding:calc(24px + env(safe-area-inset-top)) 28px calc(28px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain;
+  transform:translateX(100%);transition:transform .7s var(--ease);box-shadow:var(--shadow)}
+.settings.open .st-panel{transform:none}
+.st-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.st-head h2{font:600 24px/1 var(--display);letter-spacing:-.02em}
+.st-close{width:38px;height:38px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;transition:background .3s,color .3s}
+.st-close:hover{background:var(--fg);color:var(--on-fg)}
+.st-close svg{width:16px;height:16px}
+.st-sec{padding:22px 0;border-top:1px solid var(--line)}
+.st-sec h3{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin-bottom:16px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);padding:4px;border-radius:12px;background:var(--tint2)}
+.seg button{font:500 13px/1 var(--body);padding:11px 0;border-radius:9px;color:var(--text2);transition:background .3s,color .3s}
+.seg button[aria-checked="true"]{background:var(--surface2);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.swatches{display:flex;flex-wrap:wrap;gap:12px}
+.swatches button,.sw-custom{width:34px;height:34px;border-radius:50%;background:var(--c);position:relative;transition:transform .3s var(--ease)}
+.swatches button:hover,.sw-custom:hover{transform:scale(1.08)}
+.swatches button[aria-checked="true"]::after,.sw-custom.on::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--fg)}
+.sw-custom{background:conic-gradient(#ff5b2e,#f2b01e,#22b573,#3d7bff,#8a6bff,#ff4f9a,#ff5b2e);cursor:pointer;overflow:visible}
+.sw-custom input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.tg{display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-size:15px;cursor:pointer}
+.tg input{position:absolute;opacity:0;pointer-events:none}
+.tg i{width:40px;height:24px;border-radius:100px;background:var(--line2);position:relative;transition:background .3s;flex-shrink:0}
+.tg i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .35s var(--ease)}
+.tg input:checked + i{background:var(--acc)}
+.tg input:checked + i::after{transform:translateX(16px)}
+.tg input:focus-visible + i{outline:2px solid var(--acc);outline-offset:2px}
+.st-reset{margin-top:14px;font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--line2);padding-bottom:4px}
+.st-reset:hover{color:var(--fg);border-color:var(--fg)}
+.menu-open .settings{z-index:140}
+/* effect switches (classes on <html>, set before first paint) */
+html.nogl #gl{display:none}
+html.nograin .grain{display:none}
+html.nocursor .cursor,html.nocursor .cursor-dot,html.nocursor .glow{display:none}
+html.nocursor body,html.nocursor a,html.nocursor button,html.nocursor .card{cursor:auto}
+html.nocursor a,html.nocursor button{cursor:pointer}
+/* solid accent instead of gradient text: follows the accent picked in settings */
+.hero-name .row:nth-child(2) .c,:root[data-theme="frutiger"] .hero-name .row:nth-child(2) .c{color:var(--acc);background:none;-webkit-background-clip:border-box;background-clip:border-box}
+.loader-name .acc .c{color:var(--acc,#ff5b2e);background:none;-webkit-background-clip:border-box;background-clip:border-box}
+.loader-line i{background:var(--acc,#ff5b2e)}
+.trait-num{font:500 12px/1 var(--mono);letter-spacing:.08em}
+.trait h3{padding-top:48px}
 @media (max-width:760px){
   .steps{grid-template-columns:1fr;margin-top:28px}
   .player{padding:0}
@@ -641,16 +709,16 @@ footer a{color:var(--fg)}
 <!-- PRELOADER -->
 <div class="loader" aria-hidden="true">
   <div class="loader-panel">
-    <div class="loader-top"><div><span>Emir Yalçın</span></div><div><span>Portfolyo — 2026</span></div></div>
+    <div class="loader-top"><div><span>Emir Yalçın</span></div><div><span>Portfolyo 2026</span></div></div>
     <div class="loader-center">
       <div class="loader-name">
         <span class="w"><span class="c">E</span><span class="c">M</span><span class="c">İ</span><span class="c">R</span></span>
         <span class="w acc"><span class="c">Y</span><span class="c">A</span><span class="c">L</span><span class="c">Ç</span><span class="c">I</span><span class="c">N</span></span>
       </div>
-      <div class="loader-sub"><span>Dünya inşa eden geliştirici</span></div>
+      <div class="loader-sub"><span>Oyun ve uygulama geliştiricisi</span></div>
     </div>
     <div class="loader-bot">
-      <div><div class="lb loader-words"><div><p>Dünyalar yükleniyor</p><p>Portallar açılıyor</p><p>Kasetler sarılıyor</p><p>Küller tutuşuyor</p><p>Dünyalar yükleniyor</p></div></div></div>
+      <div><div class="lb loader-words">Yükleniyor</div></div>
       <div><div class="lb loader-pct"><span id="loaderNum">000</span><sup>%</sup></div></div>
     </div>
     <div class="loader-line"><i></i></div>
@@ -690,19 +758,18 @@ footer a{color:var(--fg)}
 <header class="nav">
   <a href="#top" class="logo magnetic" data-cursor="link"><i></i>EMİR.</a>
   <ul>
-    <li><a href="#hakkimda" class="scramble" data-cursor="link">Hakkımda</a></li>
-    <li><a href="#projeler" class="scramble" data-cursor="link">Projeler</a></li>
-    <li><a href="#gunluk" class="scramble" data-cursor="link">Günlük</a></li>
-    <li><a href="#ben" class="scramble" data-cursor="link">Karakter</a></li>
-    <li><a href="#yolculuk" class="scramble" data-cursor="link">Yolculuk</a></li>
-    <li><a href="#iletisim" class="scramble" data-cursor="link">İletişim</a></li>
+    <li><a href="#hakkimda" data-cursor="link">Hakkımda</a></li>
+    <li><a href="#projeler" data-cursor="link">Projeler</a></li>
+    <li><a href="#gunluk" data-cursor="link">Günlük</a></li>
+    <li><a href="#ben" data-cursor="link">Karakter</a></li>
+    <li><a href="#yolculuk" data-cursor="link">Yolculuk</a></li>
+    <li><a href="#iletisim" data-cursor="link">İletişim</a></li>
   </ul>
   <div class="nav-right">
     <span class="nav-time" id="clock">--:--:--</span>
     <a class="gh magnetic" href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
-    <button class="theme-btn js-theme" data-cursor="link" aria-label="Temayı değiştir" title="Açık / karanlık tema">
-      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12H4M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+    <button class="theme-btn js-settings" data-cursor="link" aria-label="Ayarlar" title="Ayarlar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
     </button>
     <button class="menu-btn" aria-label="Menüyü aç" aria-expanded="false"><span></span><span></span></button>
   </div>
@@ -716,9 +783,48 @@ footer a{color:var(--fg)}
   <a href="#iletisim">İletişim</a>
   <div class="mm-foot">
     <a href="https://github.com/Tyrstana" target="_blank" rel="noopener">GitHub ↗</a>
-    <button class="js-theme" type="button">◐ Tema değiştir</button>
+    <button class="js-settings" type="button">Ayarlar</button>
   </div>
 </nav>
+<aside class="settings" id="settings" aria-hidden="true" data-lenis-prevent>
+  <div class="st-bg"></div>
+  <div class="st-panel" role="dialog" aria-modal="true" aria-labelledby="stTitle">
+    <div class="st-head">
+      <h2 id="stTitle">Ayarlar</h2>
+      <button class="st-close" type="button" aria-label="Ayarları kapat" data-cursor="link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="st-sec">
+      <h3>Tema</h3>
+      <div class="seg" id="stTheme" role="radiogroup" aria-label="Tema">
+        <button type="button" role="radio" data-v="dark">Koyu</button>
+        <button type="button" role="radio" data-v="light">Açık</button>
+        <button type="button" role="radio" data-v="system">Sistem</button>
+      </div>
+    </div>
+    <div class="st-sec">
+      <h3>Vurgu rengi</h3>
+      <div class="swatches" id="stAccent" role="radiogroup" aria-label="Vurgu rengi">
+        <button type="button" role="radio" data-c="" style="--c:#ff5b2e" aria-label="Turuncu (varsayılan)" title="Turuncu"></button>
+        <button type="button" role="radio" data-c="#8a6bff" style="--c:#8a6bff" aria-label="Mor" title="Mor"></button>
+        <button type="button" role="radio" data-c="#3d7bff" style="--c:#3d7bff" aria-label="Mavi" title="Mavi"></button>
+        <button type="button" role="radio" data-c="#22b573" style="--c:#22b573" aria-label="Yeşil" title="Yeşil"></button>
+        <button type="button" role="radio" data-c="#ff4f9a" style="--c:#ff4f9a" aria-label="Pembe" title="Pembe"></button>
+        <button type="button" role="radio" data-c="#f2b01e" style="--c:#f2b01e" aria-label="Sarı" title="Sarı"></button>
+        <label class="sw-custom" title="Özel renk"><input type="color" id="stCustom" value="#ff5b2e" aria-label="Özel renk seç"></label>
+      </div>
+    </div>
+    <div class="st-sec">
+      <h3>Efektler</h3>
+      <label class="tg"><span>3D arka plan</span><input type="checkbox" data-k="nogl"><i></i></label>
+      <label class="tg"><span>Yumuşak kaydırma</span><input type="checkbox" data-k="nosmooth"><i></i></label>
+      <label class="tg"><span>Özel imleç</span><input type="checkbox" data-k="nocursor"><i></i></label>
+      <label class="tg"><span>Film greni</span><input type="checkbox" data-k="nograin"><i></i></label>
+    </div>
+    <button class="st-reset" type="button" data-cursor="link">Varsayılana dön</button>
+  </div>
+</aside>
 
 <div class="hud" aria-hidden="true"><b id="hudIdx">01</b><div class="hud-track"><div class="hud-fill"></div></div><span id="hudName">Giriş</span></div>
 <button class="ring" id="ring" aria-label="Başa dön" data-cursor="link"><svg viewBox="0 0 54 54"><circle cx="27" cy="27" r="25"/></svg><span>↑</span></button>
@@ -729,7 +835,7 @@ footer a{color:var(--fg)}
   <section class="hero" data-morph="0" data-gx="0" data-name="Giriş">
     <div class="hero-meta">
       <span class="avail"><i></i>Yeni projelere açık</span>
-      <span>Yaratıcı Geliştirici<br>Oyun · Simülasyon · Mod · Web · Uygulama</span>
+      <span>Geliştirici<br>Oyun, simülasyon, mod ve uygulama</span>
     </div>
     <!-- İsmini değiştirmek için aşağıdaki iki satırı düzenle -->
     <h1 class="hero-name" aria-label="Emir Yalçın">
@@ -737,18 +843,13 @@ footer a{color:var(--fg)}
       <span class="row split">Yalçın</span>
     </h1>
     <div class="hero-bottom">
-      <p class="hero-lead">Tarayıcıda <strong>dünyalar inşa ediyorum</strong> — korku oyunlarından uçuş simülatörlerine, çoklu evrenlerden Minecraft modlarına kadar. <strong>Hepsi burada, tek tıkla oynanabilir.</strong></p>
+      <p class="hero-lead">Tarayıcıda oynanan <strong>oyunlar ve simülasyonlar</strong>, bir Minecraft modu ve bir Windows asistanı geliştiriyorum. Buradaki projelerin hepsini doğrudan sitede açabilirsin.</p>
       <div class="hero-actions">
         <div class="hero-tags">
           <span class="tag">Three.js</span><span class="tag">WebGL</span><span class="tag">JavaScript</span><span class="tag">Java · Forge</span><span class="tag">Oyun Tasarımı</span>
         </div>
-        <a href="#projeler" class="btn solid magnetic" data-cursor="link"><span>▶ Oyunları oyna</span></a>
+        <a href="#projeler" class="btn solid magnetic" data-cursor="link"><span>Projeleri gör</span></a>
       </div>
-      <a href="#hakkimda" class="badge magnetic" data-cursor="link" aria-label="Aşağı kaydır">
-        <svg viewBox="0 0 130 130"><defs><path id="circ" d="M65,65 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
-          <text><textPath href="#circ">Oyunlar · Simülasyonlar · Modlar · Web ·</textPath></text></svg>
-        <b>↓</b>
-      </a>
     </div>
   </section>
 
@@ -762,18 +863,18 @@ footer a{color:var(--fg)}
 
   <!-- ABOUT -->
   <section id="hakkimda" data-morph="1" data-gx="1.9" data-alpha=".55" data-name="Hakkımda">
-    <div class="eyebrow">Hakkımda — 01</div>
+    <div class="eyebrow">01 · Hakkımda</div>
     <div class="about-grid">
       <div class="about-side">
         <div class="portrait"><canvas id="portrait"></canvas>
-          <div class="portrait-label"><span>Emir.exe</span><span>çalışıyor</span></div>
+          <div class="portrait-label"><span>Emir Yalçın</span><span>2026</span></div>
         </div>
       </div>
       <div>
-        <p class="about-text" id="aboutText">Ben bir <span class="hl">dünya inşacısıyım.</span> Kod benim için bir araç değil, bir fırça. Bir fikir aklıma düştüğünde onu ekrana koyana kadar rahat etmem; sonra da durmadan <span class="hl2">geliştiririm.</span> Floresan ışıklı sonsuz koridorlar, kül kaplı krallıklar, sayısız evren ve kalabalık bir havalimanı — hepsini <span class="hl3">sıfırdan, tarayıcının içinde</span> kurdum.</p>
+        <p class="about-text" id="aboutText">Oyun, simülasyon ve uygulama geliştiriyorum. Çoğunu <span class="hl">tarayıcıda</span> Three.js ve JavaScript ile yazıyorum; Minecraft için <span class="hl2">Java ile bir mod</span>, Windows için C# ile bir asistan da geliştirdim. Bir projeyi yayınladıktan sonra da üzerinde çalışmayı sürdürürüm: Backrooms oyunu bugüne kadar <span class="hl3">16 güncelleme</span> aldı.</p>
         <div class="about-foot">
-          <p class="fade-up">Oyunlara oyuncu gözüyle değil, yapımcı gözüyle bakarım. Bir sahnenin neden korkutucu olduğunu, bir sesin neden tüyleri diken diken ettiğini çözmek beni heyecanlandırır.</p>
-          <p class="fade-up">Tek bir alana sığmam. Bugün WebGL ile bir uçağı uçururken yarın Java ile Minecraft'a yeni bir boyut ekliyor olabilirim. Ortak nokta hep aynı: atmosfer ve detay.</p>
+          <p class="fade-up">En çok atmosferle uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his vermeye çalışıyorum.</p>
+          <p class="fade-up">Projelerimin hepsi Türkçe. Arayüzden eşya isimlerine kadar metinleri kendim yazıyorum.</p>
         </div>
       </div>
     </div>
@@ -781,23 +882,23 @@ footer a{color:var(--fg)}
 
   <!-- STATS -->
   <div class="stats" data-morph="1" data-gx="0">
-    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="23">0</span></div><p>Günde çıkan tüm bu iş</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="23">0</span></div><p>Günde yayınlandı</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Backrooms güncellemesi</p></div>
   </div>
 
   <!-- PROJECTS -->
   <section class="projects" id="projeler" data-morph="2" data-gx="0" data-alpha=".45" data-name="Projeler">
     <div class="projects-intro">
       <div>
-        <div class="eyebrow">Seçilmiş İşler — 02</div>
-        <h2 class="h2 split-lines">Yaptığım <em>Dünyalar</em></h2>
+        <div class="eyebrow">02 · Projeler</div>
+        <h2 class="h2 split-lines">Seçilmiş <em>Projeler</em></h2>
       </div>
-      <p class="fade-up">Hepsi en güncel sürümleriyle. Bir karta tıkla, oyun doğrudan burada açılsın; istersen indir, istersen yeni sekmede oyna. Kurulum yok.</p>
+      <p class="fade-up">Hepsi en güncel sürümüyle. Tarayıcı oyunları doğrudan sitede açılır; mod ve masaüstü uygulaması için kurulum adımları ve indirme bağlantısı var.</p>
     </div>
     <div class="projects-pin">
-      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
+      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydırarak gez</span></div>
       <div class="proj-track" id="projTrack"></div>
       <div class="proj-progress"><i></i></div>
       <div class="proj-dots" id="projDots" aria-hidden="true"></div>
@@ -808,10 +909,10 @@ footer a{color:var(--fg)}
   <section id="gunluk" data-morph="2" data-gx="0" data-alpha=".35" data-name="Günlük">
     <div class="log-head">
       <div>
-        <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">23 Gün, <em>63</em><br>Çıkış</h2>
+        <div class="eyebrow">03 · Yayın takvimi</div>
+        <h2 class="h2 split-lines">23 Günde <em>63</em><br>Yayın</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 5 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">14 Ekim ile 5 Kasım arasında yayınlanan sürümler. Her çubuk bir gün; üzerine gelince o gün yayınlananlar görünür.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -822,43 +923,39 @@ footer a{color:var(--fg)}
   <section id="ben" data-morph="2" data-gx="0" data-alpha=".6" data-name="Karakter">
     <div class="traits-head">
       <div>
-        <div class="eyebrow">Nasıl Biriyim — 04</div>
-        <h2 class="h2 split-lines">Kodun <em>Arkasındaki</em><br>İnsan</h2>
+        <div class="eyebrow">04 · Yaklaşım</div>
+        <h2 class="h2 split-lines">Nasıl <em>Çalışırım</em></h2>
       </div>
-      <p class="fade-up">Projelerim beni anlatıyor ama işte birkaç cümleyle ben: meraklı, inatçı ve atmosfere takıntılı.</p>
+      <p class="fade-up">Projelere nasıl yaklaştığımı birkaç maddede özetledim.</p>
     </div>
     <div class="traits">
-      <article class="trait" style="--tc:rgba(255,91,46,.2)">
-        <div class="trait-top"><span class="trait-num">01 / İterasyon</span><div class="trait-icon ic-loop"></div></div>
-        <h3>Asla “bitti” demem</h3>
-        <p>Bir projeyi yayınlamak benim için başlangıç. Backrooms oyunum tam 16 güncelleme gördü; Küllerin Saltanatı “final” olduktan sonra bile bir final daha aldı.</p>
-        <span class="trait-big">16</span>
+      <article class="trait">
+        <span class="trait-num">01</span>
+        <h3>Sürekli güncellerim</h3>
+        <p>Bir projeyi yayınlamak işin başlangıcı. Backrooms 16, Portal Silahı 7 güncelleme aldı; hataları düzeltip yeni özellikler eklemeye devam ederim.</p>
       </article>
-      <article class="trait" style="--tc:rgba(138,107,255,.24)">
-        <div class="trait-top"><span class="trait-num">02 / Atmosfer</span><div class="trait-icon ic-eye"></div></div>
-        <h3>Atmosfer avcısıyım</h3>
-        <p>VHS kaset estetiği, kül kaplı gökyüzü, kulak çınlaması… Işık, ses ve sessizlikle oyuncuya bir his yaşatmayı severim.</p>
-        <span class="trait-big">VHS</span>
+      <article class="trait">
+        <span class="trait-num">02</span>
+        <h3>Atmosfere önem veririm</h3>
+        <p>Işık, ses ve mekân tasarımıyla bir his yaratmaya çalışırım: VHS kaset görüntüsü, kül kaplı bir gökyüzü, floresan lambaların uğultusu.</p>
       </article>
-      <article class="trait" style="--tc:rgba(200,255,77,.16)">
-        <div class="trait-top"><span class="trait-num">03 / Merak</span><div class="trait-icon ic-orbit"></div></div>
-        <h3>Sınır tanımayan merak</h3>
-        <p>Korku oyunu, açık dünya RPG, hava trafik simülatörü, Minecraft modu, web arayüzü — yeni bir şey öğrenmek için yeni bir proje başlatırım.</p>
-        <span class="trait-big">∞</span>
+      <article class="trait">
+        <span class="trait-num">03</span>
+        <h3>Farklı alanlarda çalışırım</h3>
+        <p>Korku oyunu, açık dünya RPG, hava trafik simülatörü, Minecraft modu ve masaüstü asistanı. Her proje yeni bir şey öğrenmek için bir fırsat.</p>
       </article>
-      <article class="trait" style="--tc:rgba(227,10,23,.2)">
-        <div class="trait-top"><span class="trait-num">04 / Kimlik</span><div class="trait-icon ic-tr">☾</div></div>
-        <h3>Türkçeye sadığım</h3>
-        <p>Oyunlarımda, modlarımda ve arayüzlerimde her şey özenle Türkçe. “Badem Suyu”ndan “Yarık Kılıcı”na kadar her isim bilinçli bir tercih.</p>
-        <span class="trait-big">TR</span>
+      <article class="trait">
+        <span class="trait-num">04</span>
+        <h3>Türkçe geliştiririm</h3>
+        <p>Oyunlarımın, modumun ve uygulamamın hepsi Türkçe; arayüzden eşya ve yaratık isimlerine kadar.</p>
       </article>
     </div>
   </section>
 
   <!-- JOURNEY -->
   <section id="yolculuk" data-morph="2" data-gx="0" data-alpha=".5" data-name="Yolculuk">
-    <div class="eyebrow">Yolculuk — 05</div>
-    <h2 class="h2 split-lines">Bölüm <em>Bölüm</em></h2>
+    <div class="eyebrow">05 · Süreç</div>
+    <h2 class="h2 split-lines">Geliştirme <em>Süreci</em></h2>
     <div class="journey-wrap">
       <div class="j-line"><i></i></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 01 · 14 Ekim</div><h4>Kaset Kaydı Başlıyor</h4><p>İlk 3D korku oyunum: Backrooms evreninde bulunmuş bir VHS kaseti. Three.js ile ilk ciddi dünyam.</p></div></div>
@@ -868,16 +965,17 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 05 · 24 Ekim</div><h4>Java'ya Geçiş</h4><p>Skin Stealer v1.2.0: Minecraft 1.20.1 Forge modu. Backrooms seviyeleri, akıl sağlığı sistemi ve oyuncu taklidi yapan bir varlık.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 06 · 25 Ekim</div><h4>Şafak</h4><p>Küllerin Saltanatı final sürümüne ulaştı, Portal Silahı Update 6'yı aldı. Boss savaşları, yeni evrenler, daha fazla kaos.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 07 · 26 Ekim</div><h4>Cila Günü</h4><p>Backrooms Update 15'i, AeroSim havayolu yönetimiyle Update 4'ü, Aetheria daha akıcı animasyonlar ve mobil uyumla Update 1'i aldı.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero estetiğine bir aşk mektubu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero tarzında bir keşif oyunu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim</div><h4>Yeni Sahneler</h4><p>Portal Silahı, Aero Drift ve Skin Stealer yeni hallerine kavuştu; proje kartları baştan çizilen detaylı sahnelerle yenilendi.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 10 · 3 Kasım — Şimdi</div><h4>Pardux</h4><p>Tarayıcının dışına ilk adım: Türkçe konuşan, ekranın üstünde dinamik ada olarak yaşayan bir Windows asistanı. Site de daha sade kartlarla yenilendi. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 10 · 3 Kasım</div><h4>Pardux</h4><p>Tarayıcının dışına ilk adım: Türkçe konuşan, ekranın üstünde dinamik ada olarak yaşayan bir Windows asistanı. Site de daha sade kartlarla yenilendi.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 11 · 5 Kasım</div><h4>Skin Stealer 3.0</h4><p>Mod 2.0 ve 3.0 sürümleriyle büyüdü: on kabus, bir final savaşı, beş Backrooms seviyesi ve yeni yaratıklar.</p></div></div>
     </div>
   </section>
 
   <!-- SKILLS -->
   <section class="skills" data-morph="2" data-gx="0" data-alpha=".5" data-name="Yetenekler">
     <div class="inner">
-      <div class="eyebrow">Alet Çantası — 06</div>
+      <div class="eyebrow">06 · Araçlar</div>
       <h2 class="h2 split-lines">Kullandığım <em>Araçlar</em></h2>
     </div>
     <div class="skills-rows">
@@ -894,12 +992,12 @@ footer a{color:var(--fg)}
 
   <!-- CONTACT -->
   <section class="contact" id="iletisim" data-morph="3" data-gx="0" data-alpha="1" data-name="İletişim">
-    <div class="eyebrow">İletişim — 07</div>
-    <h2 class="contact-big"><span class="row split">Bir dünya</span><span class="row split">kuralım</span></h2>
-    <p class="lead fade-up">Aklında bir oyun, bir simülasyon ya da sıra dışı bir web deneyimi mi var? Portal açık — bir mesaj yeter.</p>
-    <a href="mailto:yalcinemir234@gmail.com" class="cta magnetic" data-cursor="label" data-label="Yaz"><span>Merhaba<br>de →</span></a>
+    <div class="eyebrow">07 · İletişim</div>
+    <h2 class="contact-big"><span class="row split">Birlikte</span><span class="row split">çalışalım</span></h2>
+    <p class="lead fade-up">Bir proje fikrin, önerin ya da sorun varsa e-posta gönderebilirsin.</p>
+    <a href="mailto:yalcinemir234@gmail.com" class="cta magnetic" data-cursor="label" data-label="Yaz"><span>E-posta<br>gönder</span></a>
     <div class="socials">
-      <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" class="btn solid magnetic" data-cursor="link"><span>GitHub ↗ @Tyrstana</span></a>
+      <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" class="btn solid magnetic" data-cursor="link"><span>GitHub</span></a>
       <a href="#" class="btn magnetic" data-cursor="link" id="copyMail"><span>E-postayı kopyala</span></a>
       <a href="#projeler" class="btn magnetic" data-cursor="link"><span>Projelere dön</span></a>
     </div>
@@ -907,8 +1005,7 @@ footer a{color:var(--fg)}
 </main>
 
 <footer>
-  <span>© 2026 Emir Yalçın — elle kodlandı · Update 14</span>
-  <span class="egg">İpucu: klavyede <kbd>backrooms</kbd> ya da <kbd>frutiger</kbd> yaz</span>
+  <span>© 2026 Emir Yalçın</span>
   <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link" style="color:var(--fg)">github.com/Tyrstana ↗</a>
   <button id="toTop" data-cursor="link">Başa dön ↑</button>
 </footer>
@@ -928,16 +1025,114 @@ footer a{color:var(--fg)}
     </div>
     <div class="player-stage" id="plStage">
       <div class="player-load" id="plLoad"><span>Dünya yükleniyor</span></div>
-      <div class="install" id="plInstall">
-        <h3>Skin Stealer'ı kur</h3>
-        <p>Minecraft 1.20.1 Forge modu. Backrooms seviyeleri, akıl sağlığı sistemi, Smiler ve oyuncu kılığına girip Türkçe sohbet eden bir varlık. Kurulumu üç adım:</p>
-        <div class="steps">
-          <div class="step"><b>01</b><h4>Forge'u kur</h4><p>Minecraft <code>1.20.1</code> için Forge yükleyicisini indir ve “Install client” ile kur.</p></div>
-          <div class="step"><b>02</b><h4>Modu at</h4><p>İndirdiğin <code>skinstealer-3.0.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
-          <div class="step"><b>03</b><h4>Işıkları kapat</h4><p>Launcher'dan Forge profilini seç ve oyuna gir. Sohbete yazan herkese güvenme.</p></div>
+      <div class="install mod-panel" id="plInstall">
+        <div class="mp-head">
+          <div>
+            <span class="mp-k">Minecraft 1.20.1 · Forge · v3.0.0</span>
+            <h3>Skin Stealer</h3>
+            <p>Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan bir korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve beş Backrooms seviyesi.</p>
+          </div>
+          <a class="btn solid" href="projeler/skin-stealer/skinstealer-3.0.0.jar" download data-cursor="link"><span>.jar indir · 3 MB</span></a>
         </div>
-        <div class="install-actions"><a class="btn solid" href="projeler/skin-stealer/skinstealer-3.0.0.jar" download data-cursor="link"><span>⬇ skinstealer-3.0.0.jar indir (3 MB)</span></a>
-        <a class="btn" href="projeler/skin-stealer/OKUBENI.txt" target="_blank" rel="noopener" data-cursor="link"><span>Tüm özellikler</span></a></div>
+        <div class="mp-tabs" role="tablist">
+          <button class="on" role="tab" aria-selected="true" data-tab="features">Özellikler</button>
+          <button role="tab" aria-selected="false" data-tab="install">Kurulum</button>
+        </div>
+        <div class="mp-pane" data-pane="features">
+          <div class="mp-grid">
+            <section class="mp-group">
+              <h4>Deri Hırsızı</h4>
+              <ul>
+                <li>Geceleri ortaya çıkar, öldürdüğü oyuncunun derisini giyip onun kılığına girer.</li>
+                <li>Gerçek formundayken ona baktığın sürece kıpırdamaz; arkanı döndüğün an yaklaşır.</li>
+                <li>Kılık değiştirmiş olanlar oyuncu gibi davranır, sohbete Türkçe yazar ve selamlara cevap verir.</li>
+                <li>Şüphelendiğin birine üç kez vurursan maskesi düşer.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Akıl sağlığı</h4>
+              <ul>
+                <li>Deri Hırsızı 8 blok yakınındayken ve karanlıkta siluetler gördükçe azalır.</li>
+                <li>%10'un altında Smiler belirmeye başlar.</li>
+                <li>%0'a düşersen 30 saniye içinde Badem Suyu içmezsen ölürsün.</li>
+                <li>Badem Suyu +50 verir; Yarık Zırhı kaybı azaltır.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Kabuslar</h4>
+              <ul>
+                <li>Her ikinci uykuda bir kabusa düşersin; Deri Hırsızı arkandan kovalar. 15 saniye dayan ya da uzaklaş.</li>
+                <li>On kabus: Seviye 0, Otopark, Seviye 94, Frutiger Aero Teraslar, Borulu Koridorlar, Level Fun, Havuz Odaları, Seviye ! (Run For Your Life), Terk Edilmiş Ofis ve Pembe Ev.</li>
+                <li>Her kabusta bir Kabus Notu; onunu da toplayınca ödül ve özel başarım.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Final: Kabusların Efendisi</h4>
+              <ul>
+                <li>Kabuslar bitince Deri Hırsızının Günlüğü belirir; arenadaki kürsüye koyunca savaş başlar.</li>
+                <li>450 can, birden fazla aşama, klonlar ve özel boss müziği.</li>
+                <li>Arkadaşlarınla birlikte savaşabilirsin. Son vuruş her şeyi bitirmeyebilir.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Backrooms seviyeleri</h4>
+              <ul>
+                <li>Dünyada nadir Backrooms sızıntıları oluşur: Seviye 0 Geçidi, Otopark, Level Fun, Havuz Odaları ve Terk Edilmiş Ofis.</li>
+                <li>İçlerindeki mor-siyah noclip yamasına düşersen o seviyeye geçersin; arkadaşların aynı yere düşer.</li>
+                <li>Kaçmak için parlayan beyaz yarığı bul. Çıkış Pusulası yönünü ve uzaklığını söyler.</li>
+                <li>Seviyelerde 15 Seviye Kaydı; okudukların Seviye Arşivine eklenir.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Yaratıklar</h4>
+              <ul>
+                <li>Deri Hırsızı ve Smiler.</li>
+                <li>Seviyelere özel Bakteri, Partici, Tazı ve Yüzsüz.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Ekipman</h4>
+              <ul>
+                <li><b>Yarık Kılıcı:</b> 9 hasar, Deri Hırsızına +8 büyü hasarı; onu yavaşlatır ve zayıflatır.</li>
+                <li><b>Yarık Zırhı:</b> her parça akıl kaybını %15 azaltır; tam set karanlığı siler ve gizlenenleri parlatır.</li>
+                <li><b>Fotoğraf Makinesi:</b> flaş Deri Hırsızını 6 saniye sersemletir, kılık değiştirmiş olanı ifşa eder.</li>
+                <li><b>El Feneri:</b> 8 dakikalık pil; pencereden izleyen Smiler'a tutunca kaybolur.</li>
+                <li><b>Yarık Cevheri:</b> Y 0 ile 64 arasında, elmas kazmayla çıkar.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>İçecekler</h4>
+              <ul>
+                <li><b>Badem Suyu:</b> +50 akıl sağlığı, kulak çınlamasını ve karanlığı siler.</li>
+                <li><b>Meyve Suyu:</b> Hız I; kabuslarda kaçarken işe yarar.</li>
+                <li><b>Sancı Sıvısı:</b> akıl sağlığını anında %10'a indirir. İçmen önerilmez.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Gece korkuları</h4>
+              <ul>
+                <li>Geceleri kapı çalınır, yakında ayak ve blok kırma sesleri duyulur.</li>
+                <li>Sohbette tanıdık birinin oyuna girdiği yazar, ama o burada değildir.</li>
+                <li>Evdeyken pencereden biri seni izliyor olabilir.</li>
+              </ul>
+            </section>
+            <section class="mp-group">
+              <h4>Diğer</h4>
+              <ul>
+                <li>31 başarım ve oyun içi rehber.</li>
+                <li>Ayarlanabilir: kabuslar, gece korkuları, jumpscare ve ışığa hassas oyuncular için yumuşatılmış efektler.</li>
+                <li>Tamamen Türkçe eşya ve yaratık isimleri.</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+        <div class="mp-pane" data-pane="install" hidden>
+          <div class="steps">
+            <div class="step"><b>01</b><h4>Forge'u kur</h4><p>Minecraft <code>1.20.1</code> için Forge yükleyicisini indir ve "Install client" ile kur.</p></div>
+            <div class="step"><b>02</b><h4>Modu ekle</h4><p>İndirdiğin <code>skinstealer-3.0.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
+            <div class="step"><b>03</b><h4>Oyuna gir</h4><p>Launcher'dan Forge profilini seç ve oyunu başlat. Rehber oyun içinden açılır.</p></div>
+          </div>
+        </div>
       </div>
       <div class="install" id="plApp">
         <h3>Pardux'u kur</h3>
@@ -950,7 +1145,7 @@ footer a{color:var(--fg)}
         <div class="cmds"><span>müzik aç</span><span>10 dk sonra çayı hatırlat</span><span>ankara hava durumu</span><span>100 euro kaç tl</span><span>5 dakikalık zamanlayıcı</span><span>ahmet'e whatsapp'tan akşam geliyorum yaz</span></div>
         <div class="install-actions"><a class="btn solid" href="https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip" data-cursor="link"><span>⬇ Pardux.zip indir (~850 MB)</span></a>
         <a class="btn" href="https://github.com/Tyrstana/Tyrstana.github.io/tree/main/projeler/pardux" target="_blank" rel="noopener" data-cursor="link"><span>Kaynak kod ↗</span></a>
-        <a class="btn" href="https://github.com/Tyrstana/Tyrstana.github.io/blob/main/projeler/pardux/README.md" target="_blank" rel="noopener" data-cursor="link"><span>Tüm komutlar ↗</span></a></div>
+        <a class="btn" href="https://github.com/Tyrstana/Tyrstana.github.io/releases/tag/pardux-v1.0" target="_blank" rel="noopener" data-cursor="link"><span>Sürüm sayfası ↗</span></a></div>
         <p class="install-note">Windows 10 / 11 · .NET Framework (Windows'ta yerleşik) · İnternet yalnızca hava, döviz, haber ve web aramaları için.</p>
       </div>
     </div>
@@ -977,6 +1172,9 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
+  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On kabus ve final savaşı','Beş Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v3.0.0', draw:'mc', mod:true,
+    desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve beş Backrooms seviyesi.',
+    chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-3.0.0.jar' },
   { title:'Pardux', accent:'#c8ff4d', plat:'Windows', feats:['Dinamik ada','"Hey Pardux" sesli komut','Çevrimdışı ses tanıma'], cat:'Masaüstü Asistanı', ver:'1.0', draw:'pardux', app:true,
     desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
     chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
@@ -999,9 +1197,6 @@ const PROJECTS = [
   { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', draw:'portal',
     desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Yenilenen evrenler, skor sistemi ve bolca kaos.',
     chips:['Three.js','Shader','Keşif'], file:'projeler/portal-silahi.html' },
-  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Türkçe sahte sohbet','Akıl sağlığı sistemi','Backrooms seviyeleri'], cat:'Minecraft Forge Modu', ver:'v3.0.0', isNew:true, draw:'mc', mod:true,
-    desc:'Oyuncu kılığına giren, Türkçe sahte sohbet yazan bir varlık. Backrooms seviyeleri, akıl sağlığı sistemi ve Smiler. İndir, mods klasörüne at.',
-    chips:['Java','Forge 1.20.1','Gradle'], file:'projeler/skin-stealer/skinstealer-3.0.0.jar' }
 ];
 
 const track = $('#projTrack');
@@ -1735,87 +1930,116 @@ const DRAW = {
     x.fillText('ALT + SPACE', w / 2, py + ph + 14 * s); x.textAlign = 'left';
   },
 
-  /* ---------- Skin Stealer: a Minecraft night with something wearing Steve ---------- */
+  /* ---------- Skin Stealer: Level 0 built from Minecraft blocks, and something wearing Steve ---------- */
   mc(x, w, h, t, s, st) {
-    const PW = 160, PH = 100;
+    const PW = 160, PH = 100, VX = 80, L = 61, R = 99, T = 33, B = 59;
     const pix = layer(st, 'pix', PW, PH, (c) => {
-      const R = seeded(1994), px = (X, Y, col) => { c.fillStyle = col; c.fillRect(X, Y, 1, 1); };
-      for (let y = 0; y < 70; y++) for (let X = 0; X < PW; X++) {
-        const k = y / 70, d = ((X + y) % 2) * .015;
-        c.fillStyle = `rgb(${11 + (24 * (k + d)) | 0},${15 + (34 * (k + d)) | 0},${42 + (50 * (k + d)) | 0})`; c.fillRect(X, y, 1, 1);
-      }
-      for (let i = 0; i < 46; i++) px(R() * PW | 0, R() * 42 | 0, R() > .8 ? '#fff3b0' : '#dfe6ff');
-      c.fillStyle = '#e9edf3'; c.fillRect(126, 10, 9, 9); px(128, 12, '#c3c9d4'); px(131, 15, '#c3c9d4'); px(132, 12, '#d0d5de'); px(129, 16, '#c3c9d4');
-      for (let X = 0; X < PW; X++) { const top = 52 + Math.round(Math.sin(X * .05) * 6 + Math.sin(X * .13) * 3); c.fillStyle = '#152042'; c.fillRect(X, top, 1, 70 - top); }
-      const H = X => 66 + Math.round(Math.sin(X * .07) * 3 + Math.sin(X * .19) * 1.5);
-      for (let X = 0; X < PW; X++) {
-        const top = H(X);
-        for (let y = top; y < PH; y++) {
-          const dep = y - top, n = R();
-          let col;
-          if (dep === 0) col = n > .5 ? '#5ebc3b' : '#4ea42f';
-          else if (dep < 3) col = n > .6 ? '#4ea42f' : (n > .3 ? '#7a5332' : '#6a4629');
-          else if (dep < 9) col = n > .5 ? '#7a5332' : (n > .15 ? '#6a4629' : '#8a6040');
-          else { col = n > .5 ? '#7d7d7d' : (n > .1 ? '#6e6e6e' : '#8f8f8f'); if (n < .012) col = '#1d1d1d'; else if (n < .016) col = '#4fe8e0'; else if (n < .02) col = '#d22a2a'; }
-          if ((X % 8 === 0 || dep % 8 === 0) && dep > 0) col = col.replace(/#(..)(..)(..)/, (m, r2, g2, b2) => '#' + [r2, g2, b2].map(v => Math.max(0, parseInt(v, 16) - 14).toString(16).padStart(2, '0')).join(''));
-          px(X, y, col);
+      const rnd = seeded(1994), img = c.createImageData(PW, PH), d = img.data;
+      const put = (X, Y, r, g, b) => { const i = (Y * PW + X) * 4; d[i] = r; d[i + 1] = g; d[i + 2] = b; d[i + 3] = 255; };
+      const shade = (r, g, b, k) => [r * k | 0, g * k | 0, b * k | 0];
+      for (let Y = 0; Y < PH; Y++) for (let X = 0; X < PW; X++) {
+        const n = rnd();
+        // which surface is this pixel on? (one-point perspective box)
+        const topL = T * (X / L), topR = T * ((PW - X) / (PW - R));
+        const botL = PH - (PH - B) * (X / L), botR = PH - (PH - B) * ((PW - X) / (PW - R));
+        let col;
+        if (X >= L && X <= R && Y >= T && Y <= B) {
+          // far wall with a dark doorway
+          col = (X >= 75 && X <= 85 && Y >= 41) ? [14, 11, 4] : ((X - L) % 6 < 3 ? [176, 154, 70] : [164, 143, 64]);
+          if ((Y - T) % 8 === 0) col = shade(...col, .9);
+        } else if (X < L && Y > topL && Y < botL) {
+          const u = X / L, z = u / (1 - u * .82), stripe = Math.floor(z * 7) % 2, v = (Y - topL) / (botL - topL);
+          col = stripe ? [203, 182, 88] : [188, 167, 78];
+          if (Math.floor(z * 7 / 2) !== Math.floor((z * 7 - .3) / 2)) col = shade(...col, .86);
+          if (v > .9) col = [120, 98, 44];
+          col = shade(...col, .78 + u * .22 + (n - .5) * .05);
+        } else if (X > R && Y > topR && Y < botR) {
+          const u = (PW - X) / (PW - R), z = u / (1 - u * .82), stripe = Math.floor(z * 7) % 2, v = (Y - topR) / (botR - topR);
+          col = stripe ? [203, 182, 88] : [188, 167, 78];
+          if (Math.floor(z * 7 / 2) !== Math.floor((z * 7 - .3) / 2)) col = shade(...col, .86);
+          if (v > .9) col = [120, 98, 44];
+          col = shade(...col, .78 + u * .22 + (n - .5) * .05);
+          // a doorway cut into the right wall
+          if (u > .38 && u < .55 && v > .28) col = shade(26, 20, 7, 1 + u * .3);
+        } else if (Y <= Math.min(topL, topR) || (Y < T)) {
+          // ceiling tiles with light panels
+          const k = Y / T, z = k / (1 - k * .82), row = Math.floor(z * 5), xs = (X - VX) / (1 - k * (1 - (R - L) / PW)) + VX;
+          col = [214, 205, 156];
+          if (Math.abs(z * 5 - Math.round(z * 5)) < .08 || Math.abs(((xs / 16) % 1)) < .06) col = [180, 170, 120];
+          if (row % 2 === 0 && Math.abs(xs - VX) < 14) col = [255, 252, 228];
+          col = shade(...col, .85 + k * .15);
+        } else {
+          // damp carpet
+          const k = (PH - Y) / (PH - B), z = k / (1 - k * .82);
+          col = n > .55 ? [128, 112, 62] : (n > .1 ? [116, 101, 55] : [92, 80, 42]);
+          if (Math.floor(z * 5) % 3 === 1 && n > .7) col = [84, 72, 36];
+          col = shade(...col, .8 + k * .2);
         }
+        put(X, Y, col[0], col[1], col[2]);
       }
-      // oak tree
-      const tx = 26, ty = H(tx);
-      c.fillStyle = '#6b4a2a'; c.fillRect(tx, ty - 11, 2, 11); c.fillStyle = '#5a3d22'; c.fillRect(tx, ty - 11, 1, 11);
-      for (let y = -19; y < -9; y++) for (let X = -5; X < 7; X++) if (Math.abs(X - .5) + Math.abs(y + 14) * .8 < 7.5) px(tx + X, ty + y, R() > .3 ? '#2f7d23' : '#3f9a2c');
-      // torch
-      const ox = 108, oy = H(ox); c.fillStyle = '#8a5a2b'; c.fillRect(ox, oy - 4, 1, 4); px(ox, oy - 5, '#ffd84a'); px(ox, oy - 6, '#fff3b0');
-      st.torch = [ox / PW, (oy - 5) / PH];
-      // the "Steve"
-      const sx = 84, sy = H(sx);
-      c.fillStyle = '#3a3fa8'; c.fillRect(sx, sy - 8, 6, 8); c.fillStyle = '#2d3290'; c.fillRect(sx + 3, sy - 8, 1, 8);
-      c.fillStyle = '#555'; c.fillRect(sx, sy - 1, 6, 1);
-      c.fillStyle = '#2fb3b8'; c.fillRect(sx, sy - 16, 6, 8);
-      c.fillStyle = '#c99673'; c.fillRect(sx - 2, sy - 16, 2, 8); c.fillRect(sx + 6, sy - 16, 2, 8);
-      c.fillStyle = '#c99673'; c.fillRect(sx, sy - 22, 6, 6);
-      c.fillStyle = '#3b2512'; c.fillRect(sx, sy - 22, 6, 2); px(sx, sy - 20, '#3b2512'); px(sx + 5, sy - 20, '#3b2512');
-      c.fillStyle = '#7a4b38'; c.fillRect(sx + 2, sy - 17, 2, 1);
-      st.eyes = [[(sx + 1) / PW, (sy - 19) / PH], [(sx + 4) / PW, (sy - 19) / PH]];
+      c.putImageData(img, 0, 0);
+      // the Skin Stealer: a tall, thin pale body wearing Steve's head
+      const fx = 80, fy = 72;
+      c.fillStyle = '#cfc9be'; c.fillRect(fx - 3, fy - 26, 6, 13);
+      c.fillStyle = '#b9b2a6'; c.fillRect(fx + 1, fy - 26, 1, 13);
+      c.fillStyle = '#cfc9be'; c.fillRect(fx - 3, fy - 13, 2, 13); c.fillRect(fx + 1, fy - 13, 2, 13);
+      c.fillStyle = '#c4bdb1'; c.fillRect(fx - 6, fy - 25, 2, 18); c.fillRect(fx + 4, fy - 25, 2, 18);
+      c.fillStyle = '#a89f92'; c.fillRect(fx - 6, fy - 8, 2, 2); c.fillRect(fx + 4, fy - 8, 2, 2);
+      c.fillStyle = '#2fb3b8'; c.fillRect(fx - 3, fy - 26, 6, 3);
+      c.fillStyle = '#c99673'; c.fillRect(fx - 3, fy - 32, 6, 6);
+      c.fillStyle = '#3b2512'; c.fillRect(fx - 3, fy - 32, 6, 2); c.fillRect(fx - 3, fy - 30, 1, 1); c.fillRect(fx + 2, fy - 30, 1, 1);
+      c.fillStyle = '#000'; c.fillRect(fx - 2, fy - 29, 2, 1); c.fillRect(fx + 1, fy - 29, 2, 1);
+      c.fillStyle = '#7a3b2a'; c.fillRect(fx - 1, fy - 27, 3, 1);
+      c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(fx - 5, fy, 10, 1);
+      st.eyes = [[(fx - 1) / PW, (fy - 29) / PH], [(fx + 2) / PW, (fy - 29) / PH]];
+      st.fig = [fx / PW, (fy - 18) / PH];
     });
-    // pixel art scaled up crisp; cover-fit to the canvas
+    // pixel art scaled up crisp, cover-fit to the canvas
     const sc = Math.max(w / PW, h / PH), ox = (w - PW * sc) / 2, oy = (h - PH * sc) / 2;
     x.imageSmoothingEnabled = false; x.drawImage(pix, ox, oy, PW * sc, PH * sc); x.imageSmoothingEnabled = true;
-    if (st.torch) {
-      const tr = (24 + Math.sin(t * 9) * 2 + Math.random() * 2) * sc, TX = ox + st.torch[0] * PW * sc, TY = oy + st.torch[1] * PH * sc;
-      x.globalCompositeOperation = 'lighter'; x.globalAlpha = .55; x.drawImage(artGlow('rgba(255,170,60,1)'), TX - tr, TY - tr, tr * 2, tr * 2); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+    // humming fluorescents: a slow breathe and the odd dropout
+    st.fl = (st.fl || 0) * .82; if (Math.random() < .02) st.fl = 1;
+    x.fillStyle = `rgba(20,14,0,${.08 + Math.sin(t * 9) * .02 + st.fl * .35})`; x.fillRect(0, 0, w, h);
+    // flashlight beam sweeping over the figure
+    if (st.fig) {
+      const bx = ox + (st.fig[0] + Math.sin(t * .6) * .05) * PW * sc, by = oy + st.fig[1] * PH * sc, br = 34 * sc;
+      const g = x.createRadialGradient(bx, by, 0, bx, by, br);
+      g.addColorStop(0, 'rgba(255,248,215,.32)'); g.addColorStop(1, 'rgba(255,248,215,0)');
+      x.globalCompositeOperation = 'lighter'; x.fillStyle = g; x.fillRect(0, 0, w, h); x.globalCompositeOperation = 'source-over';
     }
-    // white eyes that don't blink, flaring red sometimes
-    const red = (t % 7) > 6.3;
+    // eyes that never blink, flaring red now and then
+    const red = (t % 7) > 6.2;
     (st.eyes || []).forEach(([ex, ey]) => {
       const X = ox + ex * PW * sc, Y = oy + ey * PH * sc;
-      x.fillStyle = red ? '#ff2a2a' : '#ffffff'; x.fillRect(X, Y, sc, sc);
-      x.globalCompositeOperation = 'lighter'; x.globalAlpha = .8; x.drawImage(artGlow(red ? 'rgba(255,40,40,1)' : 'rgba(255,255,255,1)'), X - sc * 2, Y - sc * 2, sc * 5, sc * 5); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+      x.fillStyle = red ? '#ff2a2a' : '#f4f4f4'; x.fillRect(X, Y, sc, sc);
+      x.globalCompositeOperation = 'lighter'; x.globalAlpha = .7;
+      x.drawImage(artGlow(red ? 'rgba(255,40,40,1)' : 'rgba(255,255,255,1)'), X - sc * 2, Y - sc * 2, sc * 5, sc * 5);
+      x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
     });
-    // sanity bar
+    // sanity meter
     const pad = w * .075, san = 1 - ((t % 24) / 24);
-    x.font = `600 ${8 * s}px "JetBrains Mono"`; x.fillStyle = 'rgba(255,255,255,.85)'; x.fillText('AKIL SAĞLIĞI', pad, 56 * s);
-    x.fillStyle = 'rgba(0,0,0,.5)'; x.fillRect(pad, 61 * s, 90 * s, 7 * s);
-    x.fillStyle = san > .3 ? '#7cff5a' : '#ff3b3b'; x.fillRect(pad + 1 * s, 62 * s, 88 * s * san, 5 * s);
+    x.font = `600 ${8 * s}px "JetBrains Mono"`; x.fillStyle = 'rgba(255,255,255,.9)'; x.fillText('AKIL SAĞLIĞI', pad, 22 * s);
+    x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(pad, 27 * s, 90 * s, 7 * s);
+    x.fillStyle = san > .3 ? '#7cff5a' : '#ff3b3b'; x.fillRect(pad + 1 * s, 28 * s, 88 * s * san, 5 * s);
     if (san < .22) {
-      const vg = x.createRadialGradient(w / 2, h / 2, h * .2, w / 2, h / 2, w * .7); vg.addColorStop(0, 'rgba(120,0,0,0)'); vg.addColorStop(1, `rgba(150,0,0,${.5 * (1 - san / .22)})`);
+      const vg = x.createRadialGradient(w / 2, h / 2, h * .2, w / 2, h / 2, w * .7);
+      vg.addColorStop(0, 'rgba(120,0,0,0)'); vg.addColorStop(1, `rgba(150,0,0,${.5 * (1 - san / .22)})`);
       x.fillStyle = vg; x.fillRect(0, 0, w, h);
-      if (Math.random() < .3) { x.fillStyle = 'rgba(255,0,0,.25)'; x.fillRect(0, Math.random() * h, w, 4 * s); }
+      if (Math.random() < .3) { x.fillStyle = 'rgba(255,0,0,.2)'; x.fillRect(0, Math.random() * h, w, 4 * s); }
     }
-    // fake chat typing in Turkish
-    const msgs = [['<Steve>', ' sa'], ['<Alex>', ' as'], ['<Steve>', ' geliyom bekleyin'], ['<Steve>', ' madendeyim elmas buldum gelin'], ['', 'Alex öldü: Sancı Sıvısı'], ['<Steve>', ' noldu']];
+    // fake Turkish chat typing in
+    const msgs = [['<Steve>', ' sa'], ['<Alex>', ' as'], ['<Steve>', ' geliyom bekleyin'], ['<Steve>', ' madendeyim elmas buldum gelin'], ['', 'Alex oyuna katıldı'], ['<Steve>', ' noldu']];
     const per = 2.6, idx = Math.floor(t / per), into = (t % per) / per;
     x.font = `500 ${9 * s}px "JetBrains Mono"`;
     const lines = [];
-    for (let k = 3; k >= 0; k--) { const m = msgs[((idx - k) % msgs.length + msgs.length) % msgs.length]; lines.push(k === 0 ? [m[0], m[1].slice(0, Math.ceil(m[1].length * Math.min(1, into * 2.2)))] : m); }
+    for (let k = 2; k >= 0; k--) { const m = msgs[((idx - k) % msgs.length + msgs.length) % msgs.length]; lines.push(k === 0 ? [m[0], m[1].slice(0, Math.ceil(m[1].length * Math.min(1, into * 2.2)))] : m); }
     const lh = 13 * s, bh = lines.length * lh + 8 * s, by = h - bh - 12 * s;
-    x.fillStyle = 'rgba(0,0,0,.45)'; x.fillRect(pad, by, w * .55, bh);
+    x.fillStyle = 'rgba(0,0,0,.5)'; x.fillRect(pad, by, w * .5, bh);
     lines.forEach(([n, m], i) => {
       const yy = by + 4 * s + (i + .78) * lh;
-      x.fillStyle = 'rgba(40,40,40,.9)'; x.fillText(n + m, pad + 6 * s + 1.2 * s, yy + 1.2 * s);
-      x.fillStyle = n ? '#ffffff' : '#ff6b6b'; x.fillText(n, pad + 6 * s, yy);
-      x.fillStyle = n ? '#e8e8e8' : '#ff6b6b'; x.fillText(m, pad + 6 * s + x.measureText(n).width, yy);
+      x.fillStyle = 'rgba(40,40,40,.9)'; x.fillText(n + m, pad + 7.2 * s, yy + 1.2 * s);
+      x.fillStyle = n ? '#ffffff' : '#ffff55'; x.fillText(n, pad + 6 * s, yy);
+      x.fillStyle = n ? '#e8e8e8' : '#ffff55'; x.fillText(m, pad + 6 * s + x.measureText(n).width, yy);
     });
   }
 };
@@ -1911,12 +2135,23 @@ function initGL() {
       uniform float uTime, uMorph, uPx, uVel, uBurst; uniform vec2 uMouse;
       uniform vec3 uC1, uC2, uC3;
       varying vec3 vCol; varying float vA;
-      float ease(float x){ return x*x*(3.0-2.0*x); }
+      float ease(float x){ return x*x*x*(x*(x*6.0-15.0)+10.0); }
+      // progress of one shape-to-shape step, staggered per particle so the change ripples through the cloud
+      float stage(float m, float i, float d){ return clamp((m - i) * 1.25 - d, 0.0, 1.0); }
+      // while a step is in flight, particles spiral around the axis and the cloud breathes outward
+      vec3 swirl(vec3 p, float b, float seed){
+        float a = b * (1.6 + seed * 1.4);
+        float c = cos(a), s = sin(a);
+        p.xz = mat2(c, -s, s, c) * p.xz;
+        return p * (1.0 + b * 0.32) + vec3(0.0, b * (seed - 0.5) * 0.9, 0.0);
+      }
       void main(){
-        float d = aR * 0.35;
-        vec3 p = mix(position, aT1, ease(clamp(uMorph*1.35 - d, 0.0, 1.0)));
-        p = mix(p, aT2, ease(clamp((uMorph-1.0)*1.35 - d, 0.0, 1.0)));
-        p = mix(p, aT3, ease(clamp((uMorph-2.0)*1.35 - d, 0.0, 1.0)));
+        float d = aR * 0.25;
+        float k1 = stage(uMorph, 0.0, d), k2 = stage(uMorph, 1.0, d), k3 = stage(uMorph, 2.0, d);
+        vec3 p = mix(position, aT1, ease(k1));
+        p = mix(p, aT2, ease(k2));
+        p = mix(p, aT3, ease(k3));
+        p = swirl(p, sin(3.14159 * k1) + sin(3.14159 * k2) + sin(3.14159 * k3), aR);
         float n = sin(uTime*1.3 + aR*40.0 + p.y*2.2) * cos(uTime*.9 + p.x*1.7);
         p += normalize(p + 0.0001) * (n * (0.05 + uVel*0.25) + uBurst * (0.4 + aR*1.6));
         float terr = clamp(uMorph-1.0,0.0,1.0)*(1.0-clamp(uMorph-2.0,0.0,1.0));
@@ -1964,6 +2199,9 @@ function initGL() {
     const u = mat.uniforms, inks = GL_INKS[mode] || GL_INKS.dark, light = mode !== 'dark';
     mat.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending;
     u.uC1.value.set(inks[0]); u.uC2.value.set(inks[1]); u.uC3.value.set(inks[2]);
+    // the main particle colour follows the site accent (default or picked in settings)
+    const acc = getComputedStyle(document.documentElement).getPropertyValue('--acc').trim();
+    if (mode !== 'frutiger' && /^#[0-9a-f]{6}$/i.test(acc)) u.uC1.value.set(acc);
     u.uLight.value = light ? 1 : 0;
     dust.material.color.set(inks[3]);
     mat.needsUpdate = true;
@@ -1981,10 +2219,11 @@ function initGL() {
   });
 
   renderGL = (t, dt) => {
-    if (GL.paused) return;
-    GL.morph = lerp(GL.morph, GL.tMorph, 1 - Math.pow(.02, dt));
-    GL.gx = lerp(GL.gx, innerWidth < 860 ? 0 : GL.tgx, 1 - Math.pow(.05, dt));
-    GL.alpha = lerp(GL.alpha, GL.tAlpha, 1 - Math.pow(.05, dt));
+    if (GL.paused || GL.off) return;
+    // targets follow the scroll position continuously (see scrollMorph); a soft follow smooths the rest
+    GL.morph = lerp(GL.morph, GL.tMorph, 1 - Math.pow(.1, dt));
+    GL.gx = lerp(GL.gx, innerWidth < 860 ? 0 : GL.tgx, 1 - Math.pow(.1, dt));
+    GL.alpha = lerp(GL.alpha, GL.tAlpha, 1 - Math.pow(.1, dt));
     GL.smx = lerp(GL.smx, GL.mx, 1 - Math.pow(.01, dt));
     GL.smy = lerp(GL.smy, GL.my, 1 - Math.pow(.01, dt));
     GL.burst = lerp(GL.burst, 0, 1 - Math.pow(.08, dt));
@@ -2146,7 +2385,7 @@ function applyTheme(t, persist = true) {
   document.documentElement.dataset.theme = t;
   if (persist) { try { localStorage.setItem('theme', t); } catch (e) {} }
   themeMeta.content = META[t] || META.dark;
-  GL.setTheme && GL.setTheme(t);
+  applyAccent();
 }
 themeMeta.content = META[document.documentElement.dataset.theme] || META.dark;
 // swap themes with a circular reveal growing from (x, y)
@@ -2162,27 +2401,100 @@ function themeTransition(apply, x = innerWidth / 2, y = innerHeight / 2, duratio
   }).catch(() => {});
 }
 let themeBeforeAero = null, aeroTick = 0;
-function toggleTheme(e) {
-  // leaving Frutiger early: toggle relative to the theme it replaced
-  const base = themeBeforeAero || document.documentElement.dataset.theme;
-  if (themeBeforeAero) { clearInterval(aeroTick); themeBeforeAero = null; }
-  const next = base === 'light' ? 'dark' : 'light';
-  const r = e.currentTarget.getBoundingClientRect();
-  themeTransition(() => applyTheme(next), r.left + r.width / 2, r.top + r.height / 2);
-}
-$$('.js-theme').forEach(b => b.addEventListener('click', toggleTheme));
 // follow the system setting until the visitor picks a theme themselves
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
   let saved = null; try { saved = localStorage.getItem('theme'); } catch (_) {}
-  if (!saved) { applyTheme(e.matches ? 'light' : 'dark'); try { localStorage.removeItem('theme'); } catch (_) {} }
+  if (!saved && !themeBeforeAero) applyTheme(e.matches ? 'light' : 'dark', false);
 });
+
+/* ======================================================
+   SETTINGS: theme, accent colour, effects (saved in localStorage)
+   ====================================================== */
+const root = document.documentElement;
+const loadPrefs = () => { try { return JSON.parse(localStorage.getItem('prefs') || '{}'); } catch (e) { return {}; } };
+const savePrefs = p => { try { localStorage.setItem('prefs', JSON.stringify(p)); } catch (e) {} };
+let prefs = loadPrefs();
+// readable text colour on top of the accent
+const onAccent = hex => {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const lin = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
+  return .2126 * lin(r) + .7152 * lin(g) + .0722 * lin(b) > .32 ? '#000' : '#fff';
+};
+function applyAccent() {
+  // Frutiger mode brings its own palette; a custom accent comes back when it ends
+  if (prefs.accent && root.dataset.theme !== 'frutiger') {
+    root.style.setProperty('--acc', prefs.accent); root.style.setProperty('--on-acc', onAccent(prefs.accent));
+  } else { root.style.removeProperty('--acc'); root.style.removeProperty('--on-acc'); }
+  GL.setTheme && GL.setTheme(root.dataset.theme);
+  syncSettingsUI();
+}
+const themeChoice = () => { let t = null; try { t = localStorage.getItem('theme'); } catch (e) {} return t === 'light' || t === 'dark' ? t : 'system'; };
+function chooseTheme(v, from) {
+  if (themeBeforeAero) { clearInterval(aeroTick); themeBeforeAero = null; }
+  const next = v === 'system' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : v;
+  const r = from ? from.getBoundingClientRect() : { left: innerWidth, top: 0, width: 0, height: 0 };
+  const run = () => { applyTheme(next, v !== 'system'); if (v === 'system') { try { localStorage.removeItem('theme'); } catch (e) {} } applyAccent(); };
+  if (next === root.dataset.theme) run(); else themeTransition(run, r.left + r.width / 2, r.top + r.height / 2);
+}
+function setEffect(k, off) {
+  prefs[k] = off; if (!off) delete prefs[k]; savePrefs(prefs);
+  root.classList.toggle(k, !!off);
+  if (k === 'nogl') GL.off = !!off;
+  if (k === 'nosmooth') {
+    if (off && lenis) { lenis.destroy(); lenis = null; }
+    else if (!off && !lenis && window.Lenis && !reduce) makeLenis();
+  }
+}
+const settings = $('#settings');
+function syncSettingsUI() {
+  const tc = themeChoice();
+  $$('#stTheme button').forEach(b => b.setAttribute('aria-checked', b.dataset.v === tc));
+  const preset = $$('#stAccent button').some(b => b.dataset.c === (prefs.accent || ''));
+  $$('#stAccent button').forEach(b => b.setAttribute('aria-checked', b.dataset.c === (prefs.accent || '')));
+  $('.sw-custom').classList.toggle('on', !preset);
+  if (prefs.accent) $('#stCustom').value = prefs.accent;
+  $$('.tg input').forEach(i => { i.checked = !prefs[i.dataset.k]; });
+}
+let settingsFrom = null;
+function openSettings(e) {
+  settingsFrom = e && e.currentTarget;
+  setMenu(false);
+  syncSettingsUI();
+  settings.classList.add('open'); settings.setAttribute('aria-hidden', 'false');
+  if (lenis) lenis.stop();
+  setTimeout(() => $('.st-close').focus(), 50);
+}
+function closeSettings() {
+  if (!settings.classList.contains('open')) return;
+  settings.classList.remove('open'); settings.setAttribute('aria-hidden', 'true');
+  if (lenis) lenis.start();
+  settingsFrom && settingsFrom.focus && settingsFrom.focus({ preventScroll: true });
+}
+$$('.js-settings').forEach(b => b.addEventListener('click', openSettings));
+$('.st-close').addEventListener('click', closeSettings);
+$('.st-bg').addEventListener('click', closeSettings);
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSettings(); });
+['wheel', 'touchstart', 'touchmove'].forEach(type => settings.addEventListener(type, e => e.stopPropagation(), { passive: true }));
+$$('#stTheme button').forEach(b => b.addEventListener('click', () => chooseTheme(b.dataset.v, b)));
+$$('#stAccent button').forEach(b => b.addEventListener('click', () => {
+  prefs.accent = b.dataset.c || undefined; if (!prefs.accent) delete prefs.accent; savePrefs(prefs); applyAccent();
+}));
+$('#stCustom').addEventListener('input', e => { prefs.accent = e.target.value; savePrefs(prefs); applyAccent(); });
+$$('.tg input').forEach(i => i.addEventListener('change', () => setEffect(i.dataset.k, !i.checked)));
+$('.st-reset').addEventListener('click', () => {
+  ['nogl', 'nosmooth', 'nocursor', 'nograin'].forEach(k => setEffect(k, false));
+  prefs = {}; savePrefs(prefs);
+  chooseTheme('system');
+});
+GL.off = root.classList.contains('nogl');
+applyAccent();
 
 const toast = $('.toast');
 let toastT;
 function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 2400); }
 $('#copyMail').addEventListener('click', e => {
   e.preventDefault();
-  const done = () => showToast('E-posta kopyalandı ✦');
+  const done = () => showToast('E-posta kopyalandı');
   navigator.clipboard ? navigator.clipboard.writeText(EMAIL).then(done, done) : done();
 });
 
@@ -2256,6 +2568,12 @@ const plLoad = $('#plLoad'), plInstall = $('#plInstall'), plApp = $('#plApp'), p
 // Lenis listens on window and cancels every wheel/touch while it is stopped (as it is when the
 // player is open); stopping these at the player keeps the install panels natively scrollable
 ['wheel', 'touchstart', 'touchmove'].forEach(type => player.addEventListener(type, e => e.stopPropagation(), { passive: true }));
+// mod panel tabs (features / install)
+$$('.mp-tabs button').forEach(b => b.addEventListener('click', () => {
+  $$('.mp-tabs button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); });
+  $$('#plInstall .mp-pane').forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; });
+  plInstall.scrollTop = 0;
+}));
 frame.addEventListener('load', () => { if (frame.src && frame.src !== 'about:blank') plLoad.classList.add('done'); });
 let lastFocus = null;
 function openPlayer(i, ox, oy) {
@@ -2342,10 +2660,14 @@ if (!hasGSAP) {
    ====================================================== */
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
-if (window.Lenis && !reduce) {
+// smooth scrolling can be switched off and on again from the settings drawer
+function makeLenis() {
   // the player (install panels, game frame) scrolls natively: Lenis must not swallow its wheel/touch
-  lenis = new Lenis({ duration: 1.25, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, prevent: node => !!(node.closest && node.closest('.player')) });
+  lenis = new Lenis({ duration: 1.25, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, prevent: node => !!(node.closest && node.closest('.player, .settings')) });
   lenis.on('scroll', e => { ScrollTrigger.update(); GL.vel = e.velocity; });
+}
+if (window.Lenis && !reduce && !document.documentElement.classList.contains('nosmooth')) {
+  makeLenis();
   lenis.stop();
 }
 $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
@@ -2521,12 +2843,9 @@ mm.add('(max-width: 899px)', () => {
 const sections = $$('[data-morph]');
 const named = sections.filter(x => x.dataset.name);
 function applySection(s) {
-  const changed = GL.tMorph !== +s.dataset.morph;
-  GL.tMorph = +s.dataset.morph; GL.tgx = +(s.dataset.gx || 0); GL.tAlpha = +(s.dataset.alpha || 1);
-  if (changed) GL.burst = .6;
   if (s.dataset.name) {
     $('#hudIdx').textContent = String(named.indexOf(s) + 1).padStart(2, '0');
-    const hn = $('#hudName'); hn.dataset.orig = s.dataset.name; hn.textContent = s.dataset.name; scramble(hn);
+    $('#hudName').textContent = s.dataset.name;
     $$('.nav ul a').forEach(a => a.classList.toggle('active', !!s.id && a.getAttribute('href') === '#' + s.id));
   }
 }
@@ -2534,10 +2853,36 @@ const sectionTriggers = sections.map(s => ScrollTrigger.create({
   trigger: s, start: 'top 55%', end: 'bottom 55%',
   onToggle: self => self.isActive && applySection(s)
 }));
+// Background shape is tied to scroll position, not to section changes: between the centres of two
+// sections with different shapes it morphs gradually, so stopping mid-way leaves it mid-way.
+let morphAnchors = [];
+function measureMorph() {
+  morphAnchors = sections.map(s => {
+    const r = s.getBoundingClientRect();
+    return { y: r.top + scrollY + r.height / 2, m: +s.dataset.morph, gx: +(s.dataset.gx || 0), a: +(s.dataset.alpha || 1) };
+  }).sort((p, q) => p.y - q.y);
+}
+function scrollMorph() {
+  if (!morphAnchors.length) return;
+  const y = scrollY + innerHeight / 2;
+  let A = morphAnchors[0], B = A, k = 0;
+  if (y >= morphAnchors[morphAnchors.length - 1].y) A = B = morphAnchors[morphAnchors.length - 1];
+  else if (y > A.y) for (let i = 0; i < morphAnchors.length - 1; i++) {
+    if (y >= morphAnchors[i].y && y < morphAnchors[i + 1].y) {
+      A = morphAnchors[i]; B = morphAnchors[i + 1];
+      k = (y - A.y) / (B.y - A.y); k = k * k * (3 - 2 * k);
+      break;
+    }
+  }
+  GL.tMorph = lerp(A.m, B.m, k); GL.tgx = lerp(A.gx, B.gx, k); GL.tAlpha = lerp(A.a, B.a, k);
+}
 ScrollTrigger.addEventListener('refresh', () => {
+  measureMorph();
   const active = sectionTriggers.filter(t => t.isActive).pop();
   if (active) applySection(active.trigger);
 });
+measureMorph();
+gsap.ticker.add(scrollMorph);
 const ringC = $('#ring circle'), ring = $('#ring'), hudFill = $('.hud-fill'), navEl = $('.nav');
 ScrollTrigger.create({
   trigger: document.body, start: 'top top', end: 'bottom bottom',
@@ -2579,7 +2924,6 @@ lineHeads.forEach(({ el, words }) => {
   gsap.from(words, { yPercent: 115, rotateX: -80, opacity: 0, duration: 1.3, ease: 'expo.out', stagger: .07, scrollTrigger: { trigger: el, start: 'top 88%' } });
 });
 $$('.eyebrow').forEach(el => {
-  ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => scramble(el) });
   gsap.from(el, { opacity: 0, x: -20, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
 });
 $$('.fade-up').forEach(el => gsap.from(el, { opacity: 0, y: 40, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
