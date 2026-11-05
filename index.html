@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://tyrstana.github.io/">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Emir Yalçın · Oyun ve Uygulama Geliştiricisi</title>
+<title>Emir Yalçın — Dünya İnşa Eden Geliştirici</title>
 <script>
   // theme before first paint: saved choice, otherwise the system setting
   (function () {
@@ -256,7 +256,7 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .hero-name .row{display:block;white-space:nowrap}
 .hero-name .row:nth-child(2){padding-left:8vw}
 .hero-name .c{transition:font-weight .25s linear,color .4s}
-.hero-name .row:nth-child(2) .c{color:transparent;background:linear-gradient(100deg,var(--acc) 0%,#ff9a5c 40%,var(--acc2) 100%);background-size:600% 100%;-webkit-background-clip:text;background-clip:text}
+.hero-name .row:nth-child(2) .c{color:transparent;background:linear-gradient(100deg,var(--acc) 0%,color-mix(in srgb,var(--acc) 50%,#ffd9b0) 40%,var(--acc2) 100%);background-size:600% 100%;-webkit-background-clip:text;background-clip:text}
 .hero-name .row:nth-child(2) .c:nth-child(1){background-position:0 0}.hero-name .row:nth-child(2) .c:nth-child(2){background-position:20% 0}.hero-name .row:nth-child(2) .c:nth-child(3){background-position:40% 0}
 .hero-name .row:nth-child(2) .c:nth-child(4){background-position:60% 0}.hero-name .row:nth-child(2) .c:nth-child(5){background-position:80% 0}.hero-name .row:nth-child(2) .c:nth-child(6){background-position:100% 0}
 .hero-bottom{display:grid;grid-template-columns:1.2fr 1fr auto;gap:40px;align-items:end;margin-top:44px;border-top:1px solid var(--line);padding-top:28px}
@@ -286,7 +286,7 @@ section{position:relative;padding:clamp(90px,16vh,180px) var(--gut)}
 .marquee{padding:0;border-block:1px solid var(--line);overflow:hidden;background:var(--band)}
 .marquee-inner{display:flex;width:max-content;padding:26px 0;will-change:transform}
 .marquee-inner span{font:700 clamp(28px,5vw,68px)/1 var(--display);text-transform:uppercase;letter-spacing:-.03em;padding-right:44px;display:flex;align-items:center;gap:44px;white-space:nowrap}
-.marquee-inner span::after{content:"/";color:var(--mute);font-weight:400}
+.marquee-inner span::after{content:"✦";color:var(--acc);font-size:.5em}
 .marquee-inner span:nth-child(even){color:transparent;-webkit-text-stroke:1px var(--fg)}
 @media (max-width:860px){.marquee-inner{padding:18px 0}.marquee-inner span{padding-right:28px;gap:28px}}
 
@@ -470,12 +470,8 @@ html.nograin .grain{display:none}
 html.nocursor .cursor,html.nocursor .cursor-dot,html.nocursor .glow{display:none}
 html.nocursor body,html.nocursor a,html.nocursor button,html.nocursor .card{cursor:auto}
 html.nocursor a,html.nocursor button{cursor:pointer}
-/* solid accent instead of gradient text: follows the accent picked in settings */
-.hero-name .row:nth-child(2) .c,:root[data-theme="frutiger"] .hero-name .row:nth-child(2) .c{color:var(--acc);background:none;-webkit-background-clip:border-box;background-clip:border-box}
-.loader-name .acc .c{color:var(--acc,#ff5b2e);background:none;-webkit-background-clip:border-box;background-clip:border-box}
-.loader-line i{background:var(--acc,#ff5b2e)}
-.trait-num{font:500 12px/1 var(--mono);letter-spacing:.08em}
-.trait h3{padding-top:48px}
+.loader-name .acc .c{background-image:linear-gradient(100deg,var(--acc,#ff5b2e),color-mix(in srgb,var(--acc,#ff5b2e) 50%,#ffd9b0) 45%,#8a6bff)}
+.loader-line i{background:linear-gradient(90deg,var(--acc,#ff5b2e),#8a6bff)}
 @media (max-width:760px){
   .steps{grid-template-columns:1fr;margin-top:28px}
   .player{padding:0}
@@ -709,16 +705,16 @@ footer a{color:var(--fg)}
 <!-- PRELOADER -->
 <div class="loader" aria-hidden="true">
   <div class="loader-panel">
-    <div class="loader-top"><div><span>Emir Yalçın</span></div><div><span>Portfolyo 2026</span></div></div>
+    <div class="loader-top"><div><span>Emir Yalçın</span></div><div><span>Portfolyo — 2026</span></div></div>
     <div class="loader-center">
       <div class="loader-name">
         <span class="w"><span class="c">E</span><span class="c">M</span><span class="c">İ</span><span class="c">R</span></span>
         <span class="w acc"><span class="c">Y</span><span class="c">A</span><span class="c">L</span><span class="c">Ç</span><span class="c">I</span><span class="c">N</span></span>
       </div>
-      <div class="loader-sub"><span>Oyun ve uygulama geliştiricisi</span></div>
+      <div class="loader-sub"><span>Dünya inşa eden geliştirici</span></div>
     </div>
     <div class="loader-bot">
-      <div><div class="lb loader-words">Yükleniyor</div></div>
+      <div><div class="lb loader-words"><div><p>Dünyalar yükleniyor</p><p>Portallar açılıyor</p><p>Kasetler sarılıyor</p><p>Küller tutuşuyor</p><p>Dünyalar yükleniyor</p></div></div></div>
       <div><div class="lb loader-pct"><span id="loaderNum">000</span><sup>%</sup></div></div>
     </div>
     <div class="loader-line"><i></i></div>
@@ -758,12 +754,12 @@ footer a{color:var(--fg)}
 <header class="nav">
   <a href="#top" class="logo magnetic" data-cursor="link"><i></i>EMİR.</a>
   <ul>
-    <li><a href="#hakkimda" data-cursor="link">Hakkımda</a></li>
-    <li><a href="#projeler" data-cursor="link">Projeler</a></li>
-    <li><a href="#gunluk" data-cursor="link">Günlük</a></li>
-    <li><a href="#ben" data-cursor="link">Karakter</a></li>
-    <li><a href="#yolculuk" data-cursor="link">Yolculuk</a></li>
-    <li><a href="#iletisim" data-cursor="link">İletişim</a></li>
+    <li><a href="#hakkimda" class="scramble" data-cursor="link">Hakkımda</a></li>
+    <li><a href="#projeler" class="scramble" data-cursor="link">Projeler</a></li>
+    <li><a href="#gunluk" class="scramble" data-cursor="link">Günlük</a></li>
+    <li><a href="#ben" class="scramble" data-cursor="link">Karakter</a></li>
+    <li><a href="#yolculuk" class="scramble" data-cursor="link">Yolculuk</a></li>
+    <li><a href="#iletisim" class="scramble" data-cursor="link">İletişim</a></li>
   </ul>
   <div class="nav-right">
     <span class="nav-time" id="clock">--:--:--</span>
@@ -835,7 +831,7 @@ footer a{color:var(--fg)}
   <section class="hero" data-morph="0" data-gx="0" data-name="Giriş">
     <div class="hero-meta">
       <span class="avail"><i></i>Yeni projelere açık</span>
-      <span>Geliştirici<br>Oyun, simülasyon, mod ve uygulama</span>
+      <span>Yaratıcı Geliştirici<br>Oyun · Simülasyon · Mod · Web · Uygulama</span>
     </div>
     <!-- İsmini değiştirmek için aşağıdaki iki satırı düzenle -->
     <h1 class="hero-name" aria-label="Emir Yalçın">
@@ -843,13 +839,18 @@ footer a{color:var(--fg)}
       <span class="row split">Yalçın</span>
     </h1>
     <div class="hero-bottom">
-      <p class="hero-lead">Tarayıcıda oynanan <strong>oyunlar ve simülasyonlar</strong>, bir Minecraft modu ve bir Windows asistanı geliştiriyorum. Buradaki projelerin hepsini doğrudan sitede açabilirsin.</p>
+      <p class="hero-lead">Tarayıcıda <strong>dünyalar inşa ediyorum</strong> — korku oyunlarından uçuş simülatörlerine, çoklu evrenlerden Minecraft modlarına ve bir masaüstü asistanına kadar. <strong>Hepsi burada, tek tıkla açılıyor.</strong></p>
       <div class="hero-actions">
         <div class="hero-tags">
           <span class="tag">Three.js</span><span class="tag">WebGL</span><span class="tag">JavaScript</span><span class="tag">Java · Forge</span><span class="tag">Oyun Tasarımı</span>
         </div>
-        <a href="#projeler" class="btn solid magnetic" data-cursor="link"><span>Projeleri gör</span></a>
+        <a href="#projeler" class="btn solid magnetic" data-cursor="link"><span>▶ Projeleri keşfet</span></a>
       </div>
+      <a href="#hakkimda" class="badge magnetic" data-cursor="link" aria-label="Aşağı kaydır">
+        <svg viewBox="0 0 130 130"><defs><path id="circ" d="M65,65 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+          <text><textPath href="#circ">Oyunlar · Simülasyonlar · Modlar · Web ·</textPath></text></svg>
+        <b>↓</b>
+      </a>
     </div>
   </section>
 
@@ -863,18 +864,18 @@ footer a{color:var(--fg)}
 
   <!-- ABOUT -->
   <section id="hakkimda" data-morph="1" data-gx="1.9" data-alpha=".55" data-name="Hakkımda">
-    <div class="eyebrow">01 · Hakkımda</div>
+    <div class="eyebrow">Hakkımda — 01</div>
     <div class="about-grid">
       <div class="about-side">
         <div class="portrait"><canvas id="portrait"></canvas>
-          <div class="portrait-label"><span>Emir Yalçın</span><span>2026</span></div>
+          <div class="portrait-label"><span>Emir.exe</span><span>çalışıyor</span></div>
         </div>
       </div>
       <div>
-        <p class="about-text" id="aboutText">Oyun, simülasyon ve uygulama geliştiriyorum. Çoğunu <span class="hl">tarayıcıda</span> Three.js ve JavaScript ile yazıyorum; Minecraft için <span class="hl2">Java ile bir mod</span>, Windows için C# ile bir asistan da geliştirdim. Bir projeyi yayınladıktan sonra da üzerinde çalışmayı sürdürürüm: Backrooms oyunu bugüne kadar <span class="hl3">16 güncelleme</span> aldı.</p>
+        <p class="about-text" id="aboutText">Ben bir <span class="hl">dünya inşacısıyım.</span> Kod benim için bir araç değil, bir fırça. Bir fikir aklıma düştüğünde onu ekrana koyana kadar rahat etmem; sonra da durmadan <span class="hl2">geliştiririm.</span> Floresan ışıklı sonsuz koridorlar, kül kaplı krallıklar, sayısız evren ve kalabalık bir havalimanı — hepsini <span class="hl3">sıfırdan, kendi ellerimle</span> kurdum.</p>
         <div class="about-foot">
-          <p class="fade-up">En çok atmosferle uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his vermeye çalışıyorum.</p>
-          <p class="fade-up">Projelerimin hepsi Türkçe. Arayüzden eşya isimlerine kadar metinleri kendim yazıyorum.</p>
+          <p class="fade-up">Oyunlara oyuncu gözüyle değil, yapımcı gözüyle bakarım. Bir sahnenin neden korkutucu olduğunu, bir sesin neden tüyleri diken diken ettiğini çözmek beni heyecanlandırır.</p>
+          <p class="fade-up">Tek bir alana sığmam. Bugün WebGL ile bir uçağı uçururken yarın Java ile Minecraft'a yeni bir boyut ekliyor olabilirim. Ortak nokta hep aynı: atmosfer ve detay.</p>
         </div>
       </div>
     </div>
@@ -882,23 +883,23 @@ footer a{color:var(--fg)}
 
   <!-- STATS -->
   <div class="stats" data-morph="1" data-gx="0">
-    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Proje, beş farklı alanda</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="23">0</span></div><p>Günde yayınlandı</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Backrooms güncellemesi</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="23">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
   <!-- PROJECTS -->
   <section class="projects" id="projeler" data-morph="2" data-gx="0" data-alpha=".45" data-name="Projeler">
     <div class="projects-intro">
       <div>
-        <div class="eyebrow">02 · Projeler</div>
-        <h2 class="h2 split-lines">Seçilmiş <em>Projeler</em></h2>
+        <div class="eyebrow">Seçilmiş İşler — 02</div>
+        <h2 class="h2 split-lines">Yaptığım <em>Dünyalar</em></h2>
       </div>
       <p class="fade-up">Hepsi en güncel sürümüyle. Tarayıcı oyunları doğrudan sitede açılır; mod ve masaüstü uygulaması için kurulum adımları ve indirme bağlantısı var.</p>
     </div>
     <div class="projects-pin">
-      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydırarak gez</span></div>
+      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
       <div class="proj-track" id="projTrack"></div>
       <div class="proj-progress"><i></i></div>
       <div class="proj-dots" id="projDots" aria-hidden="true"></div>
@@ -909,10 +910,10 @@ footer a{color:var(--fg)}
   <section id="gunluk" data-morph="2" data-gx="0" data-alpha=".35" data-name="Günlük">
     <div class="log-head">
       <div>
-        <div class="eyebrow">03 · Yayın takvimi</div>
-        <h2 class="h2 split-lines">23 Günde <em>63</em><br>Yayın</h2>
+        <div class="eyebrow">Üretim Günlüğü — 03</div>
+        <h2 class="h2 split-lines">23 Gün, <em>63</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">14 Ekim ile 5 Kasım arasında yayınlanan sürümler. Her çubuk bir gün; üzerine gelince o gün yayınlananlar görünür.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 5 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -923,39 +924,43 @@ footer a{color:var(--fg)}
   <section id="ben" data-morph="2" data-gx="0" data-alpha=".6" data-name="Karakter">
     <div class="traits-head">
       <div>
-        <div class="eyebrow">04 · Yaklaşım</div>
-        <h2 class="h2 split-lines">Nasıl <em>Çalışırım</em></h2>
+        <div class="eyebrow">Nasıl Biriyim — 04</div>
+        <h2 class="h2 split-lines">Kodun <em>Arkasındaki</em><br>İnsan</h2>
       </div>
-      <p class="fade-up">Projelere nasıl yaklaştığımı birkaç maddede özetledim.</p>
+      <p class="fade-up">Projelerim beni anlatıyor ama işte birkaç cümleyle ben: meraklı, inatçı ve atmosfere takıntılı.</p>
     </div>
     <div class="traits">
-      <article class="trait">
-        <span class="trait-num">01</span>
-        <h3>Sürekli güncellerim</h3>
-        <p>Bir projeyi yayınlamak işin başlangıcı. Backrooms 16, Portal Silahı 7 güncelleme aldı; hataları düzeltip yeni özellikler eklemeye devam ederim.</p>
+      <article class="trait" style="--tc:rgba(255,91,46,.2)">
+        <div class="trait-top"><span class="trait-num">01 / İterasyon</span><div class="trait-icon ic-loop"></div></div>
+        <h3>Asla “bitti” demem</h3>
+        <p>Bir projeyi yayınlamak benim için başlangıç. Backrooms oyunum tam 16 güncelleme gördü; Küllerin Saltanatı “final” olduktan sonra bile bir final daha aldı.</p>
+        <span class="trait-big">16</span>
       </article>
-      <article class="trait">
-        <span class="trait-num">02</span>
-        <h3>Atmosfere önem veririm</h3>
-        <p>Işık, ses ve mekân tasarımıyla bir his yaratmaya çalışırım: VHS kaset görüntüsü, kül kaplı bir gökyüzü, floresan lambaların uğultusu.</p>
+      <article class="trait" style="--tc:rgba(138,107,255,.24)">
+        <div class="trait-top"><span class="trait-num">02 / Atmosfer</span><div class="trait-icon ic-eye"></div></div>
+        <h3>Atmosfer avcısıyım</h3>
+        <p>VHS kaset estetiği, kül kaplı gökyüzü, kulak çınlaması… Işık, ses ve sessizlikle oyuncuya bir his yaşatmayı severim.</p>
+        <span class="trait-big">VHS</span>
       </article>
-      <article class="trait">
-        <span class="trait-num">03</span>
-        <h3>Farklı alanlarda çalışırım</h3>
-        <p>Korku oyunu, açık dünya RPG, hava trafik simülatörü, Minecraft modu ve masaüstü asistanı. Her proje yeni bir şey öğrenmek için bir fırsat.</p>
+      <article class="trait" style="--tc:rgba(200,255,77,.16)">
+        <div class="trait-top"><span class="trait-num">03 / Merak</span><div class="trait-icon ic-orbit"></div></div>
+        <h3>Sınır tanımayan merak</h3>
+        <p>Korku oyunu, açık dünya RPG, hava trafik simülatörü, Minecraft modu, web arayüzü — yeni bir şey öğrenmek için yeni bir proje başlatırım.</p>
+        <span class="trait-big">∞</span>
       </article>
-      <article class="trait">
-        <span class="trait-num">04</span>
-        <h3>Türkçe geliştiririm</h3>
-        <p>Oyunlarımın, modumun ve uygulamamın hepsi Türkçe; arayüzden eşya ve yaratık isimlerine kadar.</p>
+      <article class="trait" style="--tc:rgba(227,10,23,.2)">
+        <div class="trait-top"><span class="trait-num">04 / Kimlik</span><div class="trait-icon ic-tr">☾</div></div>
+        <h3>Türkçeye sadığım</h3>
+        <p>Oyunlarımda, modlarımda ve arayüzlerimde her şey özenle Türkçe. “Badem Suyu”ndan “Yarık Kılıcı”na kadar her isim bilinçli bir tercih.</p>
+        <span class="trait-big">TR</span>
       </article>
     </div>
   </section>
 
   <!-- JOURNEY -->
   <section id="yolculuk" data-morph="2" data-gx="0" data-alpha=".5" data-name="Yolculuk">
-    <div class="eyebrow">05 · Süreç</div>
-    <h2 class="h2 split-lines">Geliştirme <em>Süreci</em></h2>
+    <div class="eyebrow">Yolculuk — 05</div>
+    <h2 class="h2 split-lines">Bölüm <em>Bölüm</em></h2>
     <div class="journey-wrap">
       <div class="j-line"><i></i></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 01 · 14 Ekim</div><h4>Kaset Kaydı Başlıyor</h4><p>İlk 3D korku oyunum: Backrooms evreninde bulunmuş bir VHS kaseti. Three.js ile ilk ciddi dünyam.</p></div></div>
@@ -965,17 +970,17 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 05 · 24 Ekim</div><h4>Java'ya Geçiş</h4><p>Skin Stealer v1.2.0: Minecraft 1.20.1 Forge modu. Backrooms seviyeleri, akıl sağlığı sistemi ve oyuncu taklidi yapan bir varlık.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 06 · 25 Ekim</div><h4>Şafak</h4><p>Küllerin Saltanatı final sürümüne ulaştı, Portal Silahı Update 6'yı aldı. Boss savaşları, yeni evrenler, daha fazla kaos.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 07 · 26 Ekim</div><h4>Cila Günü</h4><p>Backrooms Update 15'i, AeroSim havayolu yönetimiyle Update 4'ü, Aetheria daha akıcı animasyonlar ve mobil uyumla Update 1'i aldı.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero tarzında bir keşif oyunu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 08 · 27 Ekim</div><h4>Aero Drift</h4><p>Frutiger Aero estetiğine bir aşk mektubu: çayırlar, cam bir şehir, uçan adalar ve kendi film müziği. Aynı gün iki güncelleme aldı.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim</div><h4>Yeni Sahneler</h4><p>Portal Silahı, Aero Drift ve Skin Stealer yeni hallerine kavuştu; proje kartları baştan çizilen detaylı sahnelerle yenilendi.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 10 · 3 Kasım</div><h4>Pardux</h4><p>Tarayıcının dışına ilk adım: Türkçe konuşan, ekranın üstünde dinamik ada olarak yaşayan bir Windows asistanı. Site de daha sade kartlarla yenilendi.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 11 · 5 Kasım</div><h4>Skin Stealer 3.0</h4><p>Mod 2.0 ve 3.0 sürümleriyle büyüdü: on kabus, bir final savaşı, beş Backrooms seviyesi ve yeni yaratıklar.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 11 · 5 Kasım — Şimdi</div><h4>Skin Stealer 3.0</h4><p>Mod 2.0 ve 3.0 sürümleriyle büyüdü: on kabus, bir final savaşı, beş Backrooms seviyesi ve yeni yaratıklar. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
   <!-- SKILLS -->
   <section class="skills" data-morph="2" data-gx="0" data-alpha=".5" data-name="Yetenekler">
     <div class="inner">
-      <div class="eyebrow">06 · Araçlar</div>
+      <div class="eyebrow">Alet Çantası — 06</div>
       <h2 class="h2 split-lines">Kullandığım <em>Araçlar</em></h2>
     </div>
     <div class="skills-rows">
@@ -992,12 +997,12 @@ footer a{color:var(--fg)}
 
   <!-- CONTACT -->
   <section class="contact" id="iletisim" data-morph="3" data-gx="0" data-alpha="1" data-name="İletişim">
-    <div class="eyebrow">07 · İletişim</div>
-    <h2 class="contact-big"><span class="row split">Birlikte</span><span class="row split">çalışalım</span></h2>
-    <p class="lead fade-up">Bir proje fikrin, önerin ya da sorun varsa e-posta gönderebilirsin.</p>
-    <a href="mailto:yalcinemir234@gmail.com" class="cta magnetic" data-cursor="label" data-label="Yaz"><span>E-posta<br>gönder</span></a>
+    <div class="eyebrow">İletişim — 07</div>
+    <h2 class="contact-big"><span class="row split">Bir dünya</span><span class="row split">kuralım</span></h2>
+    <p class="lead fade-up">Aklında bir oyun, bir simülasyon ya da sıra dışı bir web deneyimi mi var? Portal açık — bir mesaj yeter.</p>
+    <a href="mailto:yalcinemir234@gmail.com" class="cta magnetic" data-cursor="label" data-label="Yaz"><span>Merhaba<br>de →</span></a>
     <div class="socials">
-      <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" class="btn solid magnetic" data-cursor="link"><span>GitHub</span></a>
+      <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" class="btn solid magnetic" data-cursor="link"><span>GitHub ↗ @Tyrstana</span></a>
       <a href="#" class="btn magnetic" data-cursor="link" id="copyMail"><span>E-postayı kopyala</span></a>
       <a href="#projeler" class="btn magnetic" data-cursor="link"><span>Projelere dön</span></a>
     </div>
@@ -1005,7 +1010,8 @@ footer a{color:var(--fg)}
 </main>
 
 <footer>
-  <span>© 2026 Emir Yalçın</span>
+  <span>© 2026 Emir Yalçın — elle kodlandı</span>
+  <span class="egg">İpucu: klavyede <kbd>backrooms</kbd> ya da <kbd>frutiger</kbd> yaz</span>
   <a href="https://github.com/Tyrstana" target="_blank" rel="noopener" data-cursor="link" style="color:var(--fg)">github.com/Tyrstana ↗</a>
   <button id="toTop" data-cursor="link">Başa dön ↑</button>
 </footer>
@@ -2494,7 +2500,7 @@ let toastT;
 function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('show'), 2400); }
 $('#copyMail').addEventListener('click', e => {
   e.preventDefault();
-  const done = () => showToast('E-posta kopyalandı');
+  const done = () => showToast('E-posta kopyalandı ✦');
   navigator.clipboard ? navigator.clipboard.writeText(EMAIL).then(done, done) : done();
 });
 
@@ -2845,7 +2851,7 @@ const named = sections.filter(x => x.dataset.name);
 function applySection(s) {
   if (s.dataset.name) {
     $('#hudIdx').textContent = String(named.indexOf(s) + 1).padStart(2, '0');
-    $('#hudName').textContent = s.dataset.name;
+    const hn = $('#hudName'); hn.dataset.orig = s.dataset.name; hn.textContent = s.dataset.name; scramble(hn);
     $$('.nav ul a').forEach(a => a.classList.toggle('active', !!s.id && a.getAttribute('href') === '#' + s.id));
   }
 }
@@ -2924,6 +2930,7 @@ lineHeads.forEach(({ el, words }) => {
   gsap.from(words, { yPercent: 115, rotateX: -80, opacity: 0, duration: 1.3, ease: 'expo.out', stagger: .07, scrollTrigger: { trigger: el, start: 'top 88%' } });
 });
 $$('.eyebrow').forEach(el => {
+  ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => scramble(el) });
   gsap.from(el, { opacity: 0, x: -20, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
 });
 $$('.fade-up').forEach(el => gsap.from(el, { opacity: 0, y: 40, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
