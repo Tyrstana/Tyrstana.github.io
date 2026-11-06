@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 5 Kasım 2026 arasında, 23 günde 63 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 6 Kasım 2026 arasında, 24 günde 68 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -68,7 +68,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 5, 2026: 63 releases in 23 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 6, 2026: 68 releases in 24 days.
 
 ### Projects
 
