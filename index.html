@@ -488,13 +488,13 @@ html.nocursor a,html.nocursor button{cursor:pointer}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(24,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(26,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(24,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(26,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -885,7 +885,7 @@ footer a{color:var(--fg)}
   <div class="stats" data-morph="1" data-gx="0">
     <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="24">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="26">0</span></div><p>Günde çıkan tüm bu iş</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
@@ -911,9 +911,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">24 Gün, <em>68</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">26 Gün, <em>78</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 6 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 8 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -974,7 +974,8 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 09 · 28 Ekim</div><h4>Yeni Sahneler</h4><p>Portal Silahı, Aero Drift ve Skin Stealer yeni hallerine kavuştu; proje kartları baştan çizilen detaylı sahnelerle yenilendi.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 10 · 3 Kasım</div><h4>Pardux</h4><p>Tarayıcının dışına ilk adım: Türkçe konuşan, ekranın üstünde dinamik ada olarak yaşayan bir Windows asistanı. Site de daha sade kartlarla yenilendi.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 11 · 5 Kasım</div><h4>Skin Stealer 3.0</h4><p>Mod 2.0 ve 3.0 sürümleriyle büyüdü: on kabus, bir final savaşı, beş Backrooms seviyesi ve yeni yaratıklar.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 12 · 6 Kasım — Şimdi</div><h4>Skin Stealer 3.2</h4><p>Backrooms seviyeleri baştan inşa edildi: sütunlu sarı salonlar, parti odaları, şelaleli havuzlar, sonsuz otopark ve çökmüş ofis katları. Yeni Bakteri modeli ve yeni sesler. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 12 · 6 Kasım</div><h4>Skin Stealer 3.2</h4><p>Backrooms seviyeleri baştan inşa edildi: sütunlu sarı salonlar, parti odaları, şelaleli havuzlar, sonsuz otopark ve çökmüş ofis katları. Yeni Bakteri modeli ve yeni sesler.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 13 · 8 Kasım — Şimdi</div><h4>Skin Stealer 5.5</h4><p>İki günde on sürüm: Backrooms seviyeleri ona çıktı. Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve Seviye 94, çoğu kendi yaratığıyla. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -1035,11 +1036,11 @@ footer a{color:var(--fg)}
       <div class="install mod-panel" id="plInstall">
         <div class="mp-head">
           <div>
-            <span class="mp-k">Minecraft 1.20.1 · Forge · v3.2.0</span>
+            <span class="mp-k">Minecraft 1.20.1 · Forge · v5.5.0</span>
             <h3>Skin Stealer</h3>
-            <p>Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan bir korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve beş Backrooms seviyesi.</p>
+            <p>Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan bir korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve on Backrooms seviyesi.</p>
           </div>
-          <a class="btn solid" href="projeler/skin-stealer/skinstealer-3.2.0.jar" download data-cursor="link"><span>.jar indir · 3 MB</span></a>
+          <a class="btn solid" href="projeler/skin-stealer/skinstealer-5.5.0.jar" download data-cursor="link"><span>.jar indir · 3 MB</span></a>
         </div>
         <div class="mp-tabs" role="tablist">
           <button class="on" role="tab" aria-selected="true" data-tab="features">Özellikler</button>
@@ -1085,14 +1086,19 @@ footer a{color:var(--fg)}
             <section class="mp-group">
               <h4>Backrooms seviyeleri</h4>
               <ul>
-                <li>Dünyada nadir Backrooms sızıntıları oluşur: Seviye 0 Geçidi, Otopark, Level Fun, Havuz Odaları ve Terk Edilmiş Ofis.</li>
-                <li>İçlerindeki mor-siyah noclip yamasına düşersen o seviyeye geçersin; arkadaşların aynı yere düşer.</li>
-                <li>Kaçmak için parlayan beyaz yarığı bul. Çıkış Pusulası yönünü ve uzaklığını söyler.</li>
-                <li>Seviyelerde 15 Seviye Kaydı; okudukların Seviye Arşivine eklenir. Beşinden de kaçana Seviye Gezgini başarımı.</li>
+                <li>Dünyada nadir Backrooms sızıntıları oluşur. İçlerindeki mor-siyah noclip yamasına düşersen o yapının seviyesine geçersin; arkadaşların aynı yere düşer.</li>
+                <li>Kaçmak için parlayan beyaz yarığı bul. Çıkış Pusulası yönünü ve uzaklığını söyler. Onundan da kaçana Seviye Gezgini başarımı.</li>
+                <li>Seviyelerde 25 Seviye Kaydı; okudukların Seviye Arşivine eklenir.</li>
                 <li><b>Seviye 0:</b> sütunlu sarı salonlar, basık koridorlar ve lambaları sönmüş karanlık bölgeler.</li>
                 <li><b>Level Fun =):</b> parti odaları, top havuzu, sahne, dans pisti ve hediye piramidi.</li>
-                <li><b>Havuz Odaları:</b> dev havuz ve şelale, ışıklı tüneller, teraslı havuzlar ve gökyüzü tavanlı lagün. Canavar yok, akıl sağlığı yerine gelir.</li>
-                <li><b>Otopark ve Ofis:</b> renk bantlı sütunlu sonsuz otopark; camlı odalar, arşivler ve tavanı çökmüş ofis katları.</li>
+                <li><b>Seviye 37 · Havuz Odaları:</b> dev havuz ve şelale, ışıklı tüneller ve gökyüzü tavanlı lagün. Canavar yok, akıl sağlığı yerine gelir.</li>
+                <li><b>Seviye 1 · Otopark:</b> sekiz odalı yeraltı otoparkı. Masalardaki dört anahtarı topla, çıkışın çelik kepengini aç.</li>
+                <li><b>Seviye 4 · Terk Edilmiş Ofis:</b> camlı odalar, toplantı salonları, arşivler ve tavanı çökmüş katlar.</li>
+                <li><b>Seviye 9 · Kararmış Banliyö:</b> sabahın hiç gelmediği sisli bir mahalle. Üç evin bilgisayarında güvenlik kontrolünü bitir, M.E.G. malikanesinin bodrumundan kaç.</li>
+                <li><b>Seviye 8 · Mağara Sistemi:</b> sarkıtlar, parlayan likenler ve ametist odalarıyla zifiri karanlık tüneller. El feneri şart.</li>
+                <li><b>Seviye 3999 · Neon Cennet:</b> gecenin hiç bitmediği neon bir şehir; palmiyeler, vitrinler ve arcade salonları.</li>
+                <li><b>The End · Sonsuz Kütüphane:</b> sıcak ışıklı sonsuz raflar, kırmızı halılı koridorlar ve okuma salonları.</li>
+                <li><b>Seviye 94 · Hareket:</b> öğle güneşi altında rüya gibi bir kasaba. Güneş birden batar, gece zifiri karanlık olur.</li>
               </ul>
             </section>
             <section class="mp-group">
@@ -1100,7 +1106,12 @@ footer a{color:var(--fg)}
               <ul>
                 <li>Deri Hırsızı ve Smiler.</li>
                 <li><b>Bakteri</b> (Seviye 0): üç buçuk blok boyunda, iğne gibi ince; seni görürse koşar, basık koridorlara giremez.</li>
-                <li><b>Partici</b> (Level Fun) grup halinde dolaşır; <b>Tazı</b> (Otopark) dört ayak üstünde koşar; <b>Yüzsüz</b> (Ofis) ses çıkarmadan yaklaşır.</li>
+                <li><b>Partici</b> (Level Fun) grup halinde dolaşır; <b>Yüzsüz</b> (Ofis) ses çıkarmadan yaklaşır.</li>
+                <li><b>Otopark Deri Hırsızı:</b> kılık değiştirmeyen tek bir avcı; görünce üzerine koşar.</li>
+                <li><b>Mahalle Bekçisi</b> (Banliyö): tek gözünden projektör saçan dev; ona bakmak akıl sağlığını bitirir. <b>Wretch</b> evlerde levyeyle devriye gezer, kilitli kapıdan geçemez.</li>
+                <li><b>Dev Güve</b> (Mağara): ışığa çekilen, üzerine dalan üç blokluk güve.</li>
+                <li><b>Neon Silüet</b> (Neon Cennet): kenarları neonla parlayan, uzun boylu ve hızlı.</li>
+                <li><b>Dinleyici</b> (Kütüphane): kör kütüphaneci. Görmez, duyar; eğilerek ilerle.</li>
               </ul>
             </section>
             <section class="mp-group">
@@ -1110,14 +1121,15 @@ footer a{color:var(--fg)}
                 <li><b>Yarık Zırhı:</b> her parça akıl kaybını %15 azaltır; tam set karanlığı siler ve gizlenenleri parlatır.</li>
                 <li><b>Fotoğraf Makinesi:</b> flaş Deri Hırsızını 6 saniye sersemletir, kılık değiştirmiş olanı ifşa eder.</li>
                 <li><b>El Feneri:</b> 8 dakikalık pil; pencereden izleyen Smiler'a tutunca kaybolur.</li>
-                <li><b>Yarık Cevheri:</b> Y 0 ile 64 arasında, elmas kazmayla çıkar.</li>
+                <li><b>Yarık Cevheri:</b> Y 0 ile 64 arasında, demir ya da daha iyi bir kazmayla çıkar.</li>
               </ul>
             </section>
             <section class="mp-group">
-              <h4>İçecekler</h4>
+              <h4>İçecek ve yiyecek</h4>
               <ul>
                 <li><b>Badem Suyu:</b> +50 akıl sağlığı, kulak çınlamasını ve karanlığı siler.</li>
                 <li><b>Meyve Suyu:</b> Hız I; kabuslarda kaçarken işe yarar.</li>
+                <li><b>Enerji Barı:</b> hızlı yenir, akıl sağlığını biraz toparlar. Uzun seviyelerde yanında taşı.</li>
                 <li><b>Sancı Sıvısı:</b> akıl sağlığını anında %10'a indirir. İçmen önerilmez.</li>
               </ul>
             </section>
@@ -1132,7 +1144,7 @@ footer a{color:var(--fg)}
             <section class="mp-group">
               <h4>Diğer</h4>
               <ul>
-                <li>30 başarım ve oyun içi rehber (/ss yardım).</li>
+                <li>35 başarım ve oyun içi rehber (/ss yardım).</li>
                 <li>Ayarlanabilir: kabuslar, gece korkuları, jumpscare ve ışığa hassas oyuncular için yumuşatılmış efektler.</li>
                 <li>Tamamen Türkçe eşya ve yaratık isimleri.</li>
               </ul>
@@ -1142,7 +1154,7 @@ footer a{color:var(--fg)}
         <div class="mp-pane" data-pane="install" hidden>
           <div class="steps">
             <div class="step"><b>01</b><h4>Forge'u kur</h4><p>Minecraft <code>1.20.1</code> için Forge yükleyicisini indir ve "Install client" ile kur.</p></div>
-            <div class="step"><b>02</b><h4>Modu ekle</h4><p>İndirdiğin <code>skinstealer-3.2.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
+            <div class="step"><b>02</b><h4>Modu ekle</h4><p>İndirdiğin <code>skinstealer-5.5.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
             <div class="step"><b>03</b><h4>Oyuna gir</h4><p>Launcher'dan Forge profilini seç ve oyunu başlat. Rehber oyun içinden açılır.</p></div>
           </div>
         </div>
@@ -1185,9 +1197,9 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
-  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On kabus ve final savaşı','Beş Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v3.2.0', draw:'mc', mod:true, isNew:true,
-    desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve beş Backrooms seviyesi.',
-    chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-3.2.0.jar' },
+  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On kabus ve final savaşı','On Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v5.5.0', draw:'mc', mod:true, isNew:true,
+    desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, bir final savaşı ve on Backrooms seviyesi.',
+    chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-5.5.0.jar' },
   { title:'Pardux', accent:'#c8ff4d', plat:'Windows', feats:['Dinamik ada','"Hey Pardux" sesli komut','Çevrimdışı ses tanıma'], cat:'Masaüstü Asistanı', ver:'1.0', draw:'pardux', app:true,
     desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
     chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
@@ -1277,9 +1289,11 @@ const LOG = [
   ['3 Kas', ['Pardux — 1.0', 'Kişisel site — Update 11, 12']],
   ['4 Kas', ['Skin Stealer — v2.0.0']],
   ['5 Kas', ['Skin Stealer — v2.1.0, v2.2.0, v2.3.0, v3.0.0', 'Kişisel site — Update 13, 14']],
-  ['6 Kas', ['Skin Stealer — v3.1.0, v3.2.0', 'Kişisel site — Update 15, 16, 17']]
+  ['6 Kas', ['Skin Stealer — v3.1.0, v3.2.0', 'Kişisel site — Update 15, 16, 17']],
+  ['7 Kas', ['Skin Stealer — v4.0.0, v4.1.0, v4.2.0, v4.3.0']],
+  ['8 Kas', ['Skin Stealer — v5.0.0, v5.1.0, v5.2.0, v5.3.0, v5.4.0, v5.5.0']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
