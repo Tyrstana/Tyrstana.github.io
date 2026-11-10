@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 8 Kasım 2026 arasında, 26 günde 78 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 10 Kasım 2026 arasında, 28 günde 85 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -35,7 +35,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Küllerin Saltanatı** | Birinci şahıs açık dünya dark fantasy RPG | PC · Mobil |
 | **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
 
-- **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, Kabusların Efendisi ile final savaşı ve on Backrooms seviyesi (Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve daha fazlası).
+- **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on kabus, Kabusların Efendisi ile final savaşı ve on Backrooms seviyesi (Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve daha fazlası) ve End portalının ardında gizli bir son.
 - **Pardux:** Alt+Space ile açılır, ekranın üstünde dinamik ada olarak yaşar. Müzik, hatırlatıcı, hava durumu, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları; ses tanıma çevrimdışı çalışır.
 - **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet. Uçan adalar, monoray, Aero OS bilgisayarları, halka yarışı ve kendi film müziği.
 - **Backrooms: Kaset #1994:** Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu.
@@ -68,7 +68,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 8, 2026: 78 releases in 26 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 10, 2026: 85 releases in 28 days.
 
 ### Projects
 
@@ -83,7 +83,7 @@ This repository hosts my personal website and the latest version of each project
 | **Küllerin Saltanatı** | First-person open-world dark fantasy RPG | PC · Mobile |
 | **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
 
-- **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, ten nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels (a darkened suburb, a cave system, a neon city, an endless library and more).
+- **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, ten nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels (a darkened suburb, a cave system, a neon city, an endless library and more) and a secret ending behind the End portal.
 - **Pardux:** Opens with Alt+Space and lives at the top of the screen as a dynamic island. Music, reminders, weather, exchange rates, WhatsApp messages and "Hey Pardux" voice commands; speech recognition works offline.
 - **Aero Drift:** Glide over meadows and explore a glass city. Floating islands, a monorail, Aero OS computers, ring races and an original soundtrack.
 - **Backrooms: Kaset #1994:** A first-person horror game set in endless fluorescent-lit corridors, watched through a found VHS tape.
