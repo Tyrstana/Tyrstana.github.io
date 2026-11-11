@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b78c8">
-<title>Aero Drift — Güncelleme 4</title>
+<title>Aero Drift — Güncelleme 5</title>
 <style>
   :root{ --ink:#0b3a63; }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -353,6 +353,9 @@
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:bob 1.2s ease-in-out infinite alternate}
   #t-act span{position:relative;overflow:hidden;text-overflow:ellipsis}
   #t-pause{right:calc(12px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:16px}
+  #t-board{right:calc(108px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:19px}
+  #t-night{right:calc(156px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:17px}
+  .seg.time button{padding:7px 14px}
   #t-fs{right:calc(60px + env(safe-area-inset-right));top:calc(124px + env(safe-area-inset-top));width:42px;height:42px;font-size:17px}
   #t-race{left:50%;top:calc(76px + env(safe-area-inset-top));transform:translateX(-50%);border-radius:999px;height:34px;padding:0 14px;font-size:12.5px}
   #rotate{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;
@@ -474,6 +477,7 @@
   </div>
   <div class="hud-hint glass">
     <span class="key">E</span> etkileşim &nbsp; <span class="key">V</span> kamera &nbsp; <span class="key">Q</span> el salla<br>
+    <span class="key">B</span> hover kaykay &nbsp; <span class="key">T</span> gece/gündüz &nbsp; <span class="key">R</span> yarışı bırak<br>
     <span class="key">Boşluk</span> zıpla/süzül &nbsp; <span class="key">Shift</span> hız &nbsp; <span class="key">Esc</span> menü
   </div>
   <div id="prompt" class="glass hidden"></div>
@@ -494,6 +498,8 @@
   <div class="tb-btn green" id="t-run">HIZ</div>
   <div class="tb-btn silver" id="t-cam">🎥</div>
   <div class="tb-btn silver" id="t-wave">👋</div>
+  <div class="tb-btn silver hidden" id="t-board">🛹</div>
+  <div class="tb-btn silver" id="t-night">🌙</div>
   <div class="tb-btn orange hidden" id="t-act"><span></span></div>
   <div class="tb-btn silver" id="t-pause">❚❚</div>
   <div class="tb-btn silver" id="t-fs">⛶</div>
@@ -520,6 +526,8 @@
           <button class="btn silver small" id="b-help"><span>Nasıl Oynanır</span></button>
           <button class="btn silver small" id="b-settings"><span>Ayarlar</span></button>
           <button class="btn silver small" id="b-fs"><span>⛶ Tam Ekran</span></button>
+        </div>
+        <div class="row" style="align-items:center;gap:8px;font-weight:700;color:#2a6694;font-size:13px"><span>Zaman:</span><div class="seg time"><button data-time="day">☀️ Gündüz</button><button data-time="night">🌙 Gece</button></div>
         </div>
       </div>
       <div class="footnote">Çayırda süzül · cam şehri keşfet · binalara gir · bilgisayarları kullan</div>
@@ -551,7 +559,9 @@
         <span><span class="key">E</span></span><span>Etkileşim: bilgisayar, asansör, monoray, makineler, sohbet…</span>
         <span><span class="key">Q</span></span><span>El salla (yakındaki arkadaşlar karşılık verir)</span>
         <span><span class="key">H</span> · <span class="key">N</span></span><span>Arayüzü gizle (fotoğraf modu) · müziği aç/kapat</span>
-        <span><span class="key">R</span></span><span>Devam eden Halka Yarışını iptal et</span>
+        <span><span class="key">R</span></span><span>Halka Yarışını / Trambolin yarışmasını iptal et</span>
+        <span><span class="key">B</span></span><span>Hover Kaykaya bin/in (önce AVM ya da sahilden al) — suyun üstünde kayar</span>
+        <span><span class="key">T</span></span><span>Gece ⇄ Gündüz (evindeki yatakta uyuyarak da olur)</span>
         <span><span class="key">1</span><span class="key">2</span><span class="key">3</span></span><span>İlgili görevi iptal et (yerine yenisi gelir)</span>
         <span><span class="key">Esc</span></span><span>Duraklat</span>
       </div>
@@ -567,6 +577,14 @@
         <div>🚝 Monoray: şehrin etrafında tur at</div>
         <div>🏁 Halka Yarışı: çayırdaki başlangıç pisti</div>
         <div>🏝️ Uçan adalar &amp; hazine sandıkları</div>
+        <div>🛍️ Aero Plaza AVM: şapkalar, kaykay, dondurma</div>
+        <div>🎡 Bulut Dolabı &amp; 🦢 Kuğu Parkı tekneleri</div>
+        <div>🤸 Trambolin Kulesi yarışması</div>
+        <div>🌱 Bulut Bahçesi serası · 🎬 sinema</div>
+        <div>🏠 Evin: yatakta uyu, gece/gündüz değişsin</div>
+        <div>🏖️ Aero Sahil, deniz feneri, yunuslar</div>
+        <div>💎 Kristal Vadisi &amp; kristal parçaları</div>
+        <div>✨ Gece: ateş böcekleri, kuzey ışıkları</div>
       </div>
       <button class="btn small" data-back>Geri</button>
     </div>
@@ -601,6 +619,7 @@
       <div class="setting"><span>Uyarlanabilir çözünürlük (FPS düşünce)</span><input type="checkbox" id="s-adaptive"></div>
       <div class="setting"><span>FPS göstergesi</span><input type="checkbox" id="s-fps"></div>
       <div class="setting"><span>Oyuna başlarken tam ekran</span><input type="checkbox" id="s-autofs"></div>
+      <div class="setting"><span>Zaman</span><div class="seg time"><button data-time="day">☀️ Gündüz</button><button data-time="night">🌙 Gece</button></div></div>
       <button class="btn small" data-back>Kaydet ve Dön</button>
     </div>
   </div>
@@ -616,6 +635,7 @@
         <button class="btn" id="b-resume"><span>▶ Devam Et</span></button>
         <button class="btn silver hidden" id="b-cancelrace"><span>🏁 Yarışı İptal Et</span></button>
         <button class="btn silver" id="b-rerollq"><span>↻ Görevleri Yenile</span></button>
+        <button class="btn silver" id="b-pnight"><span>🌙 Gece / ☀️ Gündüz</span></button>
         <button class="btn silver" id="b-pach"><span>🏆 Başarımlar</span></button>
         <button class="btn silver" id="b-psettings"><span>Ayarlar</span></button>
         <button class="btn silver" id="b-quit"><span>Ana Menü</span></button>
@@ -689,7 +709,10 @@ function saveJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } ca
 // touch devices get on-screen controls, lighter default graphics and auto fullscreen
 const IS_TOUCH = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && !matchMedia('(pointer: fine)').matches);
 if (IS_TOUCH) document.body.classList.add('touch');
-const settings = Object.assign({ quality: IS_TOUCH ? 'mid' : 'high', sens: 1, fov: IS_TOUCH ? 70 : 66, music: 0.6, sfx: 0.8, invertY: false, color: 0, adaptive: true, fpsShow: false, autoFs: IS_TOUCH }, loadJSON('aeroDrift.settings'));
+const settings = Object.assign({ quality: IS_TOUCH ? 'low' : 'mid', sens: 1, fov: IS_TOUCH ? 70 : 66, music: 0.6, sfx: 0.8, invertY: false, color: 0, adaptive: true, fpsShow: false, autoFs: IS_TOUCH, time: 'day', hat: '', v: 0 }, loadJSON('aeroDrift.settings'));
+// update 5 re-tuned the quality presets: older saves start again from the recommended preset
+if (settings.v < 5) { settings.quality = IS_TOUCH ? 'low' : 'mid'; settings.adaptive = true; settings.v = 5; }
+const owned = Object.assign({ board: false, hats: [] }, loadJSON('aeroDrift.owned'));
 const best = Object.assign({ time: 0, zen: 0, race: 0 }, loadJSON('aeroDrift.best'));
 let wallet = loadJSON('aeroDrift.wallet', 0) | 0;
 const achUnlocked = loadJSON('aeroDrift.ach', {});
@@ -718,19 +741,26 @@ const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;
 
-const WATER_Y = 0, LAKE = { x: -140, z: -30, r: 60 }, WORLD_R = 520;
-const CITY = { x: 230, z: -230, r: 130, y: 2 };
+const WATER_Y = 0, LAKE = { x: -140, z: -30, r: 60 }, WORLD_R = 700;
+// the city keeps its old inner core (r < 130) and gains an outer district out to r = 210
+const CITY = { x: 230, z: -230, r: 210, y: 2 };
 const SPAWN = { x: 0, z: 40 };
-const SKYLINE = { x: 860, z: -860 };
+const SKYLINE = { x: 1010, z: -1010 };
+const SEA = { x: -620, z: 330, r: 330 };       // Aero Sahil: bay + beach in the north-west
+const CRYSTAL = { x: 70, z: 560, r: 95 };      // Kristal Vadisi in the north
 function lakeF(x, z) { const d = Math.hypot(x - LAKE.x, z - LAKE.z); return 1 - smooth(LAKE.r * 0.35, LAKE.r, d); }
 function cityF(x, z) { return 1 - smooth(CITY.r + 2, CITY.r + 70, Math.hypot(x - CITY.x, z - CITY.z)); }
+function seaF(x, z) { return 1 - smooth(SEA.r - 80, SEA.r + 15, Math.hypot(x - SEA.x, z - SEA.z)); }
+function crystalF(x, z) { return 1 - smooth(45, CRYSTAL.r + 10, Math.hypot(x - CRYSTAL.x, z - CRYSTAL.z)); }
 function heightAt(x, z) {
   let h = (fbm(x * 0.007 + 11.3, z * 0.007 - 4.1) - 0.42) * 26 + (vnoise(x * 0.045, z * 0.045) - 0.5) * 2.2;
   const ds = Math.hypot(x - SPAWN.x, z - SPAWN.z);
   h = 2 + (h - 2) * smooth(10, 55, ds);
   const lk = lakeF(x, z); h = h * (1 - lk) - 6 * lk;
   const cf = cityF(x, z); h = h * (1 - cf) + CITY.y * cf;
-  h += smooth(545, 690, Math.hypot(x, z)) * 30;
+  const cv = crystalF(x, z) * 0.75; h = h * (1 - cv) + 1.5 * cv;
+  const sf = seaF(x, z); h = h * (1 - sf) - 9 * sf;
+  h += smooth(740, 880, Math.hypot(x, z)) * 30 * (1 - sf);
   return h;
 }
 const surfaceAt = (x, z) => Math.max(heightAt(x, z), WATER_Y);
@@ -741,7 +771,8 @@ const CX = (x) => CITY.x + x, CZ = (z) => CITY.z + z;
 /* ============================================================
    Renderer / scene
    ============================================================ */
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+// MSAA is only used when bloom is off (the post-processing chain renders without it), so skip it on phones
+const renderer = new THREE.WebGLRenderer({ antialias: !IS_TOUCH, powerPreference: 'high-performance', stencil: false });
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NeutralToneMapping;
@@ -794,6 +825,21 @@ const windowTex = canvasTex(128, 128, (g, s) => {
   for (let i = 0; i < 30; i++) { g.fillStyle = `rgba(255,255,255,${Math.random() * .4})`; g.fillRect(Math.floor(Math.random() * 4) * 32, Math.floor(Math.random() * 8) * 16 + 3, 32, 13); }
 });
 windowTex.wrapS = windowTex.wrapT = THREE.RepeatWrapping;
+// lit windows used as emissive map at night (dark by day: emissiveIntensity 0)
+const windowLitTex = canvasTex(128, 128, (g, s) => {
+  g.fillStyle = '#000'; g.fillRect(0, 0, s, s);
+  for (let x = 0; x < 4; x++) for (let y = 0; y < 8; y++) {
+    if (Math.random() < 0.45) continue;
+    g.fillStyle = pick(['#ffe9b0', '#bff3ff', '#9fe8ff', '#fff4d6', '#c8ffd8']);
+    g.globalAlpha = 0.55 + Math.random() * 0.45; g.fillRect(x * 32 + 3, y * 16 + 5, 26, 9);
+  }
+  g.globalAlpha = 1;
+});
+windowLitTex.wrapS = windowLitTex.wrapT = THREE.RepeatWrapping;
+function winMat(color, metalness, roughness, env) {
+  const m = new THREE.MeshStandardMaterial({ color, metalness, roughness, map: windowTex, envMapIntensity: env, emissive: 0xffffff, emissiveMap: windowLitTex, emissiveIntensity: 0 });
+  m.userData.win = true; return m;
+}
 const tileTex = canvasTex(256, 256, (g, s) => {
   g.fillStyle = '#f2f7fa'; g.fillRect(0, 0, s, s);
   for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
@@ -819,20 +865,38 @@ const earthTex = canvasTex(512, 256, (g, w, h) => {
 });
 
 /* ---------- sky ---------- */
+// sky colours are uniforms so the same shader draws the day sky and the "night Frutiger Aero" sky
+// (deep teal gradient, stars, a soft aurora and a glowing moon)
+const SKY_DAY = { top: new THREE.Vector3(0.03, 0.28, 0.80), mid: new THREE.Vector3(0.17, 0.56, 0.96), hor: new THREE.Vector3(0.80, 0.94, 1.0), sun: new THREE.Vector3(1.0, 0.98, 0.9), ground: new THREE.Vector3(0.38, 0.66, 0.22) };
+const SKY_NIGHT = { top: new THREE.Vector3(0.005, 0.02, 0.09), mid: new THREE.Vector3(0.02, 0.09, 0.24), hor: new THREE.Vector3(0.07, 0.26, 0.40), sun: new THREE.Vector3(0.75, 0.88, 1.0), ground: new THREE.Vector3(0.04, 0.12, 0.10) };
 function skyMaterial(withGround) {
   return new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false,
-    uniforms: { sunDir: { value: SUN_DIR }, ground: { value: withGround ? 1 : 0 } },
+    uniforms: {
+      sunDir: { value: SUN_DIR }, ground: { value: withGround ? 1 : 0 }, uTime: timeU, uNight: { value: 0 },
+      uTop: { value: SKY_DAY.top.clone() }, uMid: { value: SKY_DAY.mid.clone() }, uHor: { value: SKY_DAY.hor.clone() }, uSun: { value: SKY_DAY.sun.clone() }, uGround: { value: SKY_DAY.ground.clone() }
+    },
     vertexShader: `varying vec3 vD; void main(){ vD = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
-    fragmentShader: `varying vec3 vD; uniform vec3 sunDir; uniform float ground;
+    fragmentShader: `varying vec3 vD; uniform vec3 sunDir; uniform float ground, uTime, uNight; uniform vec3 uTop, uMid, uHor, uSun, uGround;
+      float hash3(vec3 p){ p = fract(p*0.3183099 + 0.1); p *= 17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
       void main(){
         vec3 d = normalize(vD); float h = d.y;
-        vec3 top = vec3(0.03,0.28,0.80), mid = vec3(0.17,0.56,0.96), hor = vec3(0.80,0.94,1.0);
-        vec3 c = mix(hor, mid, smoothstep(0.0,0.24,h));
-        c = mix(c, top, smoothstep(0.24,0.9,h));
-        if(h<0.0){ c = mix(hor, mix(hor, vec3(0.38,0.66,0.22), ground), smoothstep(0.0,-0.12,h)); }
+        vec3 c = mix(uHor, uMid, smoothstep(0.0,0.24,h));
+        c = mix(c, uTop, smoothstep(0.24,0.9,h));
+        if(h<0.0){ c = mix(uHor, mix(uHor, uGround, ground), smoothstep(0.0,-0.12,h)); }
         float s = max(dot(d, normalize(sunDir)), 0.0);
-        c += vec3(1.0,0.98,0.9)*(pow(s,900.0)*3.0 + pow(s,60.0)*0.35 + pow(s,8.0)*0.10);
+        float disk = mix(pow(s,900.0)*3.0, smoothstep(0.9993,0.9996,s)*1.6, uNight);
+        c += uSun*(disk + pow(s,60.0)*mix(0.35,0.25,uNight) + pow(s,8.0)*mix(0.10,0.05,uNight));
+        if(uNight > 0.01){
+          vec3 q = floor(d*380.0);
+          float st = step(0.9965, hash3(q)) * smoothstep(0.02, 0.25, h);
+          float tw = 0.6 + 0.4*sin(uTime*2.0 + hash3(q+7.0)*40.0);
+          c += vec3(0.85,0.95,1.0) * st * tw * uNight * 1.4;
+          float ang = atan(d.z, d.x);
+          float band = exp(-pow((h - 0.32 - 0.07*sin(ang*3.0 + uTime*0.05))*6.5, 2.0));
+          float wav = 0.5 + 0.5*sin(ang*11.0 + uTime*0.18 + 2.0*sin(ang*4.0 - uTime*0.07));
+          c += (vec3(0.08,0.85,0.55)*wav*0.30 + vec3(0.15,0.45,1.0)*0.10) * band * uNight;
+        }
         gl_FragColor = vec4(pow(c, vec3(2.2)), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -847,19 +911,32 @@ sunSprite.scale.setScalar(760); sunSprite.material.opacity = 0.85;
 scene.add(sunSprite);
 
 const pmrem = new THREE.PMREMGenerator(renderer);
-{
+// reflection environment for glossy materials; day and night versions are built once and cached
+const envCache = {};
+function buildEnv(night) {
+  const key = night ? 'n' : 'd';
+  if (envCache[key]) return envCache[key];
   const envScene = new THREE.Scene();
-  envScene.add(new THREE.Mesh(new THREE.SphereGeometry(50, 32, 16), skyMaterial(true)));
-  const cm = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const sm = skyMaterial(true); setSkyUniforms(sm, night ? 1 : 0);
+  envScene.add(new THREE.Mesh(new THREE.SphereGeometry(50, 32, 16), sm));
+  const cm = new THREE.MeshBasicMaterial({ color: night ? 0x1a3550 : 0xffffff });
   for (let i = 0; i < 14; i++) {
     const a = i / 14 * Math.PI * 2, m = new THREE.Mesh(new THREE.SphereGeometry(rr(3, 6), 12, 8), cm);
     m.position.set(Math.cos(a) * 40, rr(4, 14), Math.sin(a) * 40); m.scale.y = 0.6; envScene.add(m);
   }
-  const sunM = new THREE.Mesh(new THREE.SphereGeometry(2.5, 12, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(8, 8, 7) }));
+  const sunM = new THREE.Mesh(new THREE.SphereGeometry(night ? 1.6 : 2.5, 12, 8), new THREE.MeshBasicMaterial({ color: night ? new THREE.Color(3, 3.5, 4) : new THREE.Color(8, 8, 7) }));
   sunM.position.copy(SUN_DIR).multiplyScalar(40); envScene.add(sunM);
-  scene.environment = pmrem.fromScene(envScene, 0.015).texture;
-  scene.environmentIntensity = 0.8;
+  if (night) for (let i = 0; i < 10; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.5, 2.2, 2.6) })); const a = i / 10 * 6.28; m.position.set(Math.cos(a) * 42, -2, Math.sin(a) * 42); envScene.add(m); }
+  envCache[key] = pmrem.fromScene(envScene, 0.015).texture;
+  return envCache[key];
 }
+function setSkyUniforms(m, k) {
+  const u = m.uniforms;
+  ['top', 'mid', 'hor', 'sun', 'ground'].forEach(n => u['u' + n[0].toUpperCase() + n.slice(1)].value.copy(SKY_DAY[n]).lerp(SKY_NIGHT[n], k));
+  u.uNight.value = k;
+}
+scene.environment = buildEnv(false);
+scene.environmentIntensity = 0.8;
 
 const hemi = new THREE.HemisphereLight(0xd2ecff, 0x6fa045, 0.8);
 scene.add(hemi);
@@ -881,9 +958,9 @@ const M = {
   pearl: phys(0xdcebf4, { roughness: 0.32, envMapIntensity: 1.0 }),
   aquaGlass: glassM(0x8fdcff, 0.3),
   greenGlass: glassM(0xb4f79a, 0.32),
-  tower: new THREE.MeshStandardMaterial({ color: 0xd6efff, metalness: 0.55, roughness: 0.12, map: windowTex, envMapIntensity: 1.5 }),
-  towerG: new THREE.MeshStandardMaterial({ color: 0xc8f7d6, metalness: 0.55, roughness: 0.12, map: windowTex, envMapIntensity: 1.5 }),
-  towerB: new THREE.MeshStandardMaterial({ color: 0x9fd8ff, metalness: 0.6, roughness: 0.1, map: windowTex, envMapIntensity: 1.6 }),
+  tower: winMat(0xd6efff, 0.55, 0.12, 1.5),
+  towerG: winMat(0xc8f7d6, 0.55, 0.12, 1.5),
+  towerB: winMat(0x9fd8ff, 0.6, 0.1, 1.6),
   chrome: new THREE.MeshStandardMaterial({ color: 0xf0f7ff, metalness: 1, roughness: 0.14 }),
   lawn: std(0x6fd03a, 0.8),
   bush: phys(0x4fc22c, { roughness: 0.4, clearcoat: 0.5 }),
@@ -901,8 +978,16 @@ const M = {
 };
 M.water.userData.noCast = true; M.glow.userData.noCast = true; M.glowAqua.userData.noCast = true;
 // non-shadow-casting twins: used for building ceilings/upper floors so sunlight still reaches interiors
-const noCastMat = m => { if (!m.userData.nc) { const c = m.clone(); c.userData.noCast = true; m.userData.nc = c; } return m.userData.nc; };
+const NC_BASE = new WeakMap();
+const noCastMat = m => { if (!m.userData.nc) { const c = m.clone(); c.userData.noCast = true; m.userData.nc = c; NC_BASE.set(c, m); } return m.userData.nc; };
 M.ceil = noCastMat(M.white);
+// Palette materials: static batched geometry that only differs by colour is merged into one
+// vertex-coloured material, so each map chunk needs far fewer draw calls.
+const PAL = { phys: phys(0xffffff, { vertexColors: true, roughness: 0.26, envMapIntensity: 1.05 }), std: std(0xffffff, 0.75, { vertexColors: true }) };
+PAL.physNC = noCastMat(PAL.phys); PAL.stdNC = noCastMat(PAL.std);
+const PALETTE = new Map();
+['white', 'pearl', 'aqua', 'lime', 'orange', 'pink', 'yellow', 'purple', 'red', 'bush', 'bush2'].forEach(k => PALETTE.set(M[k], 'phys'));
+['lawn', 'wood', 'sand', 'earth', 'rock', 'trunk', 'fabric', 'fabricG', 'fabricO', 'dark'].forEach(k => PALETTE.set(M[k], 'std'));
 // lake/fountain waves on the GPU (was a per-frame CPU vertex loop + normal recompute)
 M.water.onBeforeCompile = s => {
   s.uniforms.uTime = timeU;
@@ -928,8 +1013,15 @@ class Batch {
     _m4.compose(_p4.set(x, y, z), _q4.setFromEuler(_e4.set(rx, ry, rz)), _s4.set(sx, sy, sz));
     g.applyMatrix4(_m4);
     for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv') g.deleteAttribute(k);
+    const nc = NC_BASE.has(mat), pal = PALETTE.get(nc ? NC_BASE.get(mat) : mat);
+    if (pal) {
+      const c = mat.color, n = g.attributes.position.count, col = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) { col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b; }
+      g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      mat = pal === 'phys' ? (nc ? PAL.physNC : PAL.phys) : (nc ? PAL.stdNC : PAL.std);
+    }
     // group by material AND 48 m map chunk, so merged meshes stay small enough to be frustum-culled
-    const key = mat.uuid + '|' + Math.floor(x / 96) + '|' + Math.floor(z / 96);
+    const key = mat.uuid + '|' + Math.floor(x / 160) + '|' + Math.floor(z / 160);
     let e = this.map.get(key); if (!e) { e = { mat, list: [] }; this.map.set(key, e); } e.list.push(g);
   }
   build(parent) {
@@ -1061,6 +1153,7 @@ const updrafts = [];
 const drops = [], orbs = [], bubbles = [], rings = [];
 const butterflies = [], fishes = [];
 const interactables = [];
+const cullList = [];   // [object, maxDistance]: small decor hidden when far away (fewer draw calls)
 const npcs = [];
 let grassGeo, grassMat, GRASS_N = 70000;
 
@@ -1071,7 +1164,7 @@ function buildTerrain() {
   const SIZE = 2400, SEG = 280;
   const g = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG); g.rotateX(-Math.PI / 2);
   const p = g.attributes.position, cols = new Float32Array(p.count * 3);
-  const c = new THREE.Color(), g1 = new THREE.Color(0x4fae25), g2 = new THREE.Color(0x9be343), sand = new THREE.Color(0xeee2a8), wet = new THREE.Color(0x3aa58e), far = new THREE.Color(0x6cc23a), pave = new THREE.Color(0xcfdde6);
+  const c = new THREE.Color(), g1 = new THREE.Color(0x4fae25), g2 = new THREE.Color(0x9be343), sand = new THREE.Color(0xeee2a8), wet = new THREE.Color(0x3aa58e), far = new THREE.Color(0x6cc23a), pave = new THREE.Color(0xcfdde6), mint = new THREE.Color(0x7fe0c0);
   for (let i = 0; i < p.count; i++) {
     const x = p.getX(i), z = p.getZ(i), h = heightAt(x, z);
     p.setY(i, h);
@@ -1079,20 +1172,22 @@ function buildTerrain() {
     c.copy(g1).lerp(g2, clamp(n * 0.85 + h / 40, 0, 1));
     const lk = lakeF(x, z);
     if (lk > 0.02) { c.lerp(sand, clamp((1.6 - h) / 1.6, 0, 1) * smooth(0.02, 0.25, lk)); if (h < -0.6) c.lerp(wet, clamp((-0.6 - h) / 2, 0, 1)); }
-    const dr = Math.hypot(x, z); if (dr > 560) c.lerp(far, smooth(560, 800, dr) * 0.5);
+    const dr = Math.hypot(x, z); if (dr > 740) c.lerp(far, smooth(740, 960, dr) * 0.5);
+    const sf = seaF(x, z); if (sf > 0.01 || (h < 3.5 && Math.hypot(x - SEA.x, z - SEA.z) < SEA.r + 40)) { c.lerp(sand, clamp((3.5 - h) / 2.5, 0, 1)); if (h < -0.4) c.lerp(wet, clamp((-0.4 - h) / 3, 0, 1)); }
+    const cv = crystalF(x, z); if (cv > 0.01) c.lerp(mint, cv * 0.55);
     if (inCity(x, z, 1)) c.copy(pave);
     cols[i * 3] = c.r; cols[i * 3 + 1] = c.g; cols[i * 3 + 2] = c.b;
   }
   g.setAttribute('color', new THREE.BufferAttribute(cols, 3));
   g.computeVertexNormals();
   const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, metalness: 0 }));
-  m.receiveShadow = true; scene.add(m);
+  m.receiveShadow = true; scene.add(m); world.terrainMat = m.material;
   const outer = new THREE.Mesh(new THREE.RingGeometry(1150, 4200, 64, 1).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x6cc23a, roughness: 1 }));
-  outer.position.y = 30; scene.add(outer);
+  outer.position.y = 30; scene.add(outer); world.outerMat = outer.material;
 
-  const HT = 512, data = new Uint16Array(HT * HT);
+  const HT = 640, data = new Uint16Array(HT * HT);
   for (let j = 0; j < HT; j++) for (let i = 0; i < HT; i++) {
-    const x = ((i + 0.5) / HT - 0.5) * 1200, z = ((j + 0.5) / HT - 0.5) * 1200;
+    const x = ((i + 0.5) / HT - 0.5) * 1600, z = ((j + 0.5) / HT - 0.5) * 1600;
     data[j * HT + i] = THREE.DataUtils.toHalfFloat(heightAt(x, z));
   }
   const ht = new THREE.DataTexture(data, HT, HT, THREE.RedFormat, THREE.HalfFloatType);
@@ -1132,7 +1227,7 @@ function buildGrass() {
     uniforms: {
       uTime: timeU, uCenter: { value: new V3() }, uPlayer: { value: new V3(0, -100, 0) }, uTile: { value: TILE },
       uHeight: { value: world.heightTex }, uFogColor: { value: FOG_COLOR }, uFogNear: { value: scene.fog.near }, uFogFar: { value: scene.fog.far },
-      uCity: { value: new THREE.Vector3(CITY.x, CITY.z, CITY.r + 4) }
+      uCity: { value: new THREE.Vector3(CITY.x, CITY.z, CITY.r + 4) }, uTint: { value: new THREE.Color(1, 1, 1) }
     },
     vertexShader: `
       uniform float uTime, uTile; uniform vec3 uCenter, uPlayer, uCity; uniform sampler2D uHeight;
@@ -1140,10 +1235,10 @@ function buildGrass() {
       void main(){
         vec2 o = aData.xy;
         vec2 wp = o + floor((uCenter.xz - o)/uTile + 0.5)*uTile;
-        float h = texture2D(uHeight, wp/1200.0 + 0.5).r;
+        float h = texture2D(uHeight, wp/1600.0 + 0.5).r;
         float d = length(wp - uCenter.xz);
         float s = aData.w * (1.0 - smoothstep(uTile*0.30, uTile*0.5, d));
-        if(h < 0.3 || length(wp) > 560.0 || length(wp - uCity.xy) < uCity.z) s = 0.0;
+        if(h < 0.3 || length(wp) > 740.0 || length(wp - uCity.xy) < uCity.z) s = 0.0;
         vec3 p = position * s;
         float c = cos(aData.z), sn = sin(aData.z);
         p.xz = mat2(c,-sn,sn,c) * p.xz;
@@ -1161,11 +1256,12 @@ function buildGrass() {
         vSide = wind;
       }`,
     fragmentShader: `
-      uniform vec3 uFogColor; uniform float uFogNear, uFogFar;
+      uniform vec3 uFogColor, uTint; uniform float uFogNear, uFogFar;
       varying float vY; varying vec3 vCol; varying float vFog; varying float vSide;
       void main(){
         vec3 c = mix(vCol*0.5, vCol*1.45 + vec3(0.05,0.08,0.0), vY);
         c += vec3(0.08,0.1,0.0)*vY*(0.5+vSide);
+        c *= uTint;
         c = mix(c, uFogColor, smoothstep(uFogNear, uFogFar, vFog));
         gl_FragColor = vec4(c,1.0);
         #include <tonemapping_fragment>
@@ -1178,12 +1274,12 @@ function buildGrass() {
 
 function buildFlowers() {
   const g = new THREE.IcosahedronGeometry(0.16, 0);
-  const N = 2600, m = new THREE.InstancedMesh(g, new THREE.MeshStandardMaterial({ roughness: 0.5, emissive: 0x222222 }), N);
+  const N = 3400, m = new THREE.InstancedMesh(g, new THREE.MeshStandardMaterial({ roughness: 0.5, emissive: 0x222222 }), N);
   const palette = [0xffffff, 0xfff27a, 0xff9ad5, 0xb7a6ff, 0xffd1e8, 0x9fe6ff].map(c => new THREE.Color(c));
   const mat = new THREE.Matrix4(), q = new THREE.Quaternion(), s = new V3();
   let k = 0;
-  for (let p = 0; p < 110 && k < N; p++) {
-    let cx, cz; do { cx = rr(-500, 500); cz = rr(-500, 500); } while (Math.hypot(cx, cz) > 500 || heightAt(cx, cz) < 0.6 || inCity(cx, cz, 8));
+  for (let p = 0; p < 150 && k < N; p++) {
+    let cx, cz; do { cx = rr(-680, 680); cz = rr(-680, 680); } while (Math.hypot(cx, cz) > 680 || heightAt(cx, cz) < 0.8 || inCity(cx, cz, 8) || seaF(cx, cz) > 0);
     const col = palette[Math.floor(rand() * palette.length)];
     for (let i = 0; i < 26 && k < N; i++) {
       const x = cx + rr(-8, 8) * rand(), z = cz + rr(-8, 8) * rand(), h = heightAt(x, z);
@@ -1196,7 +1292,7 @@ function buildFlowers() {
 }
 
 function buildTrees() {
-  const N = 140;
+  const N = 230;
   const trunkG = new THREE.CylinderGeometry(0.32, 0.55, 1, 8).translate(0, 0.5, 0);
   const canG = new THREE.IcosahedronGeometry(1, 2), rimG = new THREE.IcosahedronGeometry(1, 1);
   const trunks = new THREE.InstancedMesh(trunkG, M.trunk, N);
@@ -1206,8 +1302,8 @@ function buildTrees() {
   const Mx = new THREE.Matrix4(), Q = new THREE.Quaternion();
   let i = 0;
   while (i < N) {
-    const a = rand() * Math.PI * 2, r = rr(30, 505), x = Math.cos(a) * r, z = Math.sin(a) * r;
-    if (Math.hypot(x - LAKE.x, z - LAKE.z) < LAKE.r + 6 || inCity(x, z, 25) || Math.hypot(x - 30, z - 20) < 18 || Math.hypot(x - SPAWN.x, z - SPAWN.z) < 22) continue;
+    const a = rand() * Math.PI * 2, r = rr(30, 690), x = Math.cos(a) * r, z = Math.sin(a) * r;
+    if (seaF(x, z) > 0 || heightAt(x, z) < 1 || crystalF(x, z) > 0.15 || Math.hypot(x - LAKE.x, z - LAKE.z) < LAKE.r + 6 || inCity(x, z, 25) || Math.hypot(x - 30, z - 20) < 18 || Math.hypot(x - SPAWN.x, z - SPAWN.z) < 22) continue;
     const h = heightAt(x, z), s = rr(0.8, 1.6), th = 3.4 * s;
     Mx.compose(new V3(x, h - 0.2, z), Q, new V3(s, th, s)); trunks.setMatrixAt(i, Mx);
     const col = greens[Math.floor(rand() * greens.length)];
@@ -1223,8 +1319,8 @@ function buildTrees() {
   scene.add(trunks, cans);
   const RN = 760, rim = new THREE.InstancedMesh(rimG, new THREE.MeshStandardMaterial({ roughness: 0.7 }), RN);
   for (let k = 0; k < RN; k++) {
-    const a = rand() * Math.PI * 2, r = rr(560, 760), x = Math.cos(a) * r, z = Math.sin(a) * r, s = rr(4, 9);
-    if (Math.hypot(x - SKYLINE.x, z - SKYLINE.z) < 0) continue;
+    const a = rand() * Math.PI * 2, r = rr(745, 960), x = Math.cos(a) * r, z = Math.sin(a) * r, s = rr(4, 9);
+    if (seaF(x, z) > 0 || Math.hypot(x - SEA.x, z - SEA.z) < SEA.r + 60) { rim.setMatrixAt(k, new THREE.Matrix4().makeScale(0, 0, 0)); continue; }
     Mx.compose(new V3(x, heightAt(x, z) + s * 0.6, z), Q, new V3(s, s * rr(0.8, 1.1), s));
     rim.setMatrixAt(k, Mx); rim.setColorAt(k, greens[k % greens.length].clone().offsetHSL(0, 0, rr(-0.08, 0.02)));
   }
@@ -1235,7 +1331,7 @@ function buildClouds() {
   const g = new THREE.IcosahedronGeometry(1, 2);
   const mat = new THREE.ShaderMaterial({
     fog: true,
-    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { sunDir: { value: SUN_DIR } }]),
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { sunDir: { value: SUN_DIR }, uTint: { value: new THREE.Color(1, 1, 1) } }]),
     vertexShader: `#include <fog_pars_vertex>
       varying vec3 vN;
       void main(){
@@ -1246,11 +1342,12 @@ function buildClouds() {
         #include <fog_vertex>
       }`,
     fragmentShader: `#include <fog_pars_fragment>
-      uniform vec3 sunDir; varying vec3 vN;
+      uniform vec3 sunDir, uTint; varying vec3 vN;
       void main(){
         vec3 n = normalize(vN);
         vec3 c = mix(vec3(0.70,0.80,0.94), vec3(1.0), smoothstep(-0.7, 0.75, n.y));
         c += vec3(1.0,0.97,0.9) * pow(max(dot(n, sunDir), 0.0), 3.0) * 0.12;
+        c *= uTint;
         gl_FragColor = vec4(pow(c, vec3(2.2)), 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -1265,13 +1362,14 @@ function buildClouds() {
       puffs.push([cx + ox, cy2 + s * 0.3 + rr(0, W * 0.12), cz + rr(-W * 0.35, W * 0.35), s]);
     }
   };
-  for (let i = 0; i < 40; i++) { const a = rand() * Math.PI * 2, r = rr(160, 950); addCloud(Math.cos(a) * r, rr(140, 240), Math.sin(a) * r, rr(22, 60)); }
+  for (let i = 0; i < 46; i++) { const a = rand() * Math.PI * 2, r = rr(160, 1100); addCloud(Math.cos(a) * r, rr(140, 240), Math.sin(a) * r, rr(22, 60)); }
+  world.cloudNear = puffs.length;
   for (let i = 0; i < 42; i++) { const a = rand() * Math.PI * 2, r = rr(1300, 1650); addCloud(Math.cos(a) * r, rr(40, 160), Math.sin(a) * r, rr(90, 180)); }
   for (let i = 0; i < 9; i++) { const a = Math.atan2(SKYLINE.z, SKYLINE.x) + rr(-0.5, 0.5), r = rr(1150, 1350); addCloud(Math.cos(a) * r, rr(60, 150), Math.sin(a) * r, rr(110, 170)); }
   const m = new THREE.InstancedMesh(g, mat, puffs.length);
   const Mx = new THREE.Matrix4(), Q = new THREE.Quaternion();
   puffs.forEach((p, i) => { Mx.compose(new V3(p[0], p[1], p[2]), Q, new V3(p[3], p[3] * 0.78, p[3])); m.setMatrixAt(i, Mx); });
-  const grp = new THREE.Group(); grp.add(m); scene.add(grp); world.clouds = grp;
+  const grp = new THREE.Group(); grp.add(m); scene.add(grp); world.clouds = grp; world.cloudMat = mat; world.cloudMesh = m; world.cloudAll = puffs.length;
 }
 
 /* distant Frutiger skyline on the horizon (decor only) */
@@ -1295,8 +1393,9 @@ function buildSkyline() {
     [0.4, 0.22, 0.14, 0.1].forEach(t => { const th = 380 * t; b.add(GEO.cyl, M.towerB, x, y + th / 2, z, rad * 0.88, th, rad, 0, 0, 0, [rad / 3, th / 16]); y += th; b.add(GEO.cyl, M.white, x, y + 1, z, rad * 0.95, 2, rad * 0.95); y += 2; rad *= 0.8; });
     b.add(GEO.cone, M.chrome, x, y + 40, z, rad * 0.5, 80, rad * 0.5);
   });
-  const grp = new THREE.Group(); b.build(grp); grp.traverse(o => { o.castShadow = false; }); scene.add(grp);
+  const grp = new THREE.Group(); b.build(grp); grp.traverse(o => { o.castShadow = false; }); scene.add(grp); world.skyline = grp;
 }
+
 
 
 /* ============================================================
@@ -1331,7 +1430,7 @@ function isFreeSpot(x, z, rad, y0, y1) {
 // Interior point lights were removed for performance (every light costs on every pixel of the scene);
 // interiors are now lit by the sun through non-shadow-casting ceilings plus emissive light panels.
 function pointLight() { return null; }
-function addSign(text, x, y, z, ry, w, h, o) { const s = makeSign(text, w, h, o); s.position.set(x, y, z); s.rotation.y = ry; scene.add(s); return s; }
+function addSign(text, x, y, z, ry, w, h, o) { const s = makeSign(text, w, h, o); s.position.set(x, y, z); s.rotation.y = ry; scene.add(s); cullList.push([s, w > 8 ? 320 : 170]); return s; }
 
 /* ---- furniture ---- */
 function plant(x, y, z, s = 1) {
@@ -1845,7 +1944,7 @@ function buildMeadowFeatures() {
     zones.push({ name: 'Uçan Ada', test: (px, pz, py) => py > y - 2 && Math.hypot(px - x, pz - z) < R + 1 });
     for (let k = 0; k < 2; k++) roofSpots.push(new V3(x + rr(-6, 6), y + 1.3, z + rr(-6, 6)));
   });
-  [[-330, -260], [-400, 160], [320, 300], [60, 430], [-180, 400]].forEach(([x, z]) => turbine(x, heightAt(x, z) - 0.5, z, 1.4));
+  [[-330, -260], [-430, -120], [320, 300], [-120, 470], [-180, 400], [420, 120], [260, 520]].forEach(([x, z]) => turbine(x, heightAt(x, z) - 0.5, z, 1.4));
   // balloon
   const bal = new THREE.Group();
   const env = new THREE.Mesh(new THREE.SphereGeometry(9, 32, 24), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.15, clearcoat: 1, map: canvasTex(256, 128, (g, w, h) => { for (let i = 0; i < 8; i++) { g.fillStyle = ['#3ab9ff', '#ffffff', '#7be844', '#ffffff'][i % 4]; g.fillRect(i * w / 8, 0, w / 8, h); } }) }));
@@ -1895,7 +1994,7 @@ function makeBuddy(color) {
 }
 function animateBuddy(b, dt, t, o) {
   const sp2 = clamp(o.speed / 10, 0, 1.6);
-  b.blend += ((o.air || o.swim || o.sit ? 0 : sp2) - b.blend) * (1 - Math.exp(-10 * dt));
+  b.blend += ((o.air || o.swim || o.sit || o.board ? 0 : sp2) - b.blend) * (1 - Math.exp(-10 * dt));
   const k = b.blend;
   b.phase += dt * (5 + o.speed * 0.9);
   const ph = b.phase;
@@ -1918,6 +2017,7 @@ function animateBuddy(b, dt, t, o) {
     if (o.swim) { rz = s * 1.2; rx = Math.sin(t * 5 + i * Math.PI) * 0.9; }
     if (o.boost && !o.air) { rx = 0.9; rz = s * 0.35; }
     if (o.sit) { rz = s * 0.35; rx = -0.3; }
+    if (o.board) { rz = s * (0.95 + Math.sin(t * 3 + i) * 0.08); rx = 0.15; }
     if (i === 1 && b.wave > 0) { rz = 2.6 + Math.sin(t * 16) * 0.35; rx = 0; }
     if (!o.air && !o.glide && !o.swim && !o.sit && k < 0.05 && b.wave <= 0) rz += s * Math.sin(t * 1.6 + i) * 0.04;
     a.rotation.z += (rz - a.rotation.z) * (1 - Math.exp(-14 * dt));
@@ -1965,6 +2065,748 @@ function buildNPCs() {
   [[20, 60], [-60, 20], [-110, 30], [60, 120], [-30, -80], [110, -20]].forEach(([x, z], i) => spawnNPC(NPC_NAMES[(i + 8) % NPC_NAMES.length] + (i > 5 ? '' : ''), cols[(i + 4) % 6], x, z, 'meadow'));
 }
 
+
+
+
+/* ============================================================
+   Update 5: outer city district, Aero Sahil, Kristal Vadisi,
+   night mode, hats, hoverboard, rides, bounce pads
+   ============================================================ */
+const CP = (aDeg, r) => [CX(Math.cos(aDeg * Math.PI / 180) * r), CZ(Math.sin(aDeg * Math.PI / 180) * r)];
+const bouncePads = [];          // {x, z, y, r, power}
+const rides = {};               // ferris wheel, swan boat
+const world2 = { shards: [], fireflies: null, dolphins: [], waterJets: [] };
+let nightK = 0, nightTarget = settings.time === 'night' ? 1 : 0;
+
+// interactable whose label is computed when it is shown (shop items change text once bought)
+function dynInteract(x, y, z, r, labelFn, fn, o = {}) {
+  const it = addInteract(x, y, z, r, '', fn, o);
+  Object.defineProperty(it, 'label', { get: labelFn });
+  return it;
+}
+function bouncePad(x, z, y, r, power, mat = M.pink) {
+  cy(mat, x, y, z, r, 0.35, true);
+  B.add(GEO.torus, M.glowAqua, x, y + 0.36, z, r, r, r * 2, Math.PI / 2, 0, 0);
+  bouncePads.push({ x, z, y: y + 0.35, r: r + 0.2, power });
+}
+function moveZoneBeforeCity() {
+  // the generic "Aero Şehir" zone must stay last so building zones inside the city are found first
+  const i = zones.findIndex(z => z.name === 'Aero Şehir');
+  if (i >= 0) zones.push(zones.splice(i, 1)[0]);
+}
+
+/* ---------------- hats ---------------- */
+const HATS = [
+  { id: 'phones', n: 'Aero Kulaklık', cost: 30, ic: '🎧' }, { id: 'cap', n: 'Parlak Kep', cost: 25, ic: '🧢' },
+  { id: 'flower', n: 'Çiçek Taç', cost: 35, ic: '🌸' }, { id: 'leaf', n: 'Yaprak Filizi', cost: 20, ic: '🌱' },
+  { id: 'crown', n: 'Cam Taç', cost: 80, ic: '👑' }, { id: 'halo', n: 'Işık Halesi', cost: 60, ic: '😇' }
+];
+const hatMats = {};
+function hatMat(k) {
+  if (hatMats[k]) return hatMats[k];
+  const defs = { gold: [0xffc533, { metalness: 0.8, roughness: 0.15 }], white: [0xffffff, {}], aqua: [0x2fb6f5, {}], green: [0x5fd23a, {}], pink: [0xff7ad0, {}], orange: [0xff9a1f, {}] };
+  return hatMats[k] = phys(defs[k][0], defs[k][1]);
+}
+function makeHat(id) {
+  const g = new THREE.Group();
+  const add = (geo, mat, x, y, z, sx = 1, sy = 1, sz = 1, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(rx, ry, rz); g.add(m); return m; };
+  const sph = new THREE.SphereGeometry(1, 16, 10);
+  if (id === 'phones') {
+    add(new THREE.TorusGeometry(0.45, 0.045, 8, 24, Math.PI), hatMat('white'), 0, 0.42, 0);
+    [-1, 1].forEach(s => add(sph, hatMat('aqua'), s * 0.45, 0.42, 0, 0.09, 0.15, 0.15));
+  } else if (id === 'cap') {
+    add(new THREE.SphereGeometry(0.44, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), hatMat('orange'), 0, 0.55, 0, 1, 0.7, 1);
+    add(new THREE.CylinderGeometry(0.32, 0.32, 0.04, 20), hatMat('white'), 0, 0.58, 0.36, 1, 1, 0.8);
+  } else if (id === 'flower') {
+    add(new THREE.TorusGeometry(0.33, 0.05, 8, 24), hatMat('green'), 0, 0.78, 0, 1, 1, 1, Math.PI / 2);
+    for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; add(sph, hatMat(i % 2 ? 'pink' : 'white'), Math.cos(a) * 0.33, 0.83, Math.sin(a) * 0.33, 0.09); }
+  } else if (id === 'leaf') {
+    add(new THREE.CylinderGeometry(0.025, 0.035, 0.26, 6), hatMat('green'), 0, 0.92, 0);
+    [-1, 1].forEach(s => add(sph, hatMat('green'), s * 0.22, 1.06, 0, 0.26, 0.05, 0.13, 0, 0, s * 0.3));
+  } else if (id === 'crown') {
+    add(new THREE.CylinderGeometry(0.3, 0.28, 0.22, 20, 1, true), hatMat('gold'), 0, 0.86, 0);
+    for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; add(sph, M.glowAqua, Math.cos(a) * 0.3, 1.0, Math.sin(a) * 0.3, 0.06); }
+  } else if (id === 'halo') {
+    add(new THREE.TorusGeometry(0.3, 0.04, 8, 32), M.glow, 0, 1.12, 0, 1, 1, 1, Math.PI / 2);
+  }
+  return g;
+}
+function setBuddyHat(b, id) {
+  if (b.hat) { b.headPivot.remove(b.hat); b.hat = null; }
+  if (id) { b.hat = makeHat(id); b.headPivot.add(b.hat); }
+}
+function buyHat(h) {
+  if (owned.hats.includes(h.id)) {
+    settings.hat = settings.hat === h.id ? '' : h.id; saveJSON('aeroDrift.settings', settings);
+    setBuddyHat(player, settings.hat); toast(settings.hat ? `${h.ic} ${h.n} takıldı` : 'Şapka çıkarıldı', 1.6); Sound.click(); return;
+  }
+  if (wallet < h.cost) { toast(`Yeterli 💧 yok (${h.cost} gerekli)`); Sound.nudge(); return; }
+  addWallet(-h.cost); owned.hats.push(h.id); saveJSON('aeroDrift.owned', owned);
+  settings.hat = h.id; saveJSON('aeroDrift.settings', settings); setBuddyHat(player, h.id);
+  toast(`${h.ic} ${h.n} senin! Gardıroptan veya buradan değiştirebilirsin`, 3); Sound.orb(); unlock('hat');
+  if (owned.hats.length >= HATS.length) unlock('hatall');
+}
+function cycleOwnedHat() {
+  if (!owned.hats.length) { toast('Henüz şapkan yok — Aero Plaza AVM\'deki Şapkacıya uğra!'); return; }
+  const list = ['', ...owned.hats], i = list.indexOf(settings.hat);
+  settings.hat = list[(i + 1) % list.length]; saveJSON('aeroDrift.settings', settings);
+  setBuddyHat(player, settings.hat);
+  const h = HATS.find(x => x.id === settings.hat); toast(h ? `${h.ic} ${h.n}` : 'Şapkasız', 1.4); Sound.click();
+}
+
+/* ---------------- hoverboard ---------------- */
+function buyBoard() {
+  if (owned.board) { toggleBoard(); return; }
+  if (wallet < 60) { toast('Hover Kaykay 60💧 — biraz daha damla topla!'); Sound.nudge(); return; }
+  addWallet(-60); owned.board = true; saveJSON('aeroDrift.owned', owned);
+  toast('🛹 Hover Kaykay senin! B tuşu (veya 🛹 düğmesi) ile bin/in. Suyun üstünde bile kayar!', 4); Sound.orb(); unlock('board');
+  toggleBoard(true);
+}
+function toggleBoard(force) {
+  if (!owned.board) { toast('Önce bir Hover Kaykay al (AVM veya sahildeki dükkân)'); return; }
+  if (P.mode !== 'free') return;
+  P.onBoard = force !== undefined ? force : !P.onBoard;
+  Sound.whoosh(); burst(P.pos.clone().setY(P.pos.y + 0.3), 0x7fe8ff, 20, 5, 0.6);
+  toast(P.onBoard ? '🛹 Hover Kaykay: açık' : '🛹 Kaykaydan indin', 1.3);
+}
+function buildBoardMesh() {
+  const g = new THREE.Group();
+  const deck = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 1.3, 6, 16).rotateX(Math.PI / 2), phys(0x2fb6f5, { emissive: 0x0a74b8, emissiveIntensity: 0.4 }));
+  deck.scale.set(1, 0.18, 1); g.add(deck);
+  const strip = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.04, 1.7), M.glowAqua); strip.position.y = -0.06; g.add(strip);
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x7fe8ff, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }));
+  glow.scale.set(2.4, 1.2, 1); glow.position.y = -0.2; g.add(glow);
+  deck.castShadow = true; g.visible = false; scene.add(g); world.board = g;
+}
+
+/* ---------------- outer city district ---------------- */
+function buildMall() {
+  const o = room({ x: -155, z: -56, w: 46, d: 34, h: 12, door: '+x', doorW: 6, name: 'Aero Plaza AVM', sign: { c1: '#c4f1ff', c2: '#1a8be0', sub: 'Alışveriş · Eğlence' } });
+  const x = o.cx, z = o.cz, y = Y0, MZ = y + 6;
+  // mezzanine around a central atrium
+  bx(M.white, x, MZ, z + 11.5, 46, 0.4, 11, true); bx(M.white, x, MZ, z - 11.5, 46, 0.4, 11, true);
+  bx(M.white, x - 16, MZ, z, 14, 0.4, 12, true); bx(M.white, x + 16, MZ, z, 14, 0.4, 12, true);
+  const top = MZ + 0.4;
+  [[x, z + 6, 18, 0.12], [x - 9, z, 0.12, 12], [x + 9, z, 0.12, 12], [x - 8, z - 6, 2, 0.12], [x + 3.5, z - 6, 11, 0.12]].forEach(([a, b, w, d]) => { bx(M.aquaGlass, a, top, b, w, 1.1, d, true); bx(M.white, a, top + 1.1, b, w + 0.04, 0.08, d + 0.04, false); });
+  for (let i = -2; i <= 2; i++) bx(M.glow, x + i * 8, MZ - 0.05, z + 11.5, 3, 0.05, 6, false);
+  // stairs up from the atrium (along its south edge)
+  const steps = 20, rise = 6.4 / steps;
+  for (let i = 0; i < steps; i++) bx(i % 2 ? M.white : M.pearl, x + 7 - i * 0.6, y, z - 5, 0.6, rise * (i + 1), 2, true);
+  bx(M.aquaGlass, x + 1.3, y + 1, z - 3.95, 12, 5.6, 0.08, false);
+  // atrium fountain + planters
+  cy(M.white, x + 2, y, z + 1.5, 2.6, 0.6, true); cy(M.water, x + 2, y + 0.45, z + 1.5, 2.3, 0.16, false); sp(M.glowAqua, x + 2, y + 1.6, z + 1.5, 0.35);
+  world2.waterJets.push(new V3(x + 2, y + 1.2, z + 1.5));
+  plant(x - 6, y, z + 3, 1.3); plant(x + 7, y, z + 4, 1.3); plant(x - 6, y, z - 2, 1.1);
+  // ground-floor shops (north side, under the mezzanine)
+  const shop = (sx, name, c1, c2) => {
+    bx(M.white, sx, y, z + 13, 7, 1.05, 1, true); bx(M.aqua, sx, y + 0.2, z + 12.48, 6.6, 0.6, 0.04, false);
+    addSign(name, sx, MZ - 1.1, z + 10.6, Math.PI, 6.4, 1.2, { c1, c2 });
+  };
+  shop(x - 17, 'Parlak Şapkalar', '#ffe9a8', '#ff9a1f');
+  HATS.forEach((h, i) => {
+    const hx = x - 19.5 + i, hz = z + 14.6;
+    cy(M.white, hx, y, hz, 0.3, 1.0, false, true);
+    const disp = makeHat(h.id); disp.position.set(hx, y + 0.95 - 0.42, hz); disp.scale.setScalar(0.85); scene.add(disp); cullList.push([disp, 60]);
+    dynInteract(hx, y + 1.1, z + 12.2, 1.2, () => owned.hats.includes(h.id) ? `${h.ic} ${h.n}: ${settings.hat === h.id ? 'çıkar' : 'tak'}` : `${h.ic} ${h.n} al (${h.cost}💧)`, () => buyHat(h));
+  });
+  npcStatic('Şapkacı Elif', 0xff6fc8, x - 13.6, y, z + 14.6, Math.PI, ['Her şapka cam gibi parlar! Bir tane dene.', 'Aldığın şapkaları evindeki gardıroptan da değiştirebilirsin.']);
+  shop(x - 6.5, 'Hover Dükkânı', '#c4f1ff', '#0f86da');
+  const disp = new THREE.Mesh(new THREE.CapsuleGeometry(0.42, 1.3, 6, 16).rotateX(Math.PI / 2), phys(0x2fb6f5, { emissive: 0x0a74b8, emissiveIntensity: 0.4 }));
+  disp.scale.set(1, 0.18, 1); disp.rotation.x = -0.5; disp.position.set(x - 6.5, y + 1.6, z + 15.6); scene.add(disp);
+  dynInteract(x - 6.5, y + 1.1, z + 12.2, 1.6, () => owned.board ? `🛹 Hover Kaykay: ${P.onBoard ? 'in' : 'bin'}` : '🛹 Hover Kaykay al (60💧)', () => buyBoard());
+  shop(x + 4, 'Bulut Dondurma', '#ffffff', '#7fd0ff');
+  for (let i = 0; i < 4; i++) { B.add(GEO.cone, M.wood, x + 2.5 + i, y + 1.25, z + 13, 0.12, 0.35, 0.12, Math.PI, 0, 0); sp([M.pink, M.white, M.lime, M.yellow][i], x + 2.5 + i, y + 1.48, z + 13, 0.15, 0.15, 0.15, true); }
+  addInteract(x + 4, y + 1.1, z + 12.2, 1.6, 'Bulut Dondurma al (12💧) — 30 sn uzun süzülme', () => buyBuff('glide', 12, 'Bulut Dondurma'));
+  shop(x + 15, 'Gökkuşağı Smoothie', '#e2ffc4', '#3ead17');
+  for (let i = 0; i < 5; i++) cy([M.red, M.orange, M.yellow, M.lime, M.aqua][i], x + 13 + i, y + 1.05, z + 13, 0.14, 0.45, false, true);
+  addInteract(x + 15, y + 1.1, z + 12.2, 1.6, 'Gökkuşağı Smoothie al (12💧) — 30 sn hızlı enerji', () => buyBuff('regen', 12, 'Gökkuşağı Smoothie'));
+  npcStatic('Mert', 0x18d6c0, x + 15, y, z + 14.6, Math.PI, ['Smoothie içince enerjin üç kat hızlı dolar!', 'Yukarı kattaki fotoğraf kabinini denedin mi?']);
+  // food court (south)
+  [[-14, -12], [-6, -13], [4, -12.5], [14, -13]].forEach(([dx, dz]) => { roundTable(x + dx, y, z + dz, 0.8, M.white); chair(x + dx - 1.2, y, z + dz, 1, M.orange); chair(x + dx + 1.2, y, z + dz, 3, M.orange); });
+  // upper floor
+  arcade(x - 15, top, z + 15.5, 2); arcade(x - 12, top, z + 15.5, 2);
+  bx(M.white, x + 2, top, z + 14, 6, 1.05, 1, true);
+  addSign('AeroTunes', x + 2, top + 3.2, z + 16.7, Math.PI, 4.4, 1.0, { c1: '#e2d6ff', c2: '#7a4fd8' });
+  addInteract(x + 2, top + 1.1, z + 12.6, 1.8, 'AeroTunes: müzik dinle', () => openPC('AeroTunes', 'media'), { kind: 'pc' });
+  bx(M.aqua, x + 15, top, z + 14.5, 3, 2.6, 2.6, true); bx(M.glowAqua, x + 15, top + 2.6, z + 14.5, 3.1, 0.12, 2.7, false);
+  addSign('📸 Foto Kabin', x + 15, top + 3.3, z + 13.1, Math.PI, 3.4, 0.8, { c1: '#ffe9a8', c2: '#ff8a00' });
+  addInteract(x + 15, top + 1.1, z + 12.4, 1.8, 'Fotoğraf kabini: poz ver!', () => photoBooth());
+  [-16, -12, 14].forEach((dx, i) => desk(x + dx, top, z - 14, 0, 'AVM bilgisayarı', 'AVM PC ' + (i + 1)));
+  sofa(x - 3, top, z - 12.5, 0, M.fabricG); sofa(x + 3.5, top, z - 12.5, 0, M.fabric);
+  plant(x - 21, top, z - 15.5, 1); plant(x + 21, top, z + 15.5, 1);
+  for (let i = 0; i < 3; i++) indoorSpots.push(new V3(x + rr(-18, 18), top + 1.3, z + rr(8, 16)));
+  zones.push({ name: 'Aero Plaza AVM', test: (px, pz, py) => Math.abs(px - x) < 23 && Math.abs(pz - z) < 17 && py < y + 12 });
+}
+
+function buildGreenhouse() {
+  const [x, z] = CP(240, 168), y = Y0, R = 22;
+  const gapA = Math.atan2(CZ(0) - z, CX(0) - x);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(R, 40, 18, 0, Math.PI * 2, 0, Math.PI / 2), glassM(0xd0ffd8, 0.12));
+  dome.position.set(x, y, z); dome.scale.y = 0.7; scene.add(dome);
+  const rib = new THREE.TorusGeometry(R, 0.16, 6, 40, Math.PI);
+  for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(rib, M.white); m.position.set(x, y, z); m.rotation.y = i / 6 * Math.PI; m.scale.set(1, 0.7, 1); scene.add(m); }
+  B.add(GEO.torus, M.white, x, y + 0.3, z, R, R, R * 4, Math.PI / 2, 0, 0);
+  B.add(GEO.disc, M.lawn, x, y + 0.04, z, R, 1, R);
+  colRing(x, z, R, 0.6, y, y + 12, gapA, 0.12);
+  const dx = Math.cos(gapA), dz = Math.sin(gapA);
+  addSign('Bulut Bahçesi', x + dx * (R + 0.6), y + 6.4, z + dz * (R + 0.6), -gapA + Math.PI / 2, 7, 1.5, { c1: '#e2ffc4', c2: '#3ead17', sub: 'Botanik Sera' });
+  // pond + rock waterfall in the middle
+  cy(M.rock, x, y, z, 5.4, 0.5, true); cy(M.water, x, y + 0.42, z, 5, 0.12, false);
+  for (let i = 0; i < 9; i++) { const a = i / 9 * 6.28; sp(M.rock, x + Math.cos(a) * 1.4, y + 1 + (i % 3) * 1.1, z + Math.sin(a) * 1.4, 1.3, 1.1, 1.3, true); }
+  colCyl(x, z, 2.2, y, y + 4.2);
+  world2.waterJets.push(new V3(x, y + 4, z));
+  // big tropical trees, flower beds, ferns
+  for (let i = 0; i < 6; i++) { const a = i / 6 * 6.28 + 0.4, r = 14; planterTree(x + Math.cos(a) * r, z + Math.sin(a) * r, 1.7); }
+  const flowerMats = [M.pink, M.yellow, M.white, M.purple, M.orange, M.red];
+  for (let i = 0; i < 70; i++) {
+    const a = Math.random() * 6.28, r = rr(7, 19);
+    if (Math.abs(Math.atan2(Math.sin(a - gapA), Math.cos(a - gapA))) < 0.25) continue;
+    sp(pick(flowerMats), x + Math.cos(a) * r, y + 0.35, z + Math.sin(a) * r, 0.25, 0.22, 0.25, true);
+    if (i % 3 === 0) B.add(GEO.cone, M.bush, x + Math.cos(a) * r, y + 0.7, z + Math.sin(a) * r, 0.25, 1.4, 0.25);
+  }
+  bench(x + dx * 9 + Math.cos(gapA + 1.57) * 4, z + dz * 9 + Math.sin(gapA + 1.57) * 4, -gapA - Math.PI / 2);
+  bench(x + dx * 9 - Math.cos(gapA + 1.57) * 4, z + dz * 9 - Math.sin(gapA + 1.57) * 4, -gapA - Math.PI / 2);
+  let lastWater = -999;
+  addInteract(x + dx * 6, y + 1, z + dz * 6, 2.2, 'Bitkileri sula 💦', () => {
+    if (T - lastWater < 60) { toast(`Bitkiler daha yeni sulandı (${Math.ceil(60 - (T - lastWater))} sn)`); return; }
+    lastWater = T; addWallet(6); score += 60; unlock('garden');
+    for (let i = 0; i < 60; i++) { const a = Math.random() * 6.28, r = rr(4, 18); emit(x + Math.cos(a) * r, y + 4, z + Math.sin(a) * r, 0, -2, 0, 0x9fe8ff, 1.4, 6); }
+    toast('🌱 Bitkiler mutlu! +6💧 · +60', 2.5); Sound.ding();
+  });
+  npcStatic('Bahçıvan Nil', 0x4fd23a, x + Math.cos(gapA - 0.5) * 11, y, z + Math.sin(gapA - 0.5) * 11, -gapA + Math.PI / 2, ['Bulut Bahçesi\'ne hoş geldin! Bitkileri sularsan seni ödüllendiririm.', 'Gece buraya gel — bitkiler yumuşacık parlıyor.']);
+  zones.push({ name: 'Bulut Bahçesi', test: (px, pz, py) => Math.hypot(px - x, pz - z) < R && py < y + 14 });
+  for (let i = 0; i < 3; i++) indoorSpots.push(new V3(x + Math.cos(i * 2) * 10, y + 1.3, z + Math.sin(i * 2) * 10));
+}
+
+function buildCinema() {
+  const o = room({ x: 44, z: -164, w: 30, d: 24, h: 9, door: '+z', doorW: 5, name: 'AeroVizyon Sinema', sign: { c1: '#ffd6e8', c2: '#d6307a' }, tower: 18, tmat: M.towerB });
+  const x = o.cx, z = o.cz, y = Y0;
+  tvWall(x, y + 1.4, z - 11.7, 0, 22, 7);
+  addSign('🌊 Okyanus Belgeseli — Şimdi Gösterimde', x, y + 8.4, z - 11.6, 0, 9, 0.7, { c1: '#c4f1ff', c2: '#0f86da' });
+  const seatMat = std(0xd6307a, 0.7);
+  for (let row = 0; row < 3; row++) for (let i = 0; i < 6; i++) {
+    const sx = x - 7.5 + i * 3, sz = z - 3 + row * 3.4, sy = y + row * 0.35;
+    if (row) bx(M.white, sx, y, sz, 3, row * 0.35, 3.4, true);
+    bx(seatMat, sx, sy, sz, 1.1, 0.5, 1, false); bx(seatMat, sx, sy + 0.5, sz + 0.45, 1.1, 0.8, 0.15, false);
+    colCyl(sx, sz, 0.45, sy, sy + 0.5);
+    addSeat(sx, sy + 0.5, sz, Math.PI);
+  }
+  bx(M.white, x + 10, y, z + 9, 5, 1.05, 1.2, true); bx(M.red, x + 10, y + 0.15, z + 8.38, 4.6, 0.7, 0.04, false);
+  for (let i = 0; i < 6; i++) sp(M.yellow, x + 8.5 + i * 0.6, y + 1.2, z + 9, 0.16, 0.16, 0.16, true);
+  addInteract(x + 10, y + 1.1, z + 7.6, 1.8, 'Patlamış mısır al (5💧) — enerji', () => { if (wallet < 5) { toast('5💧 gerekli'); return; } addWallet(-5); P.energy = 100; toast('🍿 Çıtır çıtır! Enerji doldu'); Sound.pop(); unlock('cinema'); });
+  npcStatic('Gişeci Can', 0xff9a1f, x + 10, y, z + 10, Math.PI, ['Belgesel çok güzel, otur ve izle!', 'Bir koltuğa yaklaş ve E ile otur.']);
+}
+
+function buildFerrisWheel() {
+  const [x, z] = CP(325, 172), y = Y0, R = 24, hubY = y + 30;
+  const toC = Math.atan2(CX(0) - x, CZ(0) - z);           // wheel faces the city centre
+  const yaw = toC;
+  const rx = Math.cos(yaw), rz = -Math.sin(yaw);
+  bx(M.white, x, y, z, 20, 0.6, 12, true);
+  [-1, 1].forEach(side => [-1, 1].forEach(depth => {
+    const fx = x + rx * side * 13 + Math.sin(yaw) * depth * 3, fz = z + rz * side * 13 + Math.cos(yaw) * depth * 3;
+    const len = Math.hypot(13, hubY - y - 0.6), ang = Math.atan2(13, hubY - y);
+    B.add(GEO.cyl12, M.white, (fx + x + Math.sin(yaw) * depth * 3) / 2, y + (hubY - y) / 2, (fz + z + Math.cos(yaw) * depth * 3) / 2, 0.5, len, 0.5, 0, yaw, side * ang);
+  }));
+  const grp = new THREE.Group(); grp.position.set(x, hubY, z); grp.rotation.y = yaw; scene.add(grp);
+  const spin = new THREE.Group(); grp.add(spin);
+  const rimG = new THREE.TorusGeometry(R, 0.35, 8, 96);
+  [-1.3, 1.3].forEach(dz => { const m = new THREE.Mesh(rimG, M.white); m.position.z = dz; spin.add(m); });
+  const parts = [], bulbs = [];
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; parts.push(new THREE.BoxGeometry(0.3, R, 0.3).translate(0, R / 2, 0).rotateZ(a)); }
+  for (let i = 0; i < 32; i++) { const a = i / 32 * Math.PI * 2; bulbs.push(new THREE.SphereGeometry(0.32, 8, 6).translate(Math.cos(a) * R, Math.sin(a) * R, 1.6)); }
+  spin.add(new THREE.Mesh(mergeGeometries(parts), M.white), new THREE.Mesh(mergeGeometries(bulbs), M.glowAqua));
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 3.4, 24).rotateX(Math.PI / 2), M.chrome); grp.add(hub);
+  const cabMats = [M.aqua, M.lime, M.orange, M.pink, M.purple, M.yellow, M.aqua, M.lime];
+  const cabins = [];
+  for (let i = 0; i < 8; i++) {
+    const c = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.SphereGeometry(1.8, 20, 14), cabMats[i]); body.scale.set(1, 0.9, 1); body.position.y = -2;
+    const win = new THREE.Mesh(new THREE.SphereGeometry(1.84, 20, 8, 0, Math.PI * 2, Math.PI * 0.3, Math.PI * 0.25), M.aquaGlass); win.position.y = -2;
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.4, 6), M.chrome); rod.position.y = -0.6;
+    c.add(body, win, rod); body.castShadow = true; scene.add(c); cabins.push(c); cullList.push([c, 600]);
+  }
+  rides.wheel = { grp, spin, cabins, x, z, hubY, R, yaw, a: 0, speed: 0.07, seat: 0 };
+  addSign('🎡 Bulut Dolabı', x - rx * 11, y + 5, z - rz * 11, yaw, 5, 1.2, { c1: '#ffe9a8', c2: '#ff8a00' });
+  addInteract(x + Math.sin(yaw) * 7, y + 1.2, z + Math.cos(yaw) * 7, 3, 'Dönme dolaba bin', () => startRide('wheel'));
+  zones.push({ name: 'Bulut Dolabı', test: (px, pz, py) => Math.hypot(px - x, pz - z) < 16 && py < y + 6 });
+}
+function wheelCabinPos(i, out) {
+  const w = rides.wheel, a = w.a + i * Math.PI * 2 / 8;
+  const lx = Math.cos(a) * w.R, ly = Math.sin(a) * w.R;
+  return out.set(w.x + Math.cos(w.yaw) * lx, w.hubY + ly, w.z - Math.sin(w.yaw) * lx);
+}
+
+function buildTrampolinePark() {
+  const [x, z] = CP(15, 168), y = Y0;
+  const soft = std(0xa8e6ff, 0.6);
+  bx(soft, x, y - 0.02, z, 40, 0.1, 40, false);
+  const toC = Math.atan2(CZ(0) - z, CX(0) - x);
+  [[x, z - 20, 40, 0.3], [x, z + 20, 40, 0.3], [x + 20, z, 0.3, 40]].forEach(([a, b, w, d]) => { bx(M.white, a, y, b, w, 0.7, d, true); });
+  bx(M.white, x - 20, y, z - 12.5, 0.3, 0.7, 15, true); bx(M.white, x - 20, y, z + 12.5, 0.3, 0.7, 15, true);
+  addSign('🤸 Trambolin Parkı', x - 21, y + 3.4, z, -Math.PI / 2, 6, 1.3, { c1: '#ffd6f5', c2: '#c54fd8' });
+  cy(M.white, x - 21, y, z - 3.5, 0.15, 3, false, true); cy(M.white, x - 21, y, z + 3.5, 0.15, 3, false, true);
+  const padMats = [M.pink, M.aqua, M.lime, M.orange, M.yellow, M.purple];
+  [[-12, -12, 24], [-12, 0, 20], [-12, 12, 24], [0, -14, 22], [0, 14, 22], [12, -12, 20], [12, 12, 26]].forEach(([dx, dz, p], i) => bouncePad(x + dx, z + dz, y, 1.8, p, padMats[i % 6]));
+  // floating platform tower with a star on top
+  const plats = [];
+  for (let i = 0; i < 6; i++) {
+    const a = i / 6 * Math.PI * 2, px = x + Math.cos(a) * 8, pz = z + Math.sin(a) * 8, py = y + 9 + i * 5;
+    bx(padMats[i], px, py, pz, 4, 0.6, 4, true); bx(M.glowAqua, px, py - 0.06, pz, 4.1, 0.06, 4.1, false);
+    plats.push(new V3(px, py + 0.6, pz));
+  }
+  bouncePad(x + 8, z, y, 2, 28, M.red);
+  bouncePad(plats[2].x, plats[2].z, plats[2].y, 0.9, 19, M.white);
+  const star = new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 0), new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 1.8, 0.6) }));
+  star.position.copy(plats[5]).y += 1.6; scene.add(star);
+  world2.tramp = { star, active: false, t: 0, plats, sx: x - 18, sz: z };
+  addInteract(x - 18, y + 1, z, 2.6, 'Trambolin Kulesi yarışması (yıldıza ulaş!)', () => startTramp());
+  for (let i = 0; i < 2; i++) roofSpots.push(plats[3 + i].clone().setY(plats[3 + i].y + 1.3));
+  zones.push({ name: 'Trambolin Parkı', test: (px, pz) => Math.abs(px - x) < 20 && Math.abs(pz - z) < 20 });
+}
+function startTramp() {
+  if (race.active) { toast('Önce Halka Yarışını bitir veya iptal et (R)'); return; }
+  const t = world2.tramp; if (t.active) return;
+  t.active = true; t.t = 0; toast('🤸 Trambolin ve platformlardan yukarı çık, yıldıza dokun! (R: iptal)', 3.5); Sound.ring();
+}
+function cancelTramp() { const t = world2.tramp; if (!t.active) return; t.active = false; $('racehud').classList.add('hidden'); toast('Trambolin yarışması iptal edildi', 1.8); }
+
+function buildHoverPark() {
+  const [x, z] = CP(55, 170), y = Y0;
+  bx(std(0xc6ecff, 0.4), x, y - 0.02, z, 36, 0.1, 30, false);
+  // stepped quarter pipes on two sides + a fun box
+  for (let i = 0; i < 6; i++) { bx(M.pearl, x - 15 + i * 0.7, y, z, 0.7, 0.3 * (6 - i), 26, true); bx(M.pearl, x + 15 - i * 0.7, y, z, 0.7, 0.3 * (6 - i), 26, true); }
+  bx(M.aqua, x, y, z, 6, 1.2, 4, true); bx(M.white, x - 3.6, y, z, 1.2, 0.6, 4, true); bx(M.white, x + 3.6, y, z, 1.2, 0.6, 4, true);
+  [-8, 8].forEach(dz => { B.add(GEO.cyl12, M.chrome, x, y + 0.7, z + dz, 0.1, 14, 0.1, 0, 0, Math.PI / 2); cy(M.chrome, x - 6, y, z + dz, 0.08, 0.7, false, true); cy(M.chrome, x + 6, y, z + dz, 0.08, 0.7, false, true); });
+  bouncePad(x - 8, z + 11, y, 1.6, 18, M.lime); bouncePad(x + 8, z - 11, y, 1.6, 18, M.orange);
+  addSign('🛹 Hover Parkı', x, y + 4, z - 15.2, 0, 5, 1.2, { c1: '#c4f1ff', c2: '#0f86da' });
+  bx(M.white, x, y, z - 13.5, 3, 1.05, 1, true);
+  dynInteract(x, y + 1.1, z - 12.3, 1.8, () => owned.board ? `🛹 Hover Kaykay: ${P.onBoard ? 'in' : 'bin'}` : '🛹 Hover Kaykay al (60💧)', () => buyBoard());
+  npcStatic('Kaykaycı Arda', 0x9b7bff, x + 2, y, z - 13.5, 0, ['Hover Kaykay ile suyun üstünde bile kayabilirsin!', 'Rampalardan hızla geç, zıplama pedlerini dene.']);
+  zones.push({ name: 'Hover Parkı', test: (px, pz) => Math.abs(px - x) < 18 && Math.abs(pz - z) < 15 });
+}
+
+function buildHome() {
+  const o = room({ x: 6, z: 172, w: 22, d: 16, h: 5.5, door: '-z', name: 'Evim', tower: 28, tmat: M.towerG, glass: M.greenGlass, sign: { c1: '#fff3c4', c2: '#ff9a1f' } });
+  const x = o.cx, z = o.cz, y = Y0;
+  bx(M.white, x - 7, y, z + 5, 2.6, 0.55, 3.6, true); bx(M.aqua, x - 7, y + 0.55, z + 5, 2.4, 0.25, 3.4, false);
+  sp(M.white, x - 7.6, y + 0.95, z + 6.3, 0.5, 0.2, 0.35, true); sp(M.white, x - 6.4, y + 0.95, z + 6.3, 0.5, 0.2, 0.35, true);
+  bx(M.pink, x - 7, y + 0.8, z + 4.2, 2.42, 0.06, 1.8, false);
+  addInteract(x - 7, y + 1, z + 3, 2, '🛏️ Yatağa yat (gündüz ⇄ gece)', () => sleepToggle());
+  desk(x + 7, y, z + 5.6, 2, 'Ev bilgisayarı', 'Ev PC');
+  sofa(x + 6, y, z - 2.5, 0, M.fabricG); tvWall(x + 6, y + 1.2, z - 7.7, 0, 4.2, 2.4);
+  cy(M.white, x - 8.5, y, z - 5, 1.2, 0.4, true, true);
+  B.add(GEO.cylOpen, M.aquaGlass, x - 8.5, y + 1.4, z - 5, 1.05, 2, 1.05);
+  const w = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1.8, 20, 1, true), new THREE.MeshPhysicalMaterial({ color: 0x3fc8ff, transparent: true, opacity: 0.32, roughness: 0, side: THREE.DoubleSide, depthWrite: false }));
+  w.position.set(x - 8.5, y + 1.35, z - 5); scene.add(w);
+  dyn.fishTanks.push({ x: x - 8.5, z: z - 5, y0: y + 0.7, y1: y + 2.1, r0: 0.3, r1: 0.8, n: 5 });
+  bx(M.wood, x - 9.9, y, z + 0.5, 1.2, 2.6, 3, true);
+  addInteract(x - 8.6, y + 1.2, z + 0.5, 1.6, '👕 Gardırop: şapka değiştir', () => cycleOwnedHat());
+  bx(M.white, x + 9.6, y, z - 0.5, 1.4, 2.2, 1.4, true); bx(M.aqua, x + 8.88, y + 1.4, z - 0.5, 0.04, 0.5, 0.4, false);
+  addInteract(x + 8.4, y + 1.2, z - 0.5, 1.5, '🧃 Buzdolabı: atıştır (+enerji)', () => { P.energy = 100; toast('🧃 Ferahladın!'); Sound.collect(3); unlock('home'); });
+  bx(std(0x9fe8ff, 0.9), x, y + 0.02, z, 8, 0.03, 6, false);
+  plant(x - 9.5, y, z - 7, 1); plant(x + 9.5, y, z + 7, 1);
+  npcStatic('Komşu Selin', 0xff6fc8, x + 3, y, z - 10.5, Math.PI, ['Komşum! Evin çok güzel olmuş.', 'Yatağında uyursan gece ile gündüz arasında geçiş yapabilirsin.']);
+}
+
+function buildSwanPark() {
+  const [x, z] = CP(172, 170), y = Y0;
+  B.add(GEO.disc, M.lawn, x, y + 0.03, z, 22, 1, 22);
+  cy(M.water, x, y + 0.04, z, 14, 0.08, false);
+  B.add(GEO.torus, M.white, x, y + 0.12, z, 14.2, 14.2, 20, Math.PI / 2, 0, 0);
+  for (let i = 0; i < 10; i++) { const a = Math.random() * 6.28, r = rr(3, 12); B.add(GEO.disc, M.bush2, x + Math.cos(a) * r, y + 0.14, z + Math.sin(a) * r, 0.9, 1, 0.9); }
+  for (let i = 0; i < 8; i++) { const a = i / 8 * 6.28 + 0.2; planterTree(x + Math.cos(a) * 19, z + Math.sin(a) * 19, 1.1); }
+  for (let i = 0; i < 4; i++) { const a = i / 4 * 6.28 + 0.6; bench(x + Math.cos(a) * 16, z + Math.sin(a) * 16, Math.atan2(Math.cos(a), Math.sin(a)) + Math.PI); }
+  // swan boat
+  const boat = new THREE.Group();
+  const bodyM = phys(0xffffff, { roughness: 0.2 });
+  const hull = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12), bodyM); hull.scale.set(1.3, 0.55, 2); boat.add(hull);
+  const neck = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.18, 8, 16, Math.PI * 1.1), bodyM); neck.position.set(0, 0.9, 1.5); neck.rotation.y = Math.PI / 2; boat.add(neck);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8), bodyM); head.position.set(0, 1.75, 1.0); boat.add(head);
+  const beak = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.4, 8).rotateX(Math.PI / 2), M.orange); beak.position.set(0, 1.7, 1.35); boat.add(beak);
+  hull.castShadow = true; scene.add(boat);
+  rides.boat = { boat, x, z, r: 9, a: 0, speed: 0.22 };
+  addSign('🦢 Kuğu Parkı', x + 15, y + 3.2, z, Math.PI / 2, 4.4, 1.1, { c1: '#e2ffc4', c2: '#3ead17' });
+  bx(M.wood, x + 13.5, y, z, 4, 0.3, 2, true);
+  addInteract(x + 13, y + 1, z, 2.6, 'Kuğu tekneye bin', () => startRide('boat'));
+  zones.push({ name: 'Kuğu Parkı', test: (px, pz) => Math.hypot(px - x, pz - z) < 22 });
+}
+
+function buildOuterRing() {
+  const road = new THREE.Mesh(new THREE.RingGeometry(132, 142, 180, 1).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xc6e2f2, roughness: 0.5 }));
+  road.position.set(CX(0), Y0 + 0.025, CZ(0)); road.receiveShadow = true; scene.add(road);
+  const lawn = new THREE.Mesh(new THREE.RingGeometry(202, 212, 180, 1).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x7ad946, roughness: 0.8 }));
+  lawn.position.set(CX(0), Y0 + 0.03, CZ(0)); scene.add(lawn);
+  [[185, 197, 0, 70, 10], [270, 199, 1, 95, 11], [348, 197, 4, 80, 10], [33, 199, 0, 110, 12], [80, 199, 3, 90, 6], [212, 198, 1, 65, 10], [300, 199, 0, 120, 11]].forEach(t => ecoTower(...t));
+  // outer gate
+  const ea = ENTR_DEG * Math.PI / 180, gx = CX(Math.cos(ea) * 208), gz = CZ(Math.sin(ea) * 208), tx = -Math.sin(ea), tz = Math.cos(ea);
+  [-1, 1].forEach(s => { const px = gx + tx * 11 * s, pz = gz + tz * 11 * s; cy(M.white, px, Y0, pz, 1.5, 16, true); sp(M.glowAqua, px, Y0 + 16.8, pz, 1.3); });
+  const arch = new THREE.Mesh(new THREE.TorusGeometry(11, 0.55, 12, 64, Math.PI), M.white); arch.position.set(gx, Y0 + 16, gz); arch.rotation.y = -ea + Math.PI / 2; scene.add(arch);
+  addSign('AERO ŞEHİR', gx, Y0 + 20.5, gz, -ea + Math.PI / 2, 12, 2.4, { c1: '#c4f1ff', c2: '#0f86da', sub: 'AVM · Sinema · Parklar · Sahil yolu' });
+  // updrafts that reach the new rooftops
+  updrafts.push(makeUpdraft(...CP(255, 150), 112));
+  updrafts.push(makeUpdraft(...CP(5, 146), 112));
+}
+function decorateOuterRing() {
+  const near = a => Math.abs(((a - ENTR_DEG) + 540) % 360 - 180) < 11;
+  for (let a = 0; a < 360; a += 8) {
+    if (near(a)) continue;
+    for (const r of [146, 199]) {
+      const [px, pz] = CP(a, r);
+      if (!isFreeSpot(px, pz, 1.6, Y0, Y0 + 5)) continue;
+      if ((a / 8) % 3 === 0) lamp(px, pz); else planterTree(px, pz, rr(0.85, 1.2));
+    }
+  }
+  for (let i = 0; i < 60; i++) { const [px, pz] = CP(rr(0, 360), rr(140, 203)); if (isFreeSpot(px, pz, 1.5, Y0, Y0 + 3)) cityGroundSpots.push(new V3(px, Y0 + 1.3, pz)); }
+}
+
+function buildCity2() {
+  buildMall(); buildGreenhouse(); buildCinema(); buildFerrisWheel(); buildTrampolinePark(); buildHoverPark(); buildHome(); buildSwanPark();
+  buildOuterRing(); decorateOuterRing();
+  moveZoneBeforeCity();
+}
+
+/* ---------------- Aero Sahil (beach + sea + lighthouse) ---------------- */
+const SEA_L = new V3(-SEA.x, 0, -SEA.z).normalize(), SEA_T = new V3(-SEA_L.z, 0, SEA_L.x);
+function beachPoint(s, inland = 6) {
+  for (let d = SEA.r - 70; d < SEA.r + 120; d += 2) {
+    const x = SEA.x + SEA_L.x * d + SEA_T.x * s, z = SEA.z + SEA_L.z * d + SEA_T.z * s;
+    if (heightAt(x, z) > 0.5) { const x2 = x + SEA_L.x * inland, z2 = z + SEA_L.z * inland; return new V3(x2, heightAt(x2, z2), z2); }
+  }
+  return null;
+}
+function spiralRamp(x, z, y, h, coreR, rampR, coreMats, startAng) {
+  for (let k = 0, seg = h / 6; k < 6; k++) cy(coreMats[k % coreMats.length], x, y + k * seg, z, coreR, seg, false);
+  colCyl(x, z, coreR, y, y + h);
+  const rise = 0.32, stepA = 1.7 / rampR;
+  let yy = y, ang = startAng, i = 0;
+  while (yy < y + h - 0.4) {
+    yy += rise; ang += stepA; i++;
+    const px = x + Math.cos(ang) * rampR, pz = z + Math.sin(ang) * rampR;
+    B.add(GEO.box, i % 2 ? M.white : M.pearl, px, yy - 0.15, pz, 2.6, 0.3, 1.9, 0, -ang, 0);
+    colBox(px - 1.05, yy - 0.3, pz - 1.05, px + 1.05, yy, pz + 1.05);
+  }
+  return ang;
+}
+function buildBeach() {
+  const sea = new THREE.Mesh(new THREE.PlaneGeometry(1500, 1500, 48, 48).rotateX(-Math.PI / 2), M.water);
+  sea.position.set(SEA.x, WATER_Y, SEA.z); scene.add(sea);
+  const umbMats = [M.aqua, M.pink, M.yellow, M.lime, M.orange];
+  for (let s = -150; s <= 150; s += 22) {
+    const p = beachPoint(s, 10); if (!p) continue;
+    const c = umbMats[Math.abs(s / 22 | 0) % umbMats.length];
+    cy(M.white, p.x, p.y, p.z, 0.1, 3, false, true); B.add(GEO.cone, c, p.x, p.y + 3.2, p.z, 2.2, 0.8, 2.2);
+    colCyl(p.x, p.z, 0.2, p.y, p.y + 3);
+    B.add(GEO.box, c, p.x + SEA_T.x * 1.6, p.y + 0.05, p.z + SEA_T.z * 1.6, 1.2, 0.06, 2.2, 0, Math.atan2(SEA_L.x, SEA_L.z), 0);
+  }
+  [-60, -40, 70].forEach((s, i) => {
+    const p = beachPoint(s, 26); if (!p) return;
+    const m = [M.pink, M.aqua, M.lime][i];
+    bx(m, p.x, p.y, p.z, 4, 3, 4, true); B.add(GEO.cone, M.white, p.x, p.y + 3.8, p.z, 3.2, 1.6, 3.2, 0, Math.PI / 4, 0);
+  });
+  // pier + kiosks
+  const p0 = beachPoint(0, -2);
+  if (p0) {
+    const ry = Math.atan2(SEA_L.x, SEA_L.z);
+    for (let k = 0; k < 24; k++) {
+      const px = p0.x - SEA_L.x * k * 2, pz = p0.z - SEA_L.z * k * 2;
+      B.add(GEO.box, M.wood, px, 0.75, pz, 3, 0.3, 2.1, 0, ry, 0);
+      colBox(px - 1.2, 0.6, pz - 1.2, px + 1.2, 0.9, pz + 1.2);
+      if (k % 3 === 0) { cy(M.wood, px + SEA_T.x * 1.3, -3, pz + SEA_T.z * 1.3, 0.15, 3.9, false, true); cy(M.wood, px - SEA_T.x * 1.3, -3, pz - SEA_T.z * 1.3, 0.15, 3.9, false, true); }
+    }
+    const k1 = beachPoint(-14, 14), k2 = beachPoint(14, 14);
+    if (k1) {
+      bx(M.white, k1.x, k1.y, k1.z, 3.4, 2.4, 2.4, true); B.add(GEO.cone, M.pink, k1.x, k1.y + 2.9, k1.z, 2.6, 1, 2.6, 0, Math.PI / 4, 0);
+      addSign('🍦 Deniz Dondurması', k1.x, k1.y + 4.1, k1.z, ry + Math.PI, 4.2, 0.9, { c1: '#ffe9f5', c2: '#e0408a' });
+      addInteract(k1.x + SEA_L.x * 2.4, k1.y + 1, k1.z + SEA_L.z * 2.4, 2, 'Deniz Dondurması al (12💧) — uzun süzülme', () => buyBuff('glide', 12, 'Deniz Dondurması'));
+    }
+    if (k2) {
+      bx(M.white, k2.x, k2.y, k2.z, 3.4, 2.4, 2.4, true); B.add(GEO.cone, M.aqua, k2.x, k2.y + 2.9, k2.z, 2.6, 1, 2.6, 0, Math.PI / 4, 0);
+      addSign('🛹 Sahil Kaykay', k2.x, k2.y + 4.1, k2.z, ry + Math.PI, 3.6, 0.9, { c1: '#c4f1ff', c2: '#0f86da' });
+      dynInteract(k2.x + SEA_L.x * 2.4, k2.y + 1, k2.z + SEA_L.z * 2.4, 2, () => owned.board ? `🛹 Hover Kaykay: ${P.onBoard ? 'in' : 'bin'}` : '🛹 Hover Kaykay al (60💧)', () => buyBoard());
+    }
+    const lg = beachPoint(-100, 8);
+    if (lg) { [-1, 1].forEach(s => cy(M.white, lg.x + SEA_T.x * s, lg.y, lg.z + SEA_T.z * s, 0.15, 4, false, true)); bx(M.red, lg.x, lg.y + 4, lg.z, 2.6, 0.3, 2.6, true); bx(M.white, lg.x, lg.y + 4.3, lg.z, 2.6, 1.6, 0.1, false); }
+    world.pierEnd2 = new V3(p0.x - SEA_L.x * 46, 0.9, p0.z - SEA_L.z * 46);
+  }
+  // lighthouse on a rocky point, walkable spiral to the top
+  const lp = beachPoint(185, -8);
+  if (lp) {
+    const ly = Math.max(lp.y, 0.3), H = 34;
+    for (let i = 0; i < 10; i++) { const a = i / 10 * 6.28; sp(M.rock, lp.x + Math.cos(a) * 7, ly - 0.5, lp.z + Math.sin(a) * 7, rr(2, 3.2), rr(1.4, 2.2), rr(2, 3.2), true); }
+    cy(M.rock, lp.x, ly - 2, lp.z, 8, 2.2, true);
+    const end = spiralRamp(lp.x, lp.z, ly + 0.2, H, 3.2, 5.6, [M.white, M.red], 0);
+    const topY = ly + 0.2 + H;
+    cy(M.white, lp.x, topY - 0.3, lp.z, 4.2, 0.3, true);
+    colRing(lp.x, lp.z, 4.1, 0.2, topY, topY + 1.1, end, 0.35);
+    B.add(GEO.cylOpen, M.aquaGlass, lp.x, topY + 0.55, lp.z, 4.1, 1.1, 4.1);
+    for (let i = 0; i < 4; i++) { const a = i / 4 * 6.28 + 0.4; cy(M.white, lp.x + Math.cos(a) * 3.6, topY, lp.z + Math.sin(a) * 3.6, 0.12, 3.2, false, true); }
+    B.add(GEO.cone, M.red, lp.x, topY + 4.1, lp.z, 4.2, 1.8, 4.2);
+    sp(M.glow, lp.x, topY + 2, lp.z, 0.9); colCyl(lp.x, lp.z, 0.95, topY, topY + 3);
+    const beam = new THREE.Group(); beam.position.set(lp.x, topY + 2, lp.z);
+    const bm = new THREE.MeshBasicMaterial({ color: 0xfff6c8, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+    [-1, 1].forEach(s => { const c = new THREE.Mesh(new THREE.ConeGeometry(5, 60, 20, 1, true).translate(0, -30, 0).rotateZ(s * Math.PI / 2), bm); beam.add(c); });
+    scene.add(beam); world2.beam = beam; world2.beamMat = bm;
+    chestMesh(lp.x + 2.4, topY, lp.z + 0.8);
+    addInteract(lp.x + 2.4, topY + 0.8, lp.z + 0.8, 2, 'Hazine sandığını aç', () => openChest(), { chest: true });
+    zones.push({ name: 'Deniz Feneri', test: (px, pz, py) => py > ly + 6 && Math.hypot(px - lp.x, pz - lp.z) < 8 });
+    roofSpots.push(new V3(lp.x - 2, topY + 1.3, lp.z - 1));
+  }
+  // beach goers
+  [[-120, 20], [-30, 16], [40, 22], [120, 18]].forEach(([s, d], i) => { const p = beachPoint(s, d); if (p) spawnNPC(['Deniz', 'Kumsal', 'Martı', 'Dalga'][i] + (i ? '' : ' Su'), BUDDY_COLORS[(i + 1) % 6].c, p.x, p.z, 'meadow'); });
+  // dolphins
+  const dm = phys(0x7fb8d8, { roughness: 0.15 });
+  for (let i = 0; i < 4; i++) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.55, 2.4, 6, 12).rotateX(Math.PI / 2), dm); g.add(body);
+    const fin = new THREE.Mesh(new THREE.ConeGeometry(0.35, 0.8, 6), dm); fin.position.set(0, 0.6, -0.2); fin.scale.z = 0.3; g.add(fin);
+    const tail = new THREE.Mesh(new THREE.ConeGeometry(0.6, 0.6, 3), dm); tail.position.z = -1.9; tail.rotation.x = Math.PI / 2; tail.scale.set(1.4, 1, 0.25); g.add(tail);
+    g.visible = false; scene.add(g);
+    world2.dolphins.push({ g, t: -mr(0, 8), a: new V3(), b: new V3(), dur: 2.2 });
+  }
+  zones.push({ name: 'Aero Sahil', test: (px, pz) => Math.hypot(px - SEA.x, pz - SEA.z) < SEA.r + 70 });
+  for (let s = -140; s <= 140; s += 35) { const p = beachPoint(s, 8); if (p) cityGroundSpots.push(new V3(p.x, p.y + 1.3, p.z)); }
+}
+
+/* ---------------- Kristal Vadisi ---------------- */
+function buildCrystalValley() {
+  const cx = CRYSTAL.x, cz = CRYSTAL.z, y0 = heightAt(cx, cz);
+  const geo = new THREE.OctahedronGeometry(1, 0);
+  const cols = [0x6fe8ff, 0xff8ad8, 0xb7a0ff];
+  world2.crystalMats = cols.map(c => new THREE.MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.35, roughness: 0.05, metalness: 0.1, clearcoat: 1, transparent: true, opacity: 0.88, envMapIntensity: 1.6 }));
+  const lists = [[], [], []];
+  const Mx = new THREE.Matrix4(), Q = new THREE.Quaternion(), E = new THREE.Euler();
+  for (let k = 0; k < 26; k++) {
+    const a = rand() * 6.28, r = rr(16, 88), x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r, y = heightAt(x, z);
+    const n = 3 + (rand() * 3 | 0), ci = k % 3;
+    for (let j = 0; j < n; j++) {
+      const s = rr(0.5, 1.1), hh = rr(2, 5.5);
+      E.set(rr(-0.45, 0.45), rr(0, 6.28), rr(-0.45, 0.45)); Q.setFromEuler(E);
+      Mx.compose(new V3(x + rr(-1.2, 1.2), y + hh * 0.35, z + rr(-1.2, 1.2)), Q, new V3(s, hh, s));
+      lists[ci].push(Mx.clone());
+    }
+    colCyl(x, z, 1.7, y, y + 4);
+  }
+  lists.forEach((l, i) => { const m = new THREE.InstancedMesh(geo, world2.crystalMats[i], l.length); l.forEach((mx, j) => m.setMatrixAt(j, mx)); m.castShadow = true; scene.add(m); });
+  // glowing mushrooms
+  for (let i = 0; i < 24; i++) {
+    const a = rand() * 6.28, r = rr(8, 80), x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r, y = heightAt(x, z), s = rr(0.6, 1.3);
+    cy(M.pearl, x, y, z, 0.12 * s, 0.9 * s, false, true); B.add(GEO.hemi, i % 2 ? M.glowAqua : M.glow, x, y + 0.9 * s, z, 0.5 * s, 0.35 * s, 0.5 * s);
+  }
+  // the crystal heart
+  cy(M.white, cx, y0, cz, 4, 0.6, true); B.add(GEO.torus, M.glowAqua, cx, y0 + 0.62, cz, 4, 4, 6, Math.PI / 2, 0, 0);
+  const heart = new THREE.Mesh(new THREE.OctahedronGeometry(2.4, 0), new THREE.MeshPhysicalMaterial({ color: 0xffb8f0, emissive: 0xff6fd0, emissiveIntensity: 0.6, roughness: 0, clearcoat: 1, transparent: true, opacity: 0.9 }));
+  heart.position.set(cx, y0 + 5, cz); heart.scale.y = 1.4; scene.add(heart); world2.heart = heart;
+  let heartUsed = false;
+  addInteract(cx, y0 + 1.2, cz, 5.5, '💎 Kristal Kalbe dokun', () => {
+    unlock('heart');
+    if (heartUsed) { toast('💎 Kristal Kalp sana gülümsüyor'); return; }
+    heartUsed = true; addWallet(25); score += 250; burst(heart.position, 0xff8ad8, 70, 14, 1.4); Sound.ach();
+    toast('💎 Kristal Kalbin enerjisi! +25💧 · +250', 3);
+  });
+  npcStatic('Kristal', 0x9b7bff, cx + 6, y0, cz + 2, -Math.PI / 2, ['Kristal Vadisi\'ne hoş geldin. Yerdeki parlak kristal parçalarını topla!', 'Gece burası bambaşka parlıyor.', 'Vadinin kenarındaki rüzgâr sütunu seni kristal adaya çıkarır.']);
+  // shard collectibles
+  inst.shard = instMesh(new THREE.OctahedronGeometry(0.45, 0).scale(1, 1.6, 1), world2.crystalMats[0], 16, false);
+  inst.shardGlow = glowPoints(16, 0x9ff0ff, 3);
+  for (let i = 0; i < 16; i++) { const g = new THREE.Object3D(); world2.shards.push({ group: g, mesh: g, home: new V3(), active: true, respawn: 0, phase: Math.random() * 6 }); placeShard(world2.shards[i]); }
+  // floating crystal island reached by an updraft
+  const ix = cx + 55, iz = cz - 30, iy = heightAt(ix, iz) + 36;
+  cy(M.lawn, ix, iy - 1, iz, 8, 1, true); B.add(GEO.cone, M.rock, ix, iy - 7, iz, 7.8, 12, 7.8, Math.PI, 0, 0);
+  chestMesh(ix, iy, iz); addInteract(ix, iy + 0.8, iz, 2.2, 'Hazine sandığını aç', () => openChest(), { chest: true });
+  updrafts.push(makeUpdraft(ix + 11, iz, 46));
+  zones.push({ name: 'Kristal Vadisi', test: (px, pz) => Math.hypot(px - cx, pz - cz) < CRYSTAL.r + 5 });
+  ['Işıltı', 'Ametist'].forEach((n, i) => spawnNPC(n, BUDDY_COLORS[(i + 3) % 6].c, cx + (i ? -30 : 25), cz + (i ? 20 : -25), 'meadow'));
+}
+function placeShard(s) {
+  const a = Math.random() * 6.28, r = mr(8, 85), x = CRYSTAL.x + Math.cos(a) * r, z = CRYSTAL.z + Math.sin(a) * r;
+  s.home.set(x, heightAt(x, z) + 1.2, z); s.group.position.copy(s.home);
+}
+
+/* ---------------- fireflies (night only) ---------------- */
+function buildFireflies() {
+  const N = 110, homes = [];
+  for (let i = 0; i < 70; i++) homes.push(randomMeadowSpot(20, 640).add(new V3(0, mr(0.8, 2.5), 0)));
+  for (let i = 0; i < 20; i++) { const a = Math.random() * 6.28, r = mr(5, 80); const x = CRYSTAL.x + Math.cos(a) * r, z = CRYSTAL.z + Math.sin(a) * r; homes.push(new V3(x, heightAt(x, z) + mr(0.8, 2.5), z)); }
+  for (let i = 0; i < 20; i++) { const [x, z] = CP(172 + mr(-12, 12), 170 + mr(-14, 14)); homes.push(new V3(x, Y0 + mr(0.8, 2.5), z)); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ map: glowTex, color: 0xd8ff7a, size: 1.1, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  pts.frustumCulled = false; pts.visible = false; scene.add(pts);
+  world2.fireflies = { pts, data: homes.slice(0, N).map(h => ({ home: h, ph: Math.random() * 6.28, active: true, respawn: 0 })) };
+  // far-away rings, updraft columns and chests are hidden (they are many small draw calls)
+  rings.forEach(r => cullList.push([r.group, 360]));
+  updrafts.forEach(u => cullList.push([u.group, 520]));
+  chests.forEach(c => cullList.push([c.g, 320]));
+}
+
+/* ---------------- rides (ferris wheel, swan boat) ---------------- */
+const _rp = new V3();
+function startRide(kind) {
+  if (P.mode !== 'free') return;
+  P.mode = 'ride'; P.ride = kind; P.onBoard = false; P.vel.set(0, 0, 0);
+  stats.rides = (stats.rides || 0) + 1;
+  if (kind === 'wheel') { const w = rides.wheel; let bi = 0, by = 1e9; for (let i = 0; i < 8; i++) { const p = wheelCabinPos(i, _rp); if (p.y < by) { by = p.y; bi = i; } } w.seat = bi; toast('🎡 Bulut Dolabı! İnmek için E veya Boşluk', 3); unlock('wheel'); }
+  else { toast('🦢 Kuğu tekne turu! İnmek için E veya Boşluk', 3); unlock('boat'); }
+  Sound.ding(); fadeFlash();
+}
+function ridePos(out) {
+  if (P.ride === 'wheel') return wheelCabinPos(rides.wheel.seat, out).add(new V3(0, -3, 0));
+  const b = rides.boat; return out.copy(b.boat.position).add(new V3(0, 0.1, 0));
+}
+function leaveRide() {
+  if (P.mode !== 'ride') return;
+  const kind = P.ride; P.mode = 'free'; P.ride = null;
+  if (kind === 'boat') { const b = rides.boat; P.pos.set(b.x + 13, Y0 + 0.4, b.z); }
+  else { ridePos(P.pos); P.pos.y += 0.5; P.vel.set(0, 6, 0); if (P.pos.y > Y0 + 8) toast('Süzülmek için Boşluk\'u basılı tut!', 2); }
+}
+
+/* ---------------- day / night ---------------- */
+function setNight(on, instant = false) {
+  nightTarget = on ? 1 : 0; settings.time = on ? 'night' : 'day'; saveJSON('aeroDrift.settings', settings);
+  if (instant) { nightK = nightTarget; applyNightK(nightK); }
+  document.querySelectorAll('[data-time]').forEach(b => b.classList.toggle('on', b.dataset.time === settings.time));
+  if (on) unlock('night');
+}
+function sleepToggle() {
+  const f = $('fade'); f.style.transition = 'opacity .8s'; f.style.opacity = 1; Sound.startup();
+  setTimeout(() => { setNight(nightTarget < 0.5, true); P.energy = 100; f.style.opacity = 0; toast(nightTarget ? '🌙 İyi geceler! Aero Şehir ışıl ışıl' : '☀️ Günaydın! Yeni bir parlak gün', 3); unlock('sleep'); }, 900);
+}
+const _dayFog = new THREE.Color(0xcdeeff), _nightFog = new THREE.Color(0x0b2036);
+const _dayHemiS = new THREE.Color(0xd2ecff), _nightHemiS = new THREE.Color(0x3a5c8c), _dayHemiG = new THREE.Color(0x6fa045), _nightHemiG = new THREE.Color(0x0c2a24);
+const _daySun = new THREE.Color(0xfff3dc), _nightSun = new THREE.Color(0x9fc4ff);
+const _glowDay = new THREE.Color(1.15, 1.25, 1.35), _glowNight = new THREE.Color(2.4, 2.5, 2.7), _aquaDay = new THREE.Color(0.45, 1.2, 1.6), _aquaNight = new THREE.Color(0.9, 2.5, 3.2);
+let lastEnvNight = null;
+function applyNightK(k) {
+  setSkyUniforms(sky.material, k);
+  FOG_COLOR.copy(_dayFog).lerp(_nightFog, k); scene.fog.color.copy(FOG_COLOR);
+  hemi.color.copy(_dayHemiS).lerp(_nightHemiS, k); hemi.groundColor.copy(_dayHemiG).lerp(_nightHemiG, k); hemi.intensity = lerp(0.8, 0.55, k);
+  sun.color.copy(_daySun).lerp(_nightSun, k); sun.intensity = lerp(2.4, 0.55, k);
+  renderer.toneMappingExposure = lerp(0.94, 0.9, k);
+  scene.environmentIntensity = lerp(0.8, 0.65, k);
+  const envNight = k > 0.5; if (envNight !== lastEnvNight) { scene.environment = buildEnv(envNight); lastEnvNight = envNight; }
+  sunSprite.scale.setScalar(lerp(760, 300, k)); sunSprite.material.color.setRGB(lerp(1, 0.75, k), lerp(1, 0.88, k), 1);
+  const tint = lerp(1, 0.32, k);
+  if (world.cloudMat) world.cloudMat.uniforms.uTint.value.setRGB(tint, lerp(1, 0.4, k), lerp(1, 0.6, k));
+  if (grassMat) grassMat.uniforms.uTint.value.setRGB(lerp(1, 0.3, k), lerp(1, 0.42, k), lerp(1, 0.5, k));
+  M.glow.color.copy(_glowDay).lerp(_glowNight, k); M.glowAqua.color.copy(_aquaDay).lerp(_aquaNight, k);
+  winMats().forEach(m => m.emissiveIntensity = k * 1.0);
+  if (world2.crystalMats) world2.crystalMats.forEach(m => m.emissiveIntensity = lerp(0.35, 1.1, k));
+  if (world2.beamMat) world2.beamMat.opacity = lerp(0.04, 0.22, k);
+  if (world2.fireflies) world2.fireflies.pts.visible = k > 0.5;
+  if (typeof bloom !== 'undefined') { bloom.strength = lerp(0.2, 0.55, k); bloom.threshold = lerp(0.93, 0.78, k); }
+  if (player) player.mat.emissiveIntensity = lerp(0.16, 0.42, k);
+  for (const n of npcs) n.b.mat.emissiveIntensity = lerp(0.16, 0.42, k);
+}
+let _winList = null;
+function winMats() {
+  if (_winList) return _winList;
+  const s = new Set(); scene.traverse(o => { const m = o.material; if (m && !Array.isArray(m) && m.userData && m.userData.win) s.add(m); });
+  return _winList = [...s];
+}
+function updateNight(dt) {
+  if (Math.abs(nightK - nightTarget) < 0.001) return;
+  nightK += Math.sign(nightTarget - nightK) * Math.min(Math.abs(nightTarget - nightK), dt / 2.5);
+  applyNightK(nightK);
+}
+
+/* ---------------- photo booth ---------------- */
+function photoBooth() {
+  const f = $('fade'); f.style.transition = 'opacity .12s'; f.style.background = '#ffffff';
+  hudHidden = true; $('hud').classList.add('hidden'); player.wave = 2;
+  Sound.tick(); setTimeout(() => Sound.tick(), 500);
+  setTimeout(() => { f.style.opacity = 1; Sound.pop(); setTimeout(() => { f.style.opacity = 0; f.style.background = '#eaf8ff'; hudHidden = false; $('hud').classList.remove('hidden'); toast('📸 Harika poz! Fotoğrafın AVM duvarına asıldı', 2.5); unlock('photo'); score += 50; }, 260); }, 1000);
+}
+
+/* ---------------- per-frame update for update-5 content ---------------- */
+let cullT = 0;
+function updateWorld2(dt, t, playing) {
+  const cpos = camera.position;
+  cullT -= dt;
+  if (cullT <= 0) { cullT = 0.3; for (const [o, d] of cullList) o.visible = o.position.distanceToSquared(cpos) < d * d; }
+  // ferris wheel
+  const w = rides.wheel;
+  if (w) {
+    w.a += w.speed * dt; w.spin.rotation.z = w.a;
+    w.cabins.forEach((c, i) => wheelCabinPos(i, c.position));
+  }
+  const b = rides.boat;
+  if (b) { b.a += b.speed * dt / 1.2; b.boat.position.set(b.x + Math.cos(b.a) * b.r, Y0 + 0.3 + Math.sin(t * 2) * 0.05, b.z + Math.sin(b.a) * b.r); b.boat.rotation.y = -b.a; }
+  if (world2.beam) world2.beam.rotation.y += dt * 0.6;
+  if (world2.heart) { world2.heart.rotation.y += dt * 0.6; world2.heart.position.y = heightAt(CRYSTAL.x, CRYSTAL.z) + 5 + Math.sin(t * 1.3) * 0.4; }
+  if (world2.tramp) world2.tramp.star.rotation.y += dt * 1.5;
+  for (const j of world2.waterJets) if (j.distanceToSquared(cpos) < 120 * 120 && Math.random() < 0.7) emit(j.x + mr(-0.2, 0.2), j.y, j.z + mr(-0.2, 0.2), mr(-1, 1), mr(4, 6), mr(-1, 1), 0xcff4ff, 1.1, 9.8);
+  // board under the player
+  if (world.board) {
+    world.board.visible = P.onBoard && P.mode === 'free';
+    if (world.board.visible) {
+      world.board.position.set(P.pos.x, P.pos.y + 0.12 + Math.sin(t * 4) * 0.04, P.pos.z);
+      world.board.rotation.y = P.facing; world.board.rotation.z = clamp(-P.turnRate * 0.08, -0.3, 0.3);
+      if (Math.random() < 0.5) emit(P.pos.x + mr(-0.4, 0.4), P.pos.y, P.pos.z + mr(-0.4, 0.4), -P.vel.x * 0.05, -0.5, -P.vel.z * 0.05, 0x7fe8ff, 0.5, 0);
+    }
+  }
+  // dolphins
+  for (const d of world2.dolphins) {
+    d.t += dt / d.dur;
+    if (d.t < 0) continue;
+    if (!d.g.visible) {
+      const a = Math.random() * 6.28, r = Math.sqrt(Math.random()) * (SEA.r - 90), dir = Math.random() * 6.28, len = mr(8, 14);
+      d.a.set(SEA.x + Math.cos(a) * r, WATER_Y, SEA.z + Math.sin(a) * r);
+      if (heightAt(d.a.x, d.a.z) > -3) { d.t = -1; continue; }
+      d.b.set(d.a.x + Math.cos(dir) * len, WATER_Y, d.a.z + Math.sin(dir) * len);
+      d.g.visible = true; d.t = 0;
+      if (d.a.distanceTo(cpos) < 250) burst(d.a, 0xbfefff, 20, 7, 0.8, 12);
+    }
+    if (d.t >= 1) { d.g.visible = false; d.t = -mr(2, 8) / d.dur; if (d.b.distanceTo(cpos) < 250) burst(d.b, 0xbfefff, 24, 8, 0.8, 12); continue; }
+    const p = _rp.lerpVectors(d.a, d.b, d.t); p.y = WATER_Y - 0.6 + Math.sin(d.t * Math.PI) * 5;
+    d.g.position.copy(p);
+    const nt = Math.min(1, d.t + 0.03);
+    d.g.lookAt(d.a.x + (d.b.x - d.a.x) * nt, WATER_Y - 0.6 + Math.sin(nt * Math.PI) * 5, d.a.z + (d.b.z - d.a.z) * nt);
+  }
+  // crystal shards
+  const pc = new V3(P.pos.x, P.pos.y + 0.95, P.pos.z);
+  for (const s of world2.shards) {
+    if (!s.active) { s.respawn -= dt; if (s.respawn <= 0) { placeShard(s); s.active = true; s.group.visible = true; } continue; }
+    s.group.position.y = s.home.y + Math.sin(t * 2 + s.phase) * 0.25; s.group.rotation.y += dt * 1.4;
+    if (playing && s.group.position.distanceToSquared(pc) < 2.4 * 2.4) {
+      s.active = false; s.group.visible = false; s.respawn = 90;
+      bumpCombo(); const pts = addScore(40); addWallet(4); stats.crystals = (stats.crystals || 0) + 1;
+      Sound.orb(); burst(s.group.position, 0x9ff0ff, 30, 9, 0.9); floatText(s.group.position, `+${pts} · +4💧`, 'pink');
+      if (stats.crystals >= 5) unlock('crystal');
+    }
+  }
+  syncList(world2.shards, inst.shard, o => o.mesh, inst.shardGlow);
+  // fireflies
+  const ff = world2.fireflies;
+  if (ff && ff.pts.visible) {
+    const arr = ff.pts.geometry.attributes.position.array;
+    ff.data.forEach((f, i) => {
+      if (!f.active) { f.respawn -= dt; arr[i * 3 + 1] = -9999; if (f.respawn <= 0) f.active = true; return; }
+      const x = f.home.x + Math.sin(t * 0.7 + f.ph) * 1.6, y = f.home.y + Math.sin(t * 1.3 + f.ph * 2) * 0.6, z = f.home.z + Math.cos(t * 0.5 + f.ph) * 1.6;
+      arr[i * 3] = x; arr[i * 3 + 1] = y; arr[i * 3 + 2] = z;
+      if (playing && (x - pc.x) ** 2 + (y - pc.y) ** 2 + (z - pc.z) ** 2 < 2.2 * 2.2) {
+        f.active = false; f.respawn = 50; stats.fireflies = (stats.fireflies || 0) + 1;
+        bumpCombo(); const pts = addScore(15); addWallet(1); Sound.collect(Math.min(combo, 10));
+        burst(new V3(x, y, z), 0xd8ff7a, 16, 4, 0.7, 1); floatText(new V3(x, y, z), '+' + pts, 'green');
+        if (stats.fireflies >= 10) unlock('firefly');
+      }
+    });
+    ff.pts.material.size = 0.9 + Math.sin(t * 6) * 0.25;
+    ff.pts.geometry.attributes.position.needsUpdate = true;
+  }
+  // trampoline challenge
+  const tr = world2.tramp;
+  if (tr && tr.active && playing) {
+    tr.t += dt;
+    $('racehud').classList.remove('hidden');
+    $('racehud').textContent = `🤸 Trambolin Kulesi · ${fmtTime(tr.t)}${best.tramp ? '  ·  Rekor ' + fmtTime(best.tramp) : ''}  ·  R: iptal`;
+    if (tr.star.position.distanceTo(pc) < 2.8) {
+      tr.active = false; $('racehud').classList.add('hidden');
+      const nb = !best.tramp || tr.t < best.tramp; if (nb) { best.tramp = tr.t; saveJSON('aeroDrift.best', best); }
+      score += 400; addWallet(15); Sound.end(); burst(tr.star.position, 0xffe08a, 60, 12, 1.2); unlock('tramp');
+      toast(`🌟 Zirvedesin! ${fmtTime(tr.t)} ${nb ? '— YENİ REKOR!' : ''} · +400 · +15💧`, 4);
+    }
+    if (tr.t > 240) cancelTramp();
+  }
+}
 
 /* ============================================================
    Updrafts
@@ -2212,7 +3054,7 @@ function updateParticles(dt) {
 /* ---------- player ---------- */
 const PR = 0.55, H = 1.9, STEP = 0.5;
 const P = { pos: new V3(SPAWN.x, 3, SPAWN.z), vel: new V3(), onGround: false, groundT: 0, canDouble: true, energy: 100, gliding: false, boosting: false,
-  facing: START_YAW + Math.PI, inWater: false, mode: 'free', buffs: { speed: 0, jump: 0 }, modeData: null, tired: false, boostK: 0 };
+  facing: START_YAW + Math.PI, inWater: false, mode: 'free', buffs: { speed: 0, jump: 0, glide: 0, regen: 0 }, modeData: null, tired: false, boostK: 0, onBoard: false, ride: null, turnRate: 0 };
 let player, playerShadow;
 function buildPlayer() {
   player = makeBuddy(BUDDY_COLORS[settings.color]?.c ?? 0x1fb8ff);
@@ -2356,26 +3198,55 @@ function updatePerf(rawDt) {
   if (settings.fpsShow) $('fps').textContent = `${Math.round(perf.fps)} FPS · ${Math.round(resScale * 100)}%`;
   if (!settings.adaptive || state !== 'playing') return;
   const old = resScale;
-  if (perf.fps < 42 && resScale > 0.6) resScale = Math.max(0.6, resScale - 0.1);
-  else if (perf.fps > 57 && resScale < 1) resScale = Math.min(1, resScale + 0.05);
+  if (perf.fps < 45 && resScale > 0.55) resScale = Math.max(0.55, resScale - 0.1);
+  else if (perf.fps > 58 && resScale < 1) resScale = Math.min(1, resScale + 0.05);
   if (old !== resScale) setRenderScale();
+  // still too slow at the lowest render scale for a few seconds: step the whole quality preset down
+  perf.low = perf.fps < 27 && resScale <= 0.56 ? (perf.low || 0) + 1 : 0;
+  if (perf.low >= 4 && settings.quality !== 'low') {
+    settings.quality = settings.quality === 'high' ? 'mid' : 'low'; perf.low = 0;
+    saveJSON('aeroDrift.settings', settings); applyQuality(); syncSettingsUI();
+    toast(`⚙️ Akıcılık için grafik kalitesi "${settings.quality === 'mid' ? 'Orta' : 'Düşük'}" yapıldı`, 3);
+  }
 }
+// Quality presets. The expensive parts on weak GPUs/phones are: pixel count, soft shadows,
+// bloom passes, clearcoat/iridescence shading on every glossy surface, grass and view distance.
+const QUALITY = {
+  low: { pr: 0.75, shadow: 0, bloom: false, grass: 0, far: 1500, fog: 1350, phys: false, clouds: false, skyline: false, npc: 90 },
+  mid: { pr: 1.0, shadow: 1024, soft: false, every: 3, ext: 60, bloom: !IS_TOUCH, grass: 0.4, far: 2600, fog: 2300, phys: false, clouds: true, skyline: true, npc: 140 },
+  high: { pr: IS_TOUCH ? 1.25 : 1.5, shadow: 2048, soft: true, every: 2, ext: 80, bloom: true, grass: 1, far: 4500, fog: 2400, phys: true, clouds: true, skyline: true, npc: 190 }
+};
+let npcViewDist = 180;
 function applyQuality() {
-  const q = settings.quality, dpr = window.devicePixelRatio || 1;
-  basePr = q === 'low' ? Math.min(dpr, 1) * 0.8 : q === 'mid' ? Math.min(dpr, 1.1) : Math.min(dpr, 1.5);
+  const q = settings.quality, Qc = QUALITY[q] || QUALITY.mid, dpr = window.devicePixelRatio || 1;
+  basePr = Math.min(dpr, Qc.pr);
   resScale = 1; setRenderScale();
-  shadowEvery = q === 'low' ? 3 : 2;
+  shadowEvery = Qc.every || 3;
   sun.shadow.autoUpdate = false; sun.shadow.needsUpdate = true;
   $('fps').classList.toggle('hidden', !settings.fpsShow);
-  const sh = q !== 'low';
-  if (renderer.shadowMap.enabled !== sh) {
-    renderer.shadowMap.enabled = sh;
-    scene.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.needsUpdate = true); });
+  const sh = !!Qc.shadow, type = Qc.soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+  let recompile = false;
+  if (renderer.shadowMap.enabled !== sh || renderer.shadowMap.type !== type) { renderer.shadowMap.enabled = sh; renderer.shadowMap.type = type; recompile = true; }
+  if (sh && sun.shadow.mapSize.x !== Qc.shadow) { sun.shadow.mapSize.set(Qc.shadow, Qc.shadow); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
+  if (sh) { Object.assign(sun.shadow.camera, { left: -Qc.ext, right: Qc.ext, top: Qc.ext, bottom: -Qc.ext }); sun.shadow.camera.updateProjectionMatrix(); }
+  // clearcoat / iridescence each add a full extra lighting layer per pixel: only on High
+  const mats = new Set();
+  scene.traverse(o => { const m = o.material; if (m) (Array.isArray(m) ? m : [m]).forEach(x => mats.add(x)); });
+  for (const m of mats) {
+    if (m.isMeshPhysicalMaterial) {
+      if (!m.userData.q0) m.userData.q0 = { cc: m.clearcoat, ir: m.iridescence };
+      const cc = Qc.phys ? m.userData.q0.cc : 0, ir = Qc.phys ? m.userData.q0.ir : 0;
+      if (m.clearcoat !== cc || m.iridescence !== ir) { m.clearcoat = cc; m.iridescence = ir; m.needsUpdate = true; }
+    }
+    if (recompile) m.needsUpdate = true;
   }
-  const ms = q === 'high' ? 2048 : 1024;
-  if (sun.shadow.mapSize.x !== ms) { sun.shadow.mapSize.set(ms, ms); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
-  useBloom = q !== 'low';
-  if (grassGeo) grassGeo.instanceCount = Math.floor(GRASS_N * (q === 'high' ? 1 : q === 'mid' ? 0.6 : 0.3));
+  useBloom = Qc.bloom;
+  if (grassGeo) { grassGeo.instanceCount = Math.floor(GRASS_N * Qc.grass); world.grass.visible = Qc.grass > 0; }
+  camera.far = Qc.far; scene.fog.far = Qc.fog; if (grassMat) grassMat.uniforms.uFogFar.value = Qc.fog;
+  sky.scale.setScalar(Math.min(1, Qc.far * 0.9 / 3200)); world.sunDist = Math.min(3000, Qc.far * 0.85);
+  if (world.cloudMesh) world.cloudMesh.count = Qc.clouds ? world.cloudAll : world.cloudNear;
+  if (world.skyline) world.skyline.visible = Qc.skyline;
+  npcViewDist = Qc.npc;
   camera.fov = settings.fov; camera.updateProjectionMatrix();
 }
 addEventListener('resize', () => {
@@ -2409,7 +3280,14 @@ const ACH = [
   ['piano', 'Müzisyen', 'Piyano çal', '🎹'], ['talk', 'Sosyal Kelebek', '5 farklı kişiyle konuş', '🦋'], ['wave', 'Merhaba!', 'El salla', '👋'],
   ['swim', 'Yüzücü', 'Gölde yüz', '🏊'], ['sit', 'Huzur', 'Bir bankta otur', '🪑'], ['combo', 'Kombo Kralı', 'x5 çarpana ulaş', '⚡'],
   ['rich', 'Birikimci', 'Cüzdanında 100💧 biriktir', '💰'], ['water', 'Ferahlık', 'Su sebilinden iç', '🚰'], ['printer', 'Evrak İşleri', 'Yazıcıyı kullan', '🖨️'],
-  ['gadget', 'Teknoloji Meraklısı', 'AeroPod\'a bak', '🎧'], ['views', 'Yönetmen', 'Tüm kamera açılarını dene', '🎥'], ['track', 'Ray Yürüyüşü', 'Monoray rayının üstünde yürü', '🛤️']
+  ['gadget', 'Teknoloji Meraklısı', 'AeroPod\'a bak', '🎧'], ['views', 'Yönetmen', 'Tüm kamera açılarını dene', '🎥'], ['track', 'Ray Yürüyüşü', 'Monoray rayının üstünde yürü', '🛤️'],
+  ['night', 'Gece Kuşu', 'Gece modunu aç', '🌙'], ['sleep', 'Tatlı Rüyalar', 'Evindeki yatakta uyu', '🛏️'], ['firefly', 'Ateş Böceği Avcısı', 'Gece 10 ateş böceği topla', '✨'],
+  ['board', 'Hover Ustası', 'Hover Kaykay al', '🛹'], ['hat', 'Şık', 'Bir şapka al', '🎩'], ['hatall', 'Koleksiyoncu', 'Tüm şapkaları topla', '👑'],
+  ['wheel', 'Bulutlara Yakın', 'Dönme dolaba bin', '🎡'], ['boat', 'Kuğu Gölü', 'Kuğu tekneye bin', '🦢'], ['tramp', 'Zıpzıp', 'Trambolin Kulesinde yıldıza ulaş', '🌟'],
+  ['bounce', 'Yaylanma', '10 kez zıplama pedi kullan', '🤸'], ['crystal', 'Kristal Avcısı', '5 kristal parçası topla', '💠'], ['heart', 'Kristal Kalp', 'Kristal Kalbe dokun', '💎'],
+  ['beach', 'Sahil Keyfi', 'Aero Sahil\'e git', '🏖️'], ['lighthouse', 'Fener Bekçisi', 'Deniz fenerinin tepesine çık', '🗼'], ['mall', 'Alışverişkolik', 'Aero Plaza AVM\'ye gir', '🛍️'],
+  ['cinema', 'Sinemasever', 'Sinemada mısır al', '🍿'], ['garden', 'Yeşil Parmak', 'Seradaki bitkileri sula', '🌱'], ['home', 'Evim Evim', 'Evinin buzdolabını kullan', '🏠'],
+  ['photo', 'Poz Ver', 'Fotoğraf kabinini kullan', '📸'], ['icecream', 'Bulut Dondurma', 'Süzülme dondurması ye', '🍦'], ['smoothie', 'Gökkuşağı', 'Smoothie iç', '🥤'], ['surf', 'Su Kayağı', 'Kaykayla denizde kay', '🌊']
 ];
 const achQueue = []; let achT = 0;
 function unlock(id) {
@@ -2439,10 +3317,12 @@ const QUEST_POOL = [
   { stat: 'glide', text: n => `${n} saniye süzül`, n: 12 }, { stat: 'swim', text: n => `Gölde ${n} metre yüz`, n: 60 },
   { stat: 'airtime', text: n => `${n} saniye havada kal`, n: 25 }, { stat: 'talks', text: n => `${n} kişiyle sohbet et`, n: 3 },
   { stat: 'pcs', text: n => `${n} kez bilgisayar kullan`, n: 2 }, { stat: 'wishes', text: n => `Fıskiyede ${n} dilek tut`, n: 2 },
-  { stat: 'roofs', text: n => `${n} farklı çatıya çık`, n: 2 }
+  { stat: 'roofs', text: n => `${n} farklı çatıya çık`, n: 2 },
+  { stat: 'fireflies', text: n => `Gece ${n} ateş böceği yakala`, n: 6, cond: () => nightTarget > 0.5 }, { stat: 'crystals', text: n => `Kristal Vadisi'nde ${n} kristal topla`, n: 3 },
+  { stat: 'bounces', text: n => `${n} kez zıplama pedi kullan`, n: 5 }, { stat: 'rides', text: n => `${n} kez bir araca bin`, n: 2 }
 ];
 function newQuest(exclude) {
-  const pool = QUEST_POOL.filter(q => !exclude.includes(q.stat));
+  const pool = QUEST_POOL.filter(q => !exclude.includes(q.stat) && (!q.cond || q.cond()));
   const t = pool[Math.floor(Math.random() * pool.length)];
   const n = Math.round(t.n * (1 + (stats.questsDone || 0) * 0.25));
   return { stat: t.stat, n, text: t.text(n), start: t.abs ? 0 : (stats[t.stat] || 0), abs: !!t.abs, done: false, el: null };
@@ -2530,7 +3410,9 @@ addEventListener('keydown', e => {
   if (e.code === 'KeyE') interact();
   if (e.code === 'KeyV') cycleCam();
   if (e.code === 'KeyQ') doWave();
-  if (e.code === 'KeyR' && (race.active)) cancelRace();
+  if (e.code === 'KeyR') { if (race.active) cancelRace(); else if (world2.tramp && world2.tramp.active) cancelTramp(); }
+  if (e.code === 'KeyB') toggleBoard();
+  if (e.code === 'KeyT') { setNight(nightTarget < 0.5); toast(nightTarget ? '🌙 Gece modu' : '☀️ Gündüz modu', 1.5); }
   if (e.code === 'Digit1' || e.code === 'Digit2' || e.code === 'Digit3') cancelQuest(+e.code.slice(5) - 1);
   if (e.code === 'KeyH') { hudHidden = !hudHidden; $('hud').classList.toggle('hidden', hudHidden); }
   if (e.code === 'KeyN') { Sound.musicOn = !Sound.musicOn; Sound.applyVolumes(); toast(Sound.musicOn ? '♪ Müzik açık' : '♪ Müzik kapalı', 1.5); }
@@ -2577,6 +3459,7 @@ $('crosshint').addEventListener('click', () => { lockPointer(); $('crosshint').c
 
 function doJump() {
   if (P.mode === 'train') { leaveTrain(); return; }
+  if (P.mode === 'ride') { leaveRide(); return; }
   if (P.mode !== 'free') return;
   const jv = P.buffs.jump > 0 ? 24 : 16.5;
   if (P.onGround || P.groundT < 0.12) {
@@ -2604,6 +3487,7 @@ const talkedTo = new Set();
 function findInteract() {
   currentIt = null; currentNpc = null;
   if (P.mode === 'train') return { label: 'Monoraydan in (E)' };
+  if (P.mode === 'ride') return { label: 'Araçtan in (E)' };
   if (P.mode === 'scope') return { label: 'Teleskoptan ayrıl (E)' };
   if (P.mode === 'sit') return { label: 'Kalk (E / hareket et)' };
   if (P.mode !== 'free') return null;
@@ -2625,6 +3509,7 @@ function findInteract() {
 }
 function interact() {
   if (P.mode === 'train') { leaveTrain(); return; }
+  if (P.mode === 'ride') { leaveRide(); return; }
   if (P.mode === 'scope') { leaveScope(); return; }
   if (P.mode === 'sit') { standUp(); return; }
   if (P.mode !== 'free') return;
@@ -2656,6 +3541,7 @@ function openChest() {
 function buyBuff(type, cost, name) {
   if (wallet < cost) { toast(`Yeterli 💧 yok (${cost} gerekli). Su damlası topla!`); Sound.nudge(); return; }
   addWallet(-cost); P.buffs[type] = 30;
+  if (type === 'glide' || type === 'regen') { toast(type === 'glide' ? `🍦 ${name}! 30 sn boyunca bulut gibi süzül` : `🥤 ${name}! 30 sn boyunca enerji 3 kat hızlı`); Sound.orb(); burst(P.pos.clone().setY(P.pos.y + 1.2), type === 'glide' ? 0xffffff : 0x9dff6a, 30, 6, 0.8); unlock(type === 'glide' ? 'icecream' : 'smoothie'); return; }
   toast(type === 'speed' ? `🥤 ${name}! 30 sn boyunca süper hız` : `☕ ${name}! 30 sn boyunca süper zıplama`);
   Sound.orb(); burst(P.pos.clone().setY(P.pos.y + 1.2), type === 'speed' ? 0x6fdcff : 0xffd36a, 30, 6, 0.8);
   unlock(type === 'speed' ? 'soda' : 'coffee');
@@ -2817,7 +3703,8 @@ function footprint(c, x, z, s) {
   if (c.t === 1) return Math.hypot(x - c.cx, z - c.cz) < c.r + s;
   return Math.abs(Math.hypot(x - c.cx, z - c.cz) - c.r) < c.th / 2 + s;
 }
-function terrainGround(x, z) { const h = heightAt(x, z); return h < WATER_Y - 0.25 ? WATER_Y - 0.25 : h; }
+// on the hover board the water surface is solid ground; otherwise you swim slightly below it
+function terrainGround(x, z) { const h = heightAt(x, z); const w = P.onBoard ? WATER_Y + 0.1 : WATER_Y - 0.25; return h < w ? w : h; }
 let supportCol = null;
 function supportAt(x, z, feetY) {
   let g = terrainGround(x, z); supportCol = null;
@@ -2837,6 +3724,7 @@ function updatePlayer(dt) {
   if (P.mode === 'elev') { updateElevator(dt); return; }
   if (P.mode === 'train') { const m = world.monorail; P.pos.set(m.cx + Math.cos(m.a) * m.R, m.y - 1.2, m.cz + Math.sin(m.a) * m.R); P.facing = -m.a; return; }
   if (P.mode === 'sit' || P.mode === 'scope') { P.energy = Math.min(100, P.energy + 25 * dt); return; }
+  if (P.mode === 'ride') { ridePos(P.pos); P.vel.set(0, 0, 0); P.energy = Math.min(100, P.energy + 20 * dt); return; }
 
   fwd.set(-Math.sin(yaw), 0, -Math.cos(yaw)); right.set(Math.cos(yaw), 0, -Math.sin(yaw));
   // keyboard + analog touch joystick (touchIn is -1..1 on each axis)
@@ -2849,8 +3737,9 @@ function updatePlayer(dt) {
   if (P.energy <= 0.5 && !P.tired) { P.tired = true; if (keys.boost) { toast('😮‍💨 Enerjin bitti — biraz soluklan', 1.8); Sound.nudge(); } }
   if (P.tired && P.energy >= 35) P.tired = false;
   P.boosting = keys.boost && moving && !P.tired;
-  if (P.boosting) P.energy = Math.max(0, P.energy - 24 * dt);
-  else P.energy = Math.min(100, P.energy + (P.onGround ? (P.tired ? 18 : 13) : 4) * dt);
+  const regenK = P.buffs.regen > 0 ? 3 : 1;
+  if (P.boosting) P.energy = Math.max(0, P.energy - 24 * dt / regenK);
+  else P.energy = Math.min(100, P.energy + (P.onGround ? (P.tired ? 18 : 13) : 4) * regenK * dt);
   P.boostK += ((P.boosting ? 1 : 0) - P.boostK) * (1 - Math.exp(-6 * dt));
 
   P.gliding = !P.onGround && keys.jump && P.vel.y < 0;
@@ -2858,12 +3747,14 @@ function updatePlayer(dt) {
   if (P.gliding) speed = lerp(22, 32, P.boostK);
   if (P.inWater) speed *= 0.75;
   if (P.buffs.speed > 0) speed *= 1.5;
-  const accel = P.onGround ? 11 : 3;
+  if (P.onBoard) speed *= 1.55;
+  if (P.gliding && P.buffs.glide > 0) speed += 5;
+  const accel = P.onGround ? (P.onBoard ? 5 : 11) : 3;
   const k = 1 - Math.exp(-accel * dt);
   P.vel.x += (mv.x * speed - P.vel.x) * k;
   P.vel.z += (mv.z * speed - P.vel.z) * k;
   P.vel.y -= 38 * dt;
-  if (P.gliding) { P.vel.y = Math.max(P.vel.y, -3); stats.glide += dt; }
+  if (P.gliding) { P.vel.y = Math.max(P.vel.y, P.buffs.glide > 0 ? -1.1 : -3); stats.glide += dt; }
 
   for (const u of updrafts) {
     const d = Math.hypot(P.pos.x - u.x, P.pos.z - u.z);
@@ -2900,21 +3791,33 @@ function updatePlayer(dt) {
     }
     P.pos.y = gy; P.vel.y = Math.max(P.vel.y, 0); P.onGround = true; P.canDouble = true; P.groundT = 0;
   } else { P.onGround = false; P.groundT += dt; stats.airtime += dt; }
-  P.inWater = overWater && P.onGround;
+  P.inWater = overWater && P.onGround && !P.onBoard;
   if (P.inWater) {
     const hs = Math.hypot(P.vel.x, P.vel.z); stats.swim += hs * dt; if (stats.swim > 8) unlock('swim');
     if (hs > 3 && Math.random() < 0.5) emit(P.pos.x - P.vel.x * 0.05, WATER_Y + 0.1, P.pos.z - P.vel.z * 0.05, mr(-2, 2), mr(2, 4), mr(-2, 2), 0xc6f1ff, 0.6, 12);
   }
   if (P.onGround && supportCol && supportCol.t === 2 && supportCol.r === 70) unlock('track');
+  if (P.onBoard && P.onGround && overWater && Math.hypot(P.pos.x - SEA.x, P.pos.z - SEA.z) < SEA.r) unlock('surf');
+  // bounce pads (trampoline park, hover park...)
+  if (P.onGround && P.vel.y <= 0.01) for (const bp of bouncePads) {
+    if (Math.abs(P.pos.y - bp.y) < 0.45 && Math.hypot(P.pos.x - bp.x, P.pos.z - bp.z) < bp.r) {
+      P.vel.y = bp.power * (P.buffs.jump > 0 ? 1.2 : 1); P.onGround = false; P.canDouble = true; P.groundT = 1;
+      stats.bounces = (stats.bounces || 0) + 1; if (stats.bounces >= 10) unlock('bounce');
+      Sound.jump(true); Sound.whoosh(); burst(new V3(P.pos.x, P.pos.y + 0.2, P.pos.z), 0xff9ad5, 20, 7, 0.6);
+      player.bodyG.scale.y = 0.7; break;
+    }
+  }
   if (P.pos.y < -30) { P.pos.set(SPAWN.x, heightAt(SPAWN.x, SPAWN.z) + 1, SPAWN.z); P.vel.set(0, 0, 0); toast('Başlangıç noktasına döndün'); }
 
   const hs = Math.hypot(P.vel.x, P.vel.z);
+  P.turnRate *= 0.9;
   if (hs > 0.8) {
     const tgt = Math.atan2(P.vel.x, P.vel.z);
     let d = tgt - P.facing; d = Math.atan2(Math.sin(d), Math.cos(d));
-    P.facing += d * (1 - Math.exp(-12 * dt));
+    const step = d * (1 - Math.exp(-12 * dt));
+    P.facing += step; P.turnRate = step / Math.max(dt, 0.001);
   }
-  if (P.onGround && !P.inWater && hs > 2) { stepT += dt * hs * 0.32; if (stepT > 1) { stepT = 0; Sound.step(); } }
+  if (P.onGround && !P.inWater && !P.onBoard && hs > 2) { stepT += dt * hs * 0.32; if (stepT > 1) { stepT = 0; Sound.step(); } }
   if (P.boosting && Math.random() < 0.9) emit(P.pos.x + mr(-0.5, 0.5), P.pos.y + mr(0.3, 1.5), P.pos.z + mr(-0.5, 0.5), -P.vel.x * 0.1, 0.5, -P.vel.z * 0.1, 0x9ff0ff, 0.5, 0);
   if (P.buffs.speed > 0 && hs > 3 && Math.random() < 0.5) emit(P.pos.x, P.pos.y + 0.2, P.pos.z, 0, 0.5, 0, 0x6fdcff, 0.6, 0);
   if (P.buffs.jump > 0 && Math.random() < 0.25) emit(P.pos.x, P.pos.y + 0.1, P.pos.z, mr(-1, 1), 1, mr(-1, 1), 0xffd36a, 0.6, 0);
@@ -2923,14 +3826,15 @@ function updatePlayer(dt) {
 function updatePlayerVisual(dt, t) {
   const r = player.root;
   r.position.copy(P.pos);
+  if (P.onBoard && P.mode === 'free') r.position.y += 0.28 + Math.sin(t * 4) * 0.04;
   const swim = P.inWater && P.mode === 'free';
   if (swim) r.position.y += Math.sin(t * 3) * 0.06;
   let ry = P.facing;
   if (P.mode === 'sit') ry = P.modeData.ry;
   r.rotation.y = ry;
-  r.visible = !(CAM_MODES[camMode].fp && state === 'playing') && P.mode !== 'train' && P.mode !== 'scope';
+  r.visible = !(CAM_MODES[camMode].fp && state === 'playing') && P.mode !== 'train' && P.mode !== 'scope' && P.mode !== 'ride';
   const hs = Math.hypot(P.vel.x, P.vel.z);
-  animateBuddy(player, dt, t, { speed: P.mode === 'free' && P.onGround ? hs : 0, air: P.mode === 'free' && !P.onGround && !P.gliding, glide: P.gliding, swim, sit: P.mode === 'sit', boost: P.boosting });
+  animateBuddy(player, dt, t, { speed: P.mode === 'free' && P.onGround ? hs : 0, air: P.mode === 'free' && !P.onGround && !P.gliding, glide: P.gliding, swim, sit: P.mode === 'sit', boost: P.boosting, board: P.onBoard && P.mode === 'free' });
   const sy = supportAt(P.pos.x, P.pos.z, P.pos.y + 0.1);
   playerShadow.position.set(P.pos.x, sy + 0.05, P.pos.z);
   const hgt = P.pos.y - sy;
@@ -3248,7 +4152,7 @@ function updateWorld(dt, t) {
   }
   world.pollen.geometry.attributes.position.needsUpdate = true;
   sky.position.copy(camera.position);
-  sunSprite.position.copy(camera.position).addScaledVector(SUN_DIR, 3000);
+  sunSprite.position.copy(camera.position).addScaledVector(SUN_DIR, world.sunDist || 3000);
   const focus = state === 'playing' || state === 'pc' ? P.pos : camera.position;
   sun.position.copy(focus).addScaledVector(SUN_DIR, 250);
   sun.target.position.copy(focus);
@@ -3283,7 +4187,7 @@ function updateNPCs(dt, t) {
       }
       r.position.y = n.zone === 'meadow' ? surfaceAt(r.position.x, r.position.z) : Y0;
     }
-    r.visible = dCam < 180;
+    r.visible = dCam < npcViewDist;
     if (dCam < 75) animateBuddy(n.b, dt, t, { speed });
     r.children[r.children.length - 1].visible = dCam < 30;
   }
@@ -3319,10 +4223,12 @@ function updateHUD(dt) {
     $('timer').classList.toggle('warn', timeLeft <= 10);
   } else if (lastTimeTxt !== 'zen') { $('timer').textContent = '❀ Serbest Keşif'; lastTimeTxt = 'zen'; }
   setSty('energy', 'transform', `scaleX(${(P.energy / 100).toFixed(3)})`); $('energy').classList.toggle('low', P.energy < 20 || P.tired);
-  const sl = P.mode === 'sit' ? 'Dinleniyor' : P.mode === 'train' ? 'Monorayda' : P.mode === 'elev' ? 'Asansörde' : P.tired ? 'Yoruldun — dinleniyor…' : P.gliding ? 'Süzülüyor' : P.boosting ? 'Aero hız!' : P.inWater ? 'Yüzüyor' : !P.onGround ? 'Havada' : '';
+  const sl = P.mode === 'sit' ? 'Dinleniyor' : P.mode === 'ride' ? 'Araçta' : P.onBoard ? 'Hover Kaykay' : P.mode === 'train' ? 'Monorayda' : P.mode === 'elev' ? 'Asansörde' : P.tired ? 'Yoruldun — dinleniyor…' : P.gliding ? 'Süzülüyor' : P.boosting ? 'Aero hız!' : P.inWater ? 'Yüzüyor' : !P.onGround ? 'Havada' : '';
   if (stateLblEl.textContent !== sl) stateLblEl.textContent = sl;
   let bh = '';
   if (P.buffs.speed > 0) bh += `<span style="background:linear-gradient(#7fe0ff,#0f86da)">🥤 Hız ${Math.ceil(P.buffs.speed)}s</span>`;
+  if (P.buffs.glide > 0) bh += `<span style="background:linear-gradient(#ffffff,#7fd0ff)">🍦 Süzülme ${Math.ceil(P.buffs.glide)}s</span>`;
+  if (P.buffs.regen > 0) bh += `<span style="background:linear-gradient(#c6ff9a,#3ead17)">🥤 Enerji ${Math.ceil(P.buffs.regen)}s</span>`;
   if (P.buffs.jump > 0) bh += `<span style="background:linear-gradient(#ffe07a,#f08c00)">☕ Zıplama ${Math.ceil(P.buffs.jump)}s</span>`;
   if ($('buffs').innerHTML !== bh) $('buffs').innerHTML = bh;
   setTxt('c-drops', String(stats.drops)); setTxt('c-orbs', String(stats.orbs)); setTxt('c-bubbles', String(stats.bubbles)); setTxt('c-rings', String(stats.rings));
@@ -3337,6 +4243,7 @@ function updateHUD(dt) {
     if (zn === 'Uçan Ada') unlock('island');
     if (zn === 'Spiral Bahçe Kulesi') unlock('spiral');
     if (zn === 'Gökyüzü Terası') unlock('skytop');
+    if (zn === 'Aero Sahil') unlock('beach'); if (zn === 'Deniz Feneri') unlock('lighthouse'); if (zn === 'Aero Plaza AVM') unlock('mall');
     if (zn !== 'Aero Şehir' && zn !== 'Gökyüzü Çayırı' && zn !== 'Göl') toast('📍 ' + zn, 1.8);
   }
   if (P.onGround && P.pos.y > Y0 + 6 && supportCol) { const key = Math.round(supportCol.maxY) + ':' + Math.round((supportCol.cx ?? supportCol.minX) / 10); if (!roofsVisited.has(key)) { roofsVisited.add(key); stats.roofs = roofsVisited.size; } }
@@ -3396,11 +4303,11 @@ function resetCollectibles() {
 function startGame(m) {
   Sound.init(); mode = m; state = 'playing';
   score = 0; combo = 0; comboT = 0; mult = 1; timeLeft = 180;
-  stats = { drops: 0, orbs: 0, bubbles: 0, rings: 0, updrafts: 0, maxCombo: 0, glide: 0, swim: 0, airtime: 0, questsDone: 0, talks: 0, pcs: 0, wishes: 0, roofs: 0, rides: 0 };
+  stats = { drops: 0, orbs: 0, bubbles: 0, rings: 0, updrafts: 0, maxCombo: 0, glide: 0, swim: 0, airtime: 0, questsDone: 0, talks: 0, pcs: 0, wishes: 0, roofs: 0, rides: 0, fireflies: 0, crystals: 0, bounces: 0 };
   roofsVisited = new Set(); talkedTo.clear();
-  P.pos.set(SPAWN.x, heightAt(SPAWN.x, SPAWN.z), SPAWN.z); P.vel.set(0, 0, 0); P.energy = 100; P.facing = START_YAW + Math.PI; P.onGround = true; P.mode = 'free'; P.buffs.speed = P.buffs.jump = 0; P.tired = false; P.boostK = 0; camTgt.copy(P.pos);
+  P.pos.set(SPAWN.x, heightAt(SPAWN.x, SPAWN.z), SPAWN.z); P.vel.set(0, 0, 0); P.energy = 100; P.facing = START_YAW + Math.PI; P.onGround = true; P.mode = 'free'; P.ride = null; P.onBoard = false; P.buffs.speed = P.buffs.jump = P.buffs.glide = P.buffs.regen = 0; P.tired = false; P.boostK = 0; camTgt.copy(P.pos);
   yaw = START_YAW; pitch = CAM_MODES[camMode].p; smoothView(0, true); camDistT = CAM_MODES[camMode].d || 8; camCur = camDistT;
-  race.active = false; race.rings.forEach(r => r.visible = false);
+  race.active = false; race.rings.forEach(r => r.visible = false); if (world2.tramp) world2.tramp.active = false;
   resetCollectibles();
   quests = []; for (let i = 0; i < 3; i++) quests.push(newQuest(quests.map(q => q.stat)));
   renderQuests();
@@ -3447,6 +4354,8 @@ $('b-pach').onclick = () => { achReturn = 'pause'; renderAch(); show('achs'); };
 $('b-settings').onclick = () => { settingsReturn = 'menu'; syncSettingsUI(); show('settings'); };
 $('b-psettings').onclick = () => { settingsReturn = 'pause'; syncSettingsUI(); show('settings'); };
 $('b-resume').onclick = resume;
+document.querySelectorAll('[data-time]').forEach(b => b.onclick = () => { Sound.init(); Sound.click(); setNight(b.dataset.time === 'night'); });
+$('b-pnight').onclick = () => setNight(nightTarget < 0.5);
 $('b-cancelrace').onclick = () => { cancelRace(); $('b-cancelrace').classList.add('hidden'); };
 $('b-rerollq').onclick = () => { rerollQuests(); };
 $('b-quit').onclick = toMenu;
@@ -3481,6 +4390,7 @@ function buildSwatches() {
     box.appendChild(s);
   });
 }
+
 
 
 /* ============================================================
@@ -3585,7 +4495,9 @@ holdBtn('t-wave', () => { if (state === 'playing') doWave(); });
 holdBtn('t-act', () => { if (state === 'playing') interact(); });
 holdBtn('t-pause', () => { if (state === 'playing') { keys.boost = keys.jump = false; touchIn.x = touchIn.y = 0; pause(); } });
 holdBtn('t-fs', () => toggleFullscreen());
-holdBtn('t-race', () => { cancelRace(); });
+holdBtn('t-race', () => { if (race.active) cancelRace(); else cancelTramp(); });
+holdBtn('t-board', () => { if (state === 'playing') toggleBoard(); });
+holdBtn('t-night', () => { if (state === 'playing') setNight(nightTarget < 0.5); });
 $('dialog').addEventListener('pointerdown', e => { if (!IS_TOUCH || state !== 'playing') return; e.stopPropagation(); interact(); });
 
 /* ---------- quests panel: collapse + tap ✕ to cancel ---------- */
@@ -3605,7 +4517,9 @@ function updateTouchUI() {
   let label = '';
   if (dialogNpc) label = '💬 Devam';
   else if (lastIt) label = lastIt.label.replace(/ \(E.*\)$/, '');
-  const raceOn = race.active;
+  const raceOn = race.active || !!(world2.tramp && world2.tramp.active);
+  $('t-board').classList.toggle('hidden', !owned.board);
+  $('t-night').textContent = nightTarget > 0.5 ? '☀️' : '🌙';
   const key = label + '|' + raceOn;
   if (key !== touchUiState) {
     touchUiState = key;
@@ -3614,6 +4528,7 @@ function updateTouchUI() {
     $('t-race').classList.toggle('hidden', !raceOn);
   }
 }
+
 
 
 /* ============================================================
@@ -4065,6 +4980,7 @@ function loop() {
   }
   if (state !== 'paused') {
     updateCollectibles(dt, T, playing);
+    updateWorld2(dt, T, playing);
     updateParticles(dt);
     updateWorld(dt, T);
     updatePlayerVisual(dt, T);
@@ -4075,6 +4991,7 @@ function loop() {
   updateAchPopup(dt);
   updateFloatTexts(dt);
   updateTouchUI();
+  updateNight(dt);
   if (state !== prevLoopState) { prevLoopState = state; checkOrientation(); }
   if (state === 'pc' || document.hidden) return;
   if (++frameNo % shadowEvery === 0) sun.shadow.needsUpdate = true;
@@ -4082,7 +4999,7 @@ function loop() {
 }
 
 // small console helper for testing: aeroDebug.tp(x, y, z)
-window.aeroDebug = { P, Sound, CITY, world, renderer, scene, get yaw() { return yaw; }, grassGeo: () => grassGeo, get resScale() { return resScale; }, measure() { const i = renderer.info; i.autoReset = false; i.reset(); sun.shadow.needsUpdate = true; if (useBloom) composer.render(); else renderer.render(scene, camera); const r = { calls: i.render.calls, tris: i.render.triangles }; i.autoReset = true; return r; }, get state() { return state; }, tp: (x, y, z) => { P.pos.set(x, y, z); P.vel.set(0, 0, 0); }, look: (y, p) => { yaw = y; if (p !== undefined) pitch = p; }, cam: m => { camMode = m; } };
+window.aeroDebug = { P, Sound, CITY, world, renderer, scene, get yaw() { return yaw; }, night: on => setNight(on, true), quality: q => { settings.quality = q; applyQuality(); }, board: () => { owned.board = true; toggleBoard(true); }, grassGeo: () => grassGeo, get resScale() { return resScale; }, measure() { const i = renderer.info; i.autoReset = false; i.reset(); sun.shadow.needsUpdate = true; if (useBloom) composer.render(); else renderer.render(scene, camera); const r = { calls: i.render.calls, tris: i.render.triangles }; i.autoReset = true; return r; }, get state() { return state; }, tp: (x, y, z) => { P.pos.set(x, y, z); P.vel.set(0, 0, 0); }, look: (y, p) => { yaw = y; if (p !== undefined) pitch = p; }, cam: m => { camMode = m; } };
 
 (async () => {
   try {
@@ -4093,11 +5010,16 @@ window.aeroDebug = { P, Sound, CITY, world, renderer, scene, get yaw() { return 
     setLoad(0.28, 'Çimenler büyüyor…'); await nextFrame(); buildGrass(); buildFlowers();
     setLoad(0.36, 'Ağaçlar dikiliyor…'); await nextFrame(); buildTrees();
     setLoad(0.44, 'Bulutlar kabarıyor…'); await nextFrame(); buildClouds(); buildSkyline();
-    setLoad(0.52, 'Cam şehir yükseliyor…'); await nextFrame(); buildCity();
+    setLoad(0.5, 'Cam şehir yükseliyor…'); await nextFrame(); buildCity();
+    setLoad(0.58, 'Yeni mahalleler kuruluyor…'); await nextFrame(); buildCity2();
+    setLoad(0.63, 'Sahil ve kristaller…'); await nextFrame(); buildBeach(); buildCrystalValley();
     setLoad(0.66, 'Uçan adalar süzülüyor…'); await nextFrame(); buildUpdrafts(); buildMeadowFeatures(); B.build(scene);
     setLoad(0.76, 'Arkadaşlar geliyor…'); await nextFrame(); buildCollectibles(); buildCritters(); buildParticles(); buildNPCs(); buildPlayer(); buildRace();
+    buildFireflies(); buildBoardMesh(); setBuddyHat(player, settings.hat);
+    npcs.forEach((n, i) => { if (i % 5 === 1 || i % 7 === 3) setBuddyHat(n.b, HATS[i % HATS.length].id); });
     setLoad(0.88, 'Müzik yükleniyor…'); await musicP;
     applyQuality(); syncSettingsUI(); updateBestLbl(); buildSwatches(); buildOS();
+    setNight(settings.time === 'night', true);
     setLoad(0.96, 'Son rötuşlar…'); await nextFrame();
     updateWorld(0.016, 0); updateMenuCamera(0.016);
     try { renderer.compile(scene, camera); } catch (e) {}
