@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 12 Kasım 2026 arasında, 30 günde 88 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 13 Kasım 2026 arasında, 31 günde 90 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -32,7 +32,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Backrooms: Kaset #1994** | VHS kaset atmosferli 3D korku oyunu | PC · Mobil |
 | **AeroSim 3D PRO** | Uçuş, hava trafik kontrolü ve havayolu simülatörü | PC · Mobil |
 | **Aetheria** | Liquid glass arayüzlü web deneyimi | PC · Mobil |
-| **Küllerin Saltanatı** | Birinci şahıs açık dünya dark fantasy RPG | PC · Mobil |
+| **Küllerin Saltanatı** | Birinci şahıs, co-op oynanabilen açık dünya dark fantasy RPG | PC · Mobil |
 | **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
 
 - **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, Kabusların Efendisi ile final savaşı ve on Backrooms seviyesi (Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve daha fazlası) ve End portalının ardında gizli bir son.
@@ -41,7 +41,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 - **Backrooms: Kaset #1994:** Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu.
 - **AeroSim 3D PRO:** Mega bir havalimanı, gerçekçi hava trafik kontrolü ve havayolu yönetimi: hat aç, kapı kur, filonu büyüt.
 - **Aetheria:** Akıcı animasyonlu, sakinleştirici bir dijital evren.
-- **Küllerin Saltanatı:** Ebedi gecenin altında boss savaşları, görev günlüğü, nadir eşyalar, büyüler ve Küllerin Hükümdarı ile son hesaplaşma.
+- **Küllerin Saltanatı:** Ebedi gecenin altında, istersen arkadaşlarınla birlikte: Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, sis kapılı arenalarda boss savaşları, hedefe kilitlenmeli dövüş, büyü kitabı, Kayıp Sayfalar ve gizli bir son.
 - **Portal Silahı: Çoklu Evren:** Portal silahını al ve evrenler arasında zıpla; skor sistemi ve shader efektleri.
 
 ### Nasıl oynanır / indirilir?
@@ -68,7 +68,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 12, 2026: 88 releases in 30 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 13, 2026: 90 releases in 31 days.
 
 ### Projects
 
@@ -80,7 +80,7 @@ This repository hosts my personal website and the latest version of each project
 | **Backrooms: Kaset #1994** | 3D horror game with a VHS tape look | PC · Mobile |
 | **AeroSim 3D PRO** | Flight, air traffic control and airline simulator | PC · Mobile |
 | **Aetheria** | Web experience with a liquid glass interface | PC · Mobile |
-| **Küllerin Saltanatı** | First-person open-world dark fantasy RPG | PC · Mobile |
+| **Küllerin Saltanatı** | First-person open-world dark fantasy RPG with co-op | PC · Mobile |
 | **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
 
 - **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, thirteen nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels (a darkened suburb, a cave system, a neon city, an endless library and more) and a secret ending behind the End portal.
@@ -89,7 +89,7 @@ This repository hosts my personal website and the latest version of each project
 - **Backrooms: Kaset #1994:** A first-person horror game set in endless fluorescent-lit corridors, watched through a found VHS tape.
 - **AeroSim 3D PRO:** A mega airport, realistic air traffic control and airline management: open routes, build gates and grow your fleet.
 - **Aetheria:** A calming digital world with smooth animations.
-- **Küllerin Saltanatı:** Boss fights, a quest log, rare items, spells and a final showdown with the Lord of Ashes under an eternal night.
+- **Küllerin Saltanatı:** An eternal night you can now share with friends in co-op: three new regions, boss fights in fog-gated arenas, lock-on combat, a spellbook, lost pages and a secret ending.
 - **Portal Silahı: Çoklu Evren:** Grab the portal gun and jump between universes, with a scoring system and shader effects.
 
 ### How to play / download

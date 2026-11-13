@@ -488,13 +488,13 @@ html.nocursor a,html.nocursor button{cursor:pointer}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(30,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(31,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(30,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(31,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -885,7 +885,7 @@ footer a{color:var(--fg)}
   <div class="stats" data-morph="1" data-gx="0">
     <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="30">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="31">0</span></div><p>Günde çıkan tüm bu iş</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
@@ -911,9 +911,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">30 Gün, <em>88</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">31 Gün, <em>90</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 12 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 13 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -977,7 +977,8 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 12 · 6 Kasım</div><h4>Skin Stealer 3.2</h4><p>Backrooms seviyeleri baştan inşa edildi: sütunlu sarı salonlar, parti odaları, şelaleli havuzlar, sonsuz otopark ve çökmüş ofis katları. Yeni Bakteri modeli ve yeni sesler.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 13 · 8 Kasım</div><h4>Skin Stealer 5.5</h4><p>İki günde on sürüm: Backrooms seviyeleri ona çıktı. Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve Seviye 94, çoğu kendi yaratığıyla.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 14 · 10 Kasım</div><h4>Skin Stealer 6.0</h4><p>Seviye 94'e gece geldi: karanlıkta Kukla dolaşıyor, kurtuluş dolaplarda. Bütün seviyeleri bitirenleri End portalının ardında Sonsuz Merdiven ve gizli bir son bekliyor.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 15 · 12 Kasım — Şimdi</div><h4>Aero Drift'e Gece</h4><p>Aero Drift'e gece, ateş böcekleri ve kuzey ışıkları geldi; şehir AVM, sinema, dönme dolap ve deniz fenerli bir sahille büyüdü. Skin Stealer'ın kılık değiştiren Deri Hırsızı artık sohbette gerçek bir oyuncu gibi konuşuyor. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 15 · 12 Kasım</div><h4>Aero Drift'e Gece</h4><p>Aero Drift'e gece, ateş böcekleri ve kuzey ışıkları geldi; şehir AVM, sinema, dönme dolap ve deniz fenerli bir sahille büyüdü. Skin Stealer'ın kılık değiştiren Deri Hırsızı artık sohbette gerçek bir oyuncu gibi konuşuyor.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 16 · 13 Kasım — Şimdi</div><h4>Küllerin Saltanatı: Final 3</h4><p>"Final" bir kez daha bitmedi. Ebedi gece artık arkadaşlarla paylaşılıyor: üç yeni bölge, üç yeni boss, sis kapılı arenalar ve yeni bir dövüş sistemi. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -1203,14 +1204,14 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
-  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On üç kabus ve final savaşı','On Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v6.1.0', draw:'mc', mod:true, isNew:true,
+  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On üç kabus ve final savaşı','On Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v6.1.0', draw:'mc', mod:true,
     desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, bir final savaşı ve on Backrooms seviyesi.',
     chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-6.1.0.jar' },
   { title:'Pardux', accent:'#c8ff4d', plat:'Windows', feats:['Dinamik ada','"Hey Pardux" sesli komut','Çevrimdışı ses tanıma'], cat:'Masaüstü Asistanı', ver:'1.0', draw:'pardux', app:true,
     desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
     chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
     source:'https://github.com/Tyrstana/Tyrstana.github.io/tree/main/projeler/pardux' },
-  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Gece ve gündüz','AVM, sahil ve dönme dolap','Kendi film müziği'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 5', draw:'frutiger', isNew:true,
+  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Gece ve gündüz','AVM, sahil ve dönme dolap','Kendi film müziği'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 5', draw:'frutiger',
     desc:'Frutiger Aero estetiğinde çayırlarda süzül, cam bir şehri keşfet. Artık gece de var: ateş böcekleri ve kuzey ışıkları. Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, kaykay parkı ve kendi film müziği.',
     chips:['Three.js','Frutiger Aero','Müzik'], file:'projeler/aero-drift.html' },
   { title:'Backrooms: Kaset #1994', accent:'#e3c75a', plat:'PC · Mobil', feats:['VHS kaset atmosferi','Mobil ve PC kontrol','Özel müzikler'], cat:'3D Korku Oyunu', ver:'Update 16', draw:'backrooms',
@@ -1222,9 +1223,9 @@ const PROJECTS = [
   { title:'Aetheria', accent:'#b08cff', plat:'PC · Mobil', feats:['Liquid glass arayüz','Akışkan geçişler','Mobil uyumlu'], cat:'Web Deneyimi', ver:'Update 1', draw:'aetheria',
     desc:'Liquid glass arayüzlü, sıkıntı giderici bir dijital evren. Görsel cila, akıcı animasyonlar ve tam mobil uyum.',
     chips:['CSS','Glassmorphism','Mobil'], file:'projeler/aetheria.html' },
-  { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Boss savaşları','Görev günlüğü','Nadir eşyalar ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 2', draw:'fantasy',
-    desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası. Boss savaşları, görev günlüğü, nadir eşyalar, büyüler ve Küllerin Hükümdarı ile son hesaplaşma.',
-    chips:['Three.js','RPG','Boss Savaşları'], file:'projeler/kullerin-saltanati.html' },
+  { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Arkadaşlarınla co-op','Üç yeni bölge ve boss','Kilitlenmeli dövüş ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 3', draw:'fantasy', isNew:true,
+    desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası, artık arkadaşlarınla birlikte oynanabiliyor. Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, üç yeni boss, sis kapılı arenalar, hedefe kilitlenme ve infaz, büyü kitabı, Kayıp Sayfalar ve gizli bir son.',
+    chips:['Three.js','RPG','Co-op'], file:'projeler/kullerin-saltanati.html' },
   { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', draw:'portal',
     desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Yenilenen evrenler, skor sistemi ve bolca kaos.',
     chips:['Three.js','Shader','Keşif'], file:'projeler/portal-silahi.html' },
@@ -1301,9 +1302,10 @@ const LOG = [
   ['9 Kas', ['Kişisel site — Update 18']],
   ['10 Kas', ['Skin Stealer — v5.6.0, v5.7.0, v5.8.0, v5.9.0, v6.0.0', 'Kişisel site — Update 19']],
   ['11 Kas', ['Skin Stealer — v6.1.0']],
-  ['12 Kas', ['Aero Drift — Güncelleme 5', 'Kişisel site — Update 20']]
+  ['12 Kas', ['Aero Drift — Güncelleme 5', 'Kişisel site — Update 20']],
+  ['13 Kas', ['Küllerin Saltanatı — Final 3', 'Kişisel site — Update 21']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2, 2];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
