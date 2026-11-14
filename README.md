@@ -20,13 +20,15 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 13 Kasım 2026 arasında, 31 günde 90 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 14 Kasım 2026 arasında, 32 günde 93 sürüm olarak yayınlandı.
 
 ### Projeler
 
 | Proje | Tür | Platform |
 |---|---|---|
 | **Skin Stealer** | Minecraft 1.20.1 Forge korku modu | Java · Minecraft |
+| **ZENİT** | Çevrim içi yarışlı 3D parkur oyunu | PC |
+| **Karadelik Simülasyonu** | Genel göreliliğe dayalı gerçek zamanlı karadelik görselleştirmesi | PC · Mobil |
 | **Pardux** | Türkçe komut anlayan Windows asistanı | Windows |
 | **Aero Drift** | Frutiger Aero tarzında 3D keşif oyunu | PC · Mobil |
 | **Backrooms: Kaset #1994** | VHS kaset atmosferli 3D korku oyunu | PC · Mobil |
@@ -36,6 +38,8 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
 
 - **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, Kabusların Efendisi ile final savaşı ve on Backrooms seviyesi (Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve daha fazlası) ve End portalının ardında gizli bir son.
+- **ZENİT:** Akışı bozmadan koşmaya dayalı birinci şahıs parkur: duvar koşusu, duvardan sekme, kayma ve tırmanma. Sekiz bölüm, gizli kristaller, madalyalar, hayalet koşu ve arkadaşlarınla 8 kişilik çevrim içi yarış.
+- **Karadelik Simülasyonu:** Işığın karadelik çevresinde nasıl büküldüğünü her piksel için hesaplayan gerçek zamanlı görselleştirme: dönen yığılma diski, Doppler ışıması, foton halkası, kutup jetleri ve Gargantua, M87*, Sgr A* gibi hazır sahneler.
 - **Pardux:** Alt+Space ile açılır, ekranın üstünde dinamik ada olarak yaşar. Müzik, hatırlatıcı, hava durumu, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları; ses tanıma çevrimdışı çalışır.
 - **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet. Gece ve gündüz, Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, uçan adalar, monoray ve kendi film müziği.
 - **Backrooms: Kaset #1994:** Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu.
@@ -68,13 +72,15 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 13, 2026: 90 releases in 31 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 14, 2026: 93 releases in 32 days.
 
 ### Projects
 
 | Project | Type | Platform |
 |---|---|---|
 | **Skin Stealer** | Horror mod for Minecraft 1.20.1 Forge | Java · Minecraft |
+| **ZENİT** | 3D parkour game with online races | PC |
+| **Karadelik Simülasyonu** | Real-time black hole visualisation based on general relativity | PC · Mobile |
 | **Pardux** | Windows assistant that understands Turkish commands | Windows |
 | **Aero Drift** | 3D exploration game in the Frutiger Aero style | PC · Mobile |
 | **Backrooms: Kaset #1994** | 3D horror game with a VHS tape look | PC · Mobile |
@@ -84,6 +90,8 @@ This repository hosts my personal website and the latest version of each project
 | **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
 
 - **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, thirteen nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels (a darkened suburb, a cave system, a neon city, an endless library and more) and a secret ending behind the End portal.
+- **ZENİT:** A first-person parkour game about keeping your flow: wall runs, wall jumps, slides and ledge climbs. Eight levels, hidden crystals, medals, a ghost of your best run and online races for up to 8 friends.
+- **Karadelik Simülasyonu (Black Hole Simulation):** A real-time visualisation that traces how light bends around a black hole for every pixel: a spinning accretion disk, Doppler beaming, the photon ring, polar jets and presets such as Gargantua, M87* and Sgr A*.
 - **Pardux:** Opens with Alt+Space and lives at the top of the screen as a dynamic island. Music, reminders, weather, exchange rates, WhatsApp messages and "Hey Pardux" voice commands; speech recognition works offline.
 - **Aero Drift:** Glide over meadows and explore a glass city. Day and night, a shopping mall, a Ferris wheel, a beach with a lighthouse, a crystal valley, floating islands, a monorail and an original soundtrack.
 - **Backrooms: Kaset #1994:** A first-person horror game set in endless fluorescent-lit corridors, watched through a found VHS tape.

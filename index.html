@@ -488,13 +488,13 @@ html.nocursor a,html.nocursor button{cursor:pointer}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(31,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(32,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(31,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(32,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -883,9 +883,9 @@ footer a{color:var(--fg)}
 
   <!-- STATS -->
   <div class="stats" data-morph="1" data-gx="0">
-    <div class="stat"><div class="stat-num"><span class="count" data-to="8">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="10">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="31">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="32">0</span></div><p>Günde çıkan tüm bu iş</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
@@ -899,7 +899,7 @@ footer a{color:var(--fg)}
       <p class="fade-up">Hepsi en güncel sürümüyle. Tarayıcı oyunları doğrudan sitede açılır; mod ve masaüstü uygulaması için kurulum adımları ve indirme bağlantısı var.</p>
     </div>
     <div class="projects-pin">
-      <div class="proj-bar"><span><b id="projIdx">01</b>/ 08 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
+      <div class="proj-bar"><span><b id="projIdx">01</b>/ 10 proje</span><span class="proj-hint">Kaydır → keşfet</span></div>
       <div class="proj-track" id="projTrack"></div>
       <div class="proj-progress"><i></i></div>
       <div class="proj-dots" id="projDots" aria-hidden="true"></div>
@@ -911,9 +911,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">31 Gün, <em>90</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">32 Gün, <em>93</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 13 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 14 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -978,7 +978,8 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 13 · 8 Kasım</div><h4>Skin Stealer 5.5</h4><p>İki günde on sürüm: Backrooms seviyeleri ona çıktı. Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve Seviye 94, çoğu kendi yaratığıyla.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 14 · 10 Kasım</div><h4>Skin Stealer 6.0</h4><p>Seviye 94'e gece geldi: karanlıkta Kukla dolaşıyor, kurtuluş dolaplarda. Bütün seviyeleri bitirenleri End portalının ardında Sonsuz Merdiven ve gizli bir son bekliyor.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 15 · 12 Kasım</div><h4>Aero Drift'e Gece</h4><p>Aero Drift'e gece, ateş böcekleri ve kuzey ışıkları geldi; şehir AVM, sinema, dönme dolap ve deniz fenerli bir sahille büyüdü. Skin Stealer'ın kılık değiştiren Deri Hırsızı artık sohbette gerçek bir oyuncu gibi konuşuyor.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 16 · 13 Kasım — Şimdi</div><h4>Küllerin Saltanatı: Final 3</h4><p>"Final" bir kez daha bitmedi. Ebedi gece artık arkadaşlarla paylaşılıyor: üç yeni bölge, üç yeni boss, sis kapılı arenalar ve yeni bir dövüş sistemi. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 16 · 13 Kasım</div><h4>Küllerin Saltanatı: Final 3</h4><p>"Final" bir kez daha bitmedi. Ebedi gece artık arkadaşlarla paylaşılıyor: üç yeni bölge, üç yeni boss, sis kapılı arenalar ve yeni bir dövüş sistemi.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 17 · 14 Kasım — Şimdi</div><h4>ZENİT ve Karadelik</h4><p>İki yeni proje: duvar koşusu ve çevrim içi yarışlarıyla bir parkur oyunu, ışığın yolunu genel göreliliğe göre hesaplayan bir karadelik simülasyonu. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -1207,6 +1208,12 @@ const PROJECTS = [
   { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On üç kabus ve final savaşı','On Backrooms seviyesi'], cat:'Minecraft Forge Modu', ver:'v6.1.0', draw:'mc', mod:true,
     desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, bir final savaşı ve on Backrooms seviyesi.',
     chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-6.1.0.jar' },
+  { title:'ZENİT', accent:'#3ef6ff', plat:'PC', feats:['Duvar koşusu ve kayma','Sekiz bölüm, hayalet koşu','8 kişilik çevrim içi yarış'], cat:'3D Parkur Oyunu', ver:'Sürüm 1', draw:'zenit', isNew:'Yeni',
+    desc:'Akışı bozmadan koşmaya dayalı birinci şahıs parkur oyunu: duvar koşusu, duvardan sekme, kayma ve kenarlara tırmanma. Neon Izgara\'dan Fırtına Kulesi\'ne sekiz bölüm, gizli kristaller, madalyalar, en iyi koşunun hayaleti ve arkadaşlarınla 8 kişilik gerçek zamanlı yarış.',
+    chips:['Three.js','Parkur','Çok oyunculu'], file:'projeler/zenit.html' },
+  { title:'Karadelik Simülasyonu', accent:'#ffb15a', plat:'PC · Mobil', feats:['Genel göreliliğe göre ışın izleme','Kerr dönüşü ve kütleçekimsel mercek','Altı hazır sahne'], cat:'Fizik Simülasyonu · WebGL', ver:'Sürüm 1', draw:'blackhole', isNew:'Yeni',
+    desc:'Işığın karadeliğin çevresinde nasıl büküldüğünü her piksel için hesaplayan gerçek zamanlı görselleştirme. Dönen yığılma diski, Doppler ışıması, foton halkası, kutup jetleri ve Gargantua, M87* ile Sgr A* gibi hazır sahneler.',
+    chips:['WebGL','GLSL','Fizik'], file:'projeler/karadelik.html' },
   { title:'Pardux', accent:'#c8ff4d', plat:'Windows', feats:['Dinamik ada','"Hey Pardux" sesli komut','Çevrimdışı ses tanıma'], cat:'Masaüstü Asistanı', ver:'1.0', draw:'pardux', app:true,
     desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
     chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
@@ -1223,7 +1230,7 @@ const PROJECTS = [
   { title:'Aetheria', accent:'#b08cff', plat:'PC · Mobil', feats:['Liquid glass arayüz','Akışkan geçişler','Mobil uyumlu'], cat:'Web Deneyimi', ver:'Update 1', draw:'aetheria',
     desc:'Liquid glass arayüzlü, sıkıntı giderici bir dijital evren. Görsel cila, akıcı animasyonlar ve tam mobil uyum.',
     chips:['CSS','Glassmorphism','Mobil'], file:'projeler/aetheria.html' },
-  { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Arkadaşlarınla co-op','Üç yeni bölge ve boss','Kilitlenmeli dövüş ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 3', draw:'fantasy', isNew:true,
+  { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Arkadaşlarınla co-op','Üç yeni bölge ve boss','Kilitlenmeli dövüş ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 3', draw:'fantasy',
     desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası, artık arkadaşlarınla birlikte oynanabiliyor. Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, üç yeni boss, sis kapılı arenalar, hedefe kilitlenme ve infaz, büyü kitabı, Kayıp Sayfalar ve gizli bir son.',
     chips:['Three.js','RPG','Co-op'], file:'projeler/kullerin-saltanati.html' },
   { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', draw:'portal',
@@ -1303,9 +1310,10 @@ const LOG = [
   ['10 Kas', ['Skin Stealer — v5.6.0, v5.7.0, v5.8.0, v5.9.0, v6.0.0', 'Kişisel site — Update 19']],
   ['11 Kas', ['Skin Stealer — v6.1.0']],
   ['12 Kas', ['Aero Drift — Güncelleme 5', 'Kişisel site — Update 20']],
-  ['13 Kas', ['Küllerin Saltanatı — Final 3', 'Kişisel site — Update 21']]
+  ['13 Kas', ['Küllerin Saltanatı — Final 3', 'Karadelik Simülasyonu — ilk sürüm', 'Kişisel site — Update 21']],
+  ['14 Kas', ['ZENİT — ilk sürüm', 'Kişisel site — Update 22']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2, 2];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2, 3, 2];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
@@ -1773,6 +1781,121 @@ const DRAW = {
     x.fillStyle = bg2; x.beginPath(); x.arc(bcx, bcy, br, 0, 7); x.fill();
     x.fillStyle = 'rgba(255,255,255,.85)'; x.font = `600 ${8 * s}px Manrope`; x.textAlign = 'center';
     x.fillText(Math.sin(t * .9) > 0 ? 'Nefes al' : 'Nefes ver', bcx, byy + bhei - 12 * s); x.textAlign = 'left';
+  },
+
+  /* ---------- ZENİT: neon parkour run over rooftops at dusk ---------- */
+  zenit(x, w, h, t, s, st) {
+    // static sky, sun and far skyline
+    x.drawImage(layer(st, 'zsky', w, h, (g, W, H) => {
+      const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#120a35'); sky.addColorStop(.55, '#5a1a6e'); sky.addColorStop(.8, '#ff5e7a'); sky.addColorStop(1, '#ffb36b');
+      g.fillStyle = sky; g.fillRect(0, 0, W, H);
+      const R = seeded(77);
+      for (let i = 0; i < 70; i++) { g.fillStyle = `rgba(255,255,255,${.2 + R() * .6})`; g.fillRect(R() * W, R() * H * .45, 1.2 * s, 1.2 * s); }
+      const sx = W * .62, sy = H * .66, sr = H * .2;
+      const sun = g.createLinearGradient(0, sy - sr, 0, sy + sr); sun.addColorStop(0, '#ffe36b'); sun.addColorStop(1, '#ff3d8a');
+      g.fillStyle = sun; g.beginPath(); g.arc(sx, sy, sr, 0, 7); g.fill();
+      g.fillStyle = '#5a1a6e'; for (let k = 0; k < 6; k++) g.fillRect(sx - sr, sy + k * sr * .16, sr * 2, (1 + k * .9) * s);
+      g.fillStyle = '#2a0f45';
+      let bx = 0; while (bx < W) { const bw = (14 + R() * 26) * s, bh = H * (.12 + R() * .2); g.fillRect(bx, H * .78 - bh, bw, bh + H); bx += bw + 2 * s; }
+      g.fillStyle = 'rgba(255,200,120,.55)';
+      for (let i = 0; i < 90; i++) g.fillRect(R() * W, H * (.6 + R() * .18), 1.5 * s, 2 * s);
+    }), 0, 0);
+    // scrolling rooftops (parallax) with neon edges
+    const P = w * 1.7, shift = t * 90 * s;
+    const roofs = [[0, .86, .34], [.42, .8, .22], [.72, .74, .3], [1.06, .82, .26], [1.36, .77, .3]];
+    roofs.forEach(([rx, ry, rw], i) => {
+      const X = (((rx * w - shift) % P) + P) % P - w * .35, Y = ry * h, W = rw * w;
+      x.fillStyle = '#0b0620'; x.fillRect(X, Y, W, h - Y);
+      x.fillStyle = i % 2 ? '#3ef6ff' : '#ff4fd8'; x.fillRect(X, Y, W, 2.2 * s);
+      x.globalAlpha = .35; x.drawImage(artGlow(i % 2 ? 'rgba(62,246,255,1)' : 'rgba(255,79,216,1)'), X - 6 * s, Y - 14 * s, W + 12 * s, 28 * s); x.globalAlpha = 1;
+      x.fillStyle = 'rgba(255,255,255,.08)'; for (let k = 1; k < 4; k++) x.fillRect(X + k * W / 4, Y + 10 * s, 1 * s, h);
+    });
+    // floating crystal
+    const cx = w * .8 - (t * 30 * s) % (w * .9), cy = h * .5 + Math.sin(t * 2) * 5 * s;
+    x.globalCompositeOperation = 'lighter'; x.drawImage(artGlow('rgba(120,255,240,1)'), cx - 26 * s, cy - 26 * s, 52 * s, 52 * s); x.globalCompositeOperation = 'source-over';
+    x.fillStyle = '#b8fff6'; x.beginPath(); x.moveTo(cx, cy - 9 * s); x.lineTo(cx + 6 * s, cy); x.lineTo(cx, cy + 9 * s); x.lineTo(cx - 6 * s, cy); x.closePath(); x.fill();
+    // runner: a jump arc with speed lines
+    const ph = (t * .9) % 1, jx = w * .28, jy = h * .62 - Math.sin(ph * Math.PI) * h * .2;
+    x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 1.2 * s;
+    for (let k = 0; k < 6; k++) { const ly = jy - 14 * s + k * 6 * s, ll = (20 + (k * 13 + t * 200) % 30) * s; x.beginPath(); x.moveTo(jx - 16 * s - ll, ly); x.lineTo(jx - 14 * s, ly); x.stroke(); }
+    x.save(); x.translate(jx, jy); x.rotate(-.25 + Math.sin(ph * Math.PI) * .2);
+    x.fillStyle = '#fff'; x.strokeStyle = '#fff'; x.lineCap = 'round'; x.lineWidth = 3.4 * s;
+    x.beginPath(); x.arc(5 * s, -24 * s, 4.6 * s, 0, 7); x.fill();
+    const sw = Math.sin(t * 12);
+    x.beginPath(); x.moveTo(3 * s, -18 * s); x.lineTo(-2 * s, -3 * s); x.stroke();
+    x.beginPath(); x.moveTo(2 * s, -15 * s); x.lineTo(12 * s, -10 * s + sw * 4 * s); x.moveTo(2 * s, -15 * s); x.lineTo(-9 * s, -20 * s - sw * 4 * s); x.stroke();
+    x.beginPath(); x.moveTo(-2 * s, -3 * s); x.lineTo(8 * s, 4 * s + sw * 3 * s); x.lineTo(6 * s, 13 * s); x.moveTo(-2 * s, -3 * s); x.lineTo(-11 * s, 5 * s - sw * 3 * s); x.lineTo(-16 * s, 1 * s); x.stroke();
+    x.restore();
+    // ghost run (best time) a little behind
+    x.globalAlpha = .28; x.fillStyle = '#3ef6ff'; x.beginPath(); x.arc(jx - 46 * s + 5 * s, h * .62 - Math.sin(((ph + .85) % 1) * Math.PI) * h * .2 - 24 * s, 4.6 * s, 0, 7); x.fill(); x.globalAlpha = 1;
+    // HUD
+    x.fillStyle = 'rgba(255,255,255,.95)'; x.font = `800 ${22 * s}px Syne`; x.fillText('ZENİT', w * .1, 32 * s);
+    x.fillStyle = 'rgba(255,255,255,.65)'; x.font = `400 ${7.5 * s}px "JetBrains Mono"`; x.fillText('BÖLÜM 01 · NEON IZGARA', w * .1, 45 * s);
+    const tm = (t % 60), tt = `00:${String(Math.floor(tm)).padStart(2, '0')}.${String(Math.floor((tm % 1) * 100)).padStart(2, '0')}`;
+    x.textAlign = 'right'; x.fillStyle = '#fff'; x.font = `600 ${16 * s}px "JetBrains Mono"`; x.fillText(tt, w * .9, 32 * s);
+    ['#ffd36b', '#d8e2ee', '#d08a4a'].forEach((c, i) => { x.fillStyle = i < 1 + Math.floor((t / 3) % 3) ? c : 'rgba(255,255,255,.18)'; x.beginPath(); x.arc(w * .9 - 4 * s - i * 14 * s, 44 * s, 4.5 * s, 0, 7); x.fill(); });
+    x.textAlign = 'left';
+    const tricks = ['DUVAR KOŞUSU', 'KAYMA', 'DUVARDAN SEK', 'ZIPLA'], tk = tricks[Math.floor(t / 1.6) % 4], fade = 1 - ((t / 1.6) % 1);
+    x.globalAlpha = Math.min(1, fade * 2); x.fillStyle = '#3ef6ff'; x.font = `700 ${9 * s}px "JetBrains Mono"`; x.fillText(tk + '  ×' + (2 + Math.floor(t / 1.6) % 5), jx - 10 * s, jy - 40 * s); x.globalAlpha = 1;
+  },
+
+  /* ---------- Karadelik: lensed accretion disk around a Kerr black hole ---------- */
+  blackhole(x, w, h, t, s, st) {
+    x.drawImage(layer(st, 'bhsky', w, h, (g, W, H) => {
+      g.fillStyle = '#020208'; g.fillRect(0, 0, W, H);
+      const R = seeded(311);
+      const band = g.createLinearGradient(0, H * .2, W, H * .9); band.addColorStop(0, 'rgba(60,40,90,0)'); band.addColorStop(.5, 'rgba(90,70,140,.18)'); band.addColorStop(1, 'rgba(60,40,90,0)');
+      g.fillStyle = band; g.fillRect(0, 0, W, H);
+      for (let i = 0; i < 260; i++) { const a = .15 + R() * .75, r = (R() < .06 ? 1.6 : .9) * s; g.fillStyle = `rgba(${200 + R() * 55 | 0},${200 + R() * 55 | 0},255,${a})`; g.fillRect(R() * W, R() * H, r, r); }
+    }), 0, 0);
+    const cx = w * .5, cy = h * .52, rs = Math.min(w, h) * .165, tilt = .24;
+    // a disk ring drawn as many short glowing arcs; the approaching (left) side is brighter and bluer (Doppler)
+    const ring = (front) => {
+      const n = 140;
+      for (let i = 0; i < n; i++) {
+        const a0 = i / n * Math.PI * 2, a1 = a0 + Math.PI * 2 / n + .01;
+        const sinA = Math.sin(a0 + .03); if (front ? sinA < 0 : sinA > 0) continue;
+        const dop = .5 + .5 * Math.cos(a0 - Math.PI);              // 1 on the left (coming towards us)
+        for (let k = 0; k < 5; k++) {
+          const rr = rs * (1.7 + k * .42), swirl = Math.sin(a0 * 3 - t * (2.2 - k * .3) + k) * .5 + .5;
+          const L = .4 + dop * .6, A = (.32 + swirl * .4) * (1 - k * .14) * L;
+          const r = 255, gg = 150 + dop * 90 + (4 - k) * 12, b = 60 + dop * 190;
+          x.strokeStyle = `rgba(${r},${gg | 0},${b | 0},${A})`; x.lineWidth = (6.5 - k * .7) * s;
+          x.beginPath(); x.ellipse(cx, cy, rr, rr * tilt, 0, a0, a1); x.stroke();
+        }
+      }
+    };
+    x.globalCompositeOperation = 'lighter';
+    ring(false);
+    // lensed image of the far side of the disk, bent up over the shadow
+    for (let k = 0; k < 4; k++) {
+      const rr = rs * (1.25 + k * .2), A = (.42 - k * .08) * (.85 + .15 * Math.sin(t * 1.5 + k));
+      x.strokeStyle = `rgba(255,${190 - k * 15},${110 - k * 15},${A})`; x.lineWidth = (4.5 - k * .7) * s;
+      x.beginPath(); x.ellipse(cx, cy, rr, rr * .92, 0, Math.PI * 1.04, Math.PI * 1.96); x.stroke();
+      x.beginPath(); x.ellipse(cx, cy, rr * .98, rr * .5, 0, Math.PI * .08, Math.PI * .92); x.globalAlpha = .45; x.stroke(); x.globalAlpha = 1;
+    }
+    x.globalCompositeOperation = 'source-over';
+    // shadow
+    const sh = x.createRadialGradient(cx, cy, rs * .9, cx, cy, rs * 1.15); sh.addColorStop(0, '#000'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = sh; x.beginPath(); x.arc(cx, cy, rs * 1.15, 0, 7); x.fill();
+    // photon ring
+    x.globalCompositeOperation = 'lighter';
+    x.strokeStyle = `rgba(255,236,200,${.75 + .2 * Math.sin(t * 3)})`; x.lineWidth = 1.3 * s; x.beginPath(); x.arc(cx, cy, rs * 1.02, 0, 7); x.stroke();
+    // front of the disk passes in front of the shadow
+    ring(true);
+    x.globalAlpha = .55; x.drawImage(artGlow('rgba(255,180,90,1)'), cx - rs * 3.2, cy - rs * .9, rs * 6.4, rs * 1.8); x.globalAlpha = 1;
+    // anamorphic flare
+    const fl = x.createLinearGradient(0, 0, w, 0); fl.addColorStop(0, 'rgba(120,170,255,0)'); fl.addColorStop(.5, 'rgba(160,200,255,.35)'); fl.addColorStop(1, 'rgba(120,170,255,0)');
+    x.fillStyle = fl; x.fillRect(0, cy - 1 * s, w, 2 * s);
+    x.globalCompositeOperation = 'source-over';
+    // instrument readout
+    x.fillStyle = 'rgba(255,255,255,.92)'; x.font = `700 ${15 * s}px Syne`; x.fillText('GARGANTUA', w * .1, 30 * s);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.font = `400 ${7.5 * s}px "JetBrains Mono"`; x.fillText('KERR · RK4 JEODEZİK IŞIN İZLEME', w * .1, 43 * s);
+    const spin = (.9 + .09 * Math.sin(t * .4)).toFixed(3);
+    [['a*', spin], ['T', (9500 + Math.sin(t * .7) * 900 | 0) + ' K'], ['i', '84°']].forEach(([k, v], i) => {
+      const Y = h - (16 + (2 - i) * 13) * s;
+      x.fillStyle = 'rgba(255,255,255,.45)'; x.fillText(k, w * .1, Y); x.fillStyle = 'rgba(255,220,170,.9)'; x.fillText(v, w * .1 + 16 * s, Y);
+    });
   },
 
   /* ---------- Aero Drift: Frutiger Aero meadow, glass city, floating island ---------- */

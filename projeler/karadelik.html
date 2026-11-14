@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genel Görelilik Karadelik Simülasyonu — Kerr & Schwarzschild</title>
+  <style>
+    :root {
+      --bg-panel: rgba(8, 10, 16, 0.78);
+      --border-panel: rgba(255, 190, 110, 0.22);
+      --accent: #ffaa44;
+      --accent-blue: #55b8ff;
+      --text-main: #f2f4f8;
+      --text-dim: #9aa4b8;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    #glcanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      cursor: grab;
+    }
+
+    #glcanvas:active {
+      cursor: grabbing;
+    }
+
+    /* Üst Telemetri Barı */
+    .top-bar {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+      z-index: 10;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-box {
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-panel);
+      border-radius: 12px;
+      padding: 12px 16px;
+      pointer-events: auto;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .brand-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #44ff88;
+      box-shadow: 0 0 8px #44ff88;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+
+    /* Fizik Telemetrisi */
+    .telemetry-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      pointer-events: auto;
+    }
+
+    .metric-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 8px 13px;
+      min-width: 125px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+    }
+
+    .metric-val {
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      margin-top: 2px;
+      color: #fff;
+    }
+
+    .metric-val.highlight {
+      color: var(--accent);
+    }
+
+    .metric-val.blue {
+      color: var(--accent-blue);
+    }
+
+    /* Sağ Kontrol Paneli */
+    .control-panel {
+      position: fixed;
+      top: 88px;
+      right: 16px;
+      bottom: 16px;
+      width: 340px;
+      max-height: calc(100vh - 104px);
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-panel);
+      border-radius: 14px;
+      padding: 16px;
+      overflow-y: auto;
+      z-index: 10;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    }
+
+    .control-panel.collapsed {
+      transform: translateX(370px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .control-panel::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .control-panel::-webkit-scrollbar-thumb {
+      background: rgba(255, 170, 68, 0.3);
+      border-radius: 4px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin: 14px 0 8px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 7px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: left;
+    }
+
+    .preset-btn:hover {
+      background: rgba(255, 170, 68, 0.15);
+      border-color: var(--accent);
+    }
+
+    .preset-btn.active {
+      background: rgba(255, 170, 68, 0.24);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 170, 68, 0.25);
+    }
+
+    .control-row {
+      margin-bottom: 10px;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      margin-bottom: 4px;
+    }
+
+    .control-name {
+      color: #d8dee9;
+    }
+
+    .control-readout {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(255, 170, 68, 0.8);
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 12px;
+      color: #d8dee9;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 19px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(255, 255, 255, 0.15);
+      transition: 0.2s;
+      border-radius: 19px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 13px;
+      width: 13px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(17px);
+    }
+
+    /* Alt Yardım ve Butonlar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent);
+      background: rgba(255, 170, 68, 0.15);
+    }
+
+    .hint-pill {
+      background: rgba(8, 10, 16, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* Olay Ufku Uyarı Bannerı */
+    .horizon-warning {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 14px 24px;
+      background: rgba(180, 20, 20, 0.28);
+      border: 1px solid rgba(255, 80, 80, 0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      color: #ffcccc;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+      text-align: center;
+    }
+
+    .horizon-warning.visible {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .control-panel {
+        width: calc(100vw - 32px);
+        top: auto;
+        bottom: 64px;
+        max-height: 48vh;
+      }
+      .hint-pill {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="glcanvas"></canvas>
+
+  <div id="horizonWarning" class="horizon-warning">
+    ⚠ FOTON KÜRESİ / OLAY UFKU SINIRI — AŞIRI KÜTLEÇEKİMSEL ZAMAN GENİŞLEMESİ
+  </div>
+
+  <!-- Üst Telemetri ve Başlık -->
+  <div class="top-bar">
+    <div class="brand-box">
+      <div class="brand-title">
+        <span class="status-dot"></span>
+        GR-RK4 JEODEZİK KARADELİK SİMÜLATÖRÜ
+      </div>
+      <div class="brand-sub">Kerr-Newman Metriği • Relativistik Doppler & Planck Tayfı</div>
+    </div>
+
+    <div class="telemetry-grid">
+      <div class="metric-card">
+        <div class="metric-label">Mesafe (r / r_s)</div>
+        <div class="metric-val highlight" id="telDist">11.50 r_s</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Zaman Genişlemesi (dτ/dt)</div>
+        <div class="metric-val blue" id="telDilation">0.9555x</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Gözlemci Öz Zamanı (τ)</div>
+        <div class="metric-val" id="telProperTime">00:00.0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Dünya Zamanı (t)</div>
+        <div class="metric-val" id="telCoordTime">00:00.0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">ISCO / Foton Küresi</div>
+        <div class="metric-val" id="telRadii">1.45 / 1.50 r_s</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Performans</div>
+        <div class="metric-val" id="telFps">60 FPS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sağ Kontrol Paneli -->
+  <aside id="controlPanel" class="control-panel">
+    <div class="section-title">Kozmik Senaryo Hazır Ayarları</div>
+    <div class="preset-grid">
+      <button class="preset-btn active" data-preset="gargantua">Gargantua (IMAX)</button>
+      <button class="preset-btn" data-preset="eht">M87* (EHT Radyo)</button>
+      <button class="preset-btn" data-preset="quasar">Kuasar + Relativistik Jet</button>
+      <button class="preset-btn" data-preset="kerr_extreme">Sgr A* (Maks. Spin)</button>
+      <button class="preset-btn" data-preset="lensing">Saf Einstein Halkası</button>
+      <button class="preset-btn" data-preset="close_orbit">Foton Küresi Dalışı</button>
+    </div>
+
+    <div class="section-title">Uzay-Zaman & Karadelik Fiziği</div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Kerr Dönüş Parametresi (a*)</span>
+        <span class="control-readout" id="valSpin">0.94 c</span>
+      </div>
+      <input type="range" id="slSpin" min="-0.99" max="0.99" step="0.01" value="0.94" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Kütleçekimsel Mercekleme Gücü</span>
+        <span class="control-readout" id="valMass">1.00 M</span>
+      </div>
+      <input type="range" id="slMass" min="0.4" max="1.8" step="0.01" value="1.00" />
+    </div>
+
+    <div class="section-title">Yığılma Diski (Accretion Disk)</div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Disk Sıcaklığı (Planck K)</span>
+        <span class="control-readout" id="valTemp">6800 K</span>
+      </div>
+      <input type="range" id="slTemp" min="2200" max="18000" step="100" value="6800" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Plazma Yoğunluğu & Türbülans</span>
+        <span class="control-readout" id="valDensity">1.35</span>
+      </div>
+      <input type="range" id="slDensity" min="0.0" max="3.0" step="0.05" value="1.35" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Disk Dış Yarıçapı</span>
+        <span class="control-readout" id="valDiskOuter">14.0 r_s</span>
+      </div>
+      <input type="range" id="slDiskOuter" min="5.0" max="24.0" step="0.5" value="14.0" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Relativistik Doppler Işıması</span>
+        <span class="control-readout" id="valDoppler">1.00</span>
+      </div>
+      <input type="range" id="slDoppler" min="0.0" max="1.8" step="0.05" value="1.00" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Kutup Plazma Jetleri (Blandford-Znajek)</span>
+        <span class="control-readout" id="valJet">0.15</span>
+      </div>
+      <input type="range" id="slJet" min="0.0" max="2.0" step="0.05" value="0.15" />
+    </div>
+
+    <div class="section-title">Optik & Kamera</div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Kamera Eğimi (İnklinasyon)</span>
+        <span class="control-readout" id="valPitch">8°</span>
+      </div>
+      <input type="range" id="slPitch" min="-85" max="85" step="1" value="8" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Kamera Yatışı (Roll Açısı)</span>
+        <span class="control-readout" id="valRoll">-12°</span>
+      </div>
+      <input type="range" id="slRoll" min="-180" max="180" step="1" value="-12" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">HDR Parlama & Anamorfik Lens</span>
+        <span class="control-readout" id="valBloom">0.85</span>
+      </div>
+      <input type="range" id="slBloom" min="0.0" max="2.0" step="0.05" value="0.85" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Pozlama (Exposure)</span>
+        <span class="control-readout" id="valExposure">1.15</span>
+      </div>
+      <input type="range" id="slExposure" min="0.3" max="2.5" step="0.05" value="1.15" />
+    </div>
+
+    <div class="control-row">
+      <div class="control-header">
+        <span class="control-name">Çözünürlük Ölçeği (Kalite)</span>
+        <span class="control-readout" id="valScale">100%</span>
+      </div>
+      <input type="range" id="slScale" min="0.5" max="1.25" step="0.05" value="1.0" />
+    </div>
+
+    <div class="toggle-row">
+      <span>Otomatik Yörünge Dönüşü</span>
+      <label class="switch">
+        <input type="checkbox" id="chkAutoOrbit" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span>Kütleçekimsel Kırmızıya Kayma</span>
+      <label class="switch">
+        <input type="checkbox" id="chkGravRedshift" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <span>İnce Foton Halkası (n=1,2)</span>
+      <label class="switch">
+        <input type="checkbox" id="chkPhotonRing" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+  </aside>
+
+  <!-- Alt Araç Çubuğu -->
+  <div class="bottom-bar">
+    <button class="action-btn" id="btnToggleUI">⚙ Kontrolleri Gizle / Göster (H)</button>
+    <button class="action-btn" id="btnResetCam">🎯 Kamerayı Sıfırla (R)</button>
+    <button class="action-btn" id="btnScreenshot">📷 4K Ekran Görüntüsü</button>
+    <div class="hint-pill">
+      Sol Tık + Sürükle: Yörünge • Tekerlek: Yakınlaş • Sağ Tık: Yatış (Roll) • W/S/A/D: Serbest Uçuş
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('glcanvas');
+      const gl = canvas.getContext('webgl2', {
+        alpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        preserveDrawingBuffer: true,
+        powerPreference: 'high-performance'
+      });
+
+      if (!gl) {
+        alert('Tarayıcınız WebGL 2 desteklemiyor. Lütfen güncel bir tarayıcı kullanın.');
+        return;
+      }
+
+      // Float buffer eklentileri
+      const extColorBufferFloat = gl.getExtension('EXT_color_buffer_float');
+      const extFloatLinear = gl.getExtension('OES_texture_float_linear');
+
+      // --- VERTEX SHADER (Tam ekran üçgen) ---
+      const vsSource = `#version 300 es
+        precision highp float;
+        out vec2 vUv;
+        void main() {
+          vec2 pos = vec2(
+            (gl_VertexID == 1) ? 3.0 : -1.0,
+            (gl_VertexID == 2) ? 3.0 : -1.0
+          );
+          vUv = pos * 0.5 + 0.5;
+          gl_Position = vec4(pos, 0.0, 1.0);
+        }
+      `;
+
+      // --- FRAGMENT SHADER 1: GENEL GÖRELİLİK RK4 JEODEZİK RAYTRACER ---
+      const fsRaytraceSource = `#version 300 es
+        precision highp float;
+
+        in vec2 vUv;
+        out vec4 fragColor;
+
+        uniform vec2 uResolution;
+        uniform float uTime;
+        uniform vec3 uCamPos;
+        uniform mat3 uCamMat;
+        uniform float uFov;
+
+        // Fizik parametreleri
+        uniform float uSpin;          // Kerr a* (-0.99 .. 0.99)
+        uniform float uMass;          // Kütle ölçeği (r_s = 1.0 baz)
+        uniform float uDiskTemp;      // Kelvin (2200 .. 18000)
+        uniform float uDiskDensity;   // Plazma optik derinliği
+        uniform float uDiskOuter;     // Dış yarıçap
+        uniform float uDoppler;       // Relativistik Doppler çarpanı
+        uniform float uJetPower;      // Kutup jet gücü
+        uniform float uGravRedshift;  // Kütleçekimsel kırmızıya kayma (0 veya 1)
+        uniform float uPhotonRing;    // İnce foton halkası (0 veya 1)
+
+        #define PI 3.14159265359
+        #define MAX_STEPS 230
+
+        // --- Hızlı Hash ve 3B Gürültü (Türbülanslı Plazma İçin) ---
+        float hash12(vec2 p) {
+          vec3 p3  = fract(vec3(p.xyx) * 0.1031);
+          p3 += dot(p3, p3.yzx + 33.33);
+          return fract((p3.x + p3.y) * p3.z);
+        }
+
+        float hash13(vec3 p3) {
+          p3 = fract(p3 * 0.1031);
+          p3 += dot(p3, p3.zyx + 31.32);
+          return fract((p3.x + p3.y) * p3.z);
+        }
+
+        float noise3D(vec3 x) {
+          vec3 i = floor(x);
+          vec3 f = fract(x);
+          f = f * f * (3.0 - 2.0 * f);
+
+          return mix(
+            mix(
+              mix(hash13(i + vec3(0, 0, 0)), hash13(i + vec3(1, 0, 0)), f.x),
+              mix(hash13(i + vec3(0, 1, 0)), hash13(i + vec3(1, 1, 0)), f.x),
+              f.y
+            ),
+            mix(
+              mix(hash13(i + vec3(0, 0, 1)), hash13(i + vec3(1, 0, 1)), f.x),
+              mix(hash13(i + vec3(0, 1, 1)), hash13(i + vec3(1, 1, 1)), f.x),
+              f.y
+            ),
+            f.z
+          );
+        }
+
+        float fbm3D(vec3 p) {
+          float v = 0.0;
+          float a = 0.5;
+          vec3 shift = vec3(100.0);
+          for (int i = 0; i < 5; i++) {
+            v += a * noise3D(p);
+            p = p * 2.03 + shift;
+            a *= 0.5;
+          }
+          return v;
+        }
+
+        // --- Fiziksel Kara Cisim (Planckian Locus) Sıcaklık -> RGB ---
+        vec3 blackbodyColor(float tempK) {
+          float t = clamp(tempK, 800.0, 40000.0) / 100.0;
+          vec3 col;
+
+          // Kırmızı kanal
+          if (t <= 66.0) {
+            col.r = 1.0;
+          } else {
+            col.r = clamp(1.292936186 * pow(t - 60.0, -0.1332047592), 0.0, 1.0);
+          }
+
+          // Yeşil kanal
+          if (t <= 66.0) {
+            col.g = clamp(0.3900815787 * log(t) - 0.6318414437, 0.0, 1.0);
+          } else {
+            col.g = clamp(1.129890861 * pow(t - 60.0, -0.0755148492), 0.0, 1.0);
+          }
+
+          // Mavi kanal
+          if (t >= 66.0) {
+            col.b = 1.0;
+          } else if (t <= 19.0) {
+            col.b = 0.0;
+          } else {
+            col.b = clamp(0.5432067891 * log(t - 10.0) - 1.196254089, 0.0, 1.0);
+          }
+
+          // Doğrusal (Linear) renk uzayına dönüşüm
+          return pow(col, vec3(2.2));
+        }
+
+        // --- Kerr Karadeliği ISCO Yarıçapı (Bardeen, Press, Teukolsky 1972) ---
+        float computeISCO(float rs, float aStar) {
+          float a = clamp(abs(aStar), 0.0, 0.995);
+          float z1 = 1.0 + pow(1.0 - a * a, 1.0 / 3.0) * (pow(1.0 + a, 1.0 / 3.0) + pow(1.0 - a, 1.0 / 3.0));
+          float z2 = sqrt(3.0 * a * a + z1 * z1);
+          float sgn = (aStar >= 0.0) ? -1.0 : 1.0;
+          float rIscoM = 3.0 + z2 + sgn * sqrt((3.0 - z1) * (3.0 + z1 + 2.0 * z2));
+          // r_s = 2M olduğundan r = (rIscoM * 0.5) * rs
+          return max(0.55 * rs, rIscoM * 0.5 * rs);
+        }
+
+        // --- Derin Uzay, Samanyolu Bulutsusu ve Kütleçekimsel Merceklenmiş Yıldızlar ---
+        vec3 sampleCelestialSphere(vec3 dir) {
+          dir = normalize(dir);
+
+          // Galaktik düzlem koordinat dönüşümü
+          mat3 galRot = mat3(
+             0.866,  0.250, -0.433,
+            -0.289,  0.954, -0.082,
+             0.408,  0.167,  0.897
+          );
+          vec3 gDir = galRot * dir;
+
+          float galLat = abs(gDir.y);
+          float galBand = exp(-galLat * 4.5);
+
+          // Samanyolu toz ve bulutsu dokusu
+          float n1 = fbm3D(gDir * 3.2 + vec3(1.7, 4.2, -2.1));
+          float n2 = fbm3D(gDir * 7.5 - vec3(3.1, 0.5, 2.8));
+          float dustLane = smoothstep(0.42, 0.68, fbm3D(gDir * 5.0 + vec3(0.0, 12.0, 0.0)));
+
+          vec3 nebulaWarm = vec3(0.28, 0.16, 0.09) * n1 * galBand;
+          vec3 nebulaCool = vec3(0.05, 0.12, 0.28) * n2 * exp(-galLat * 2.2);
+          vec3 milkyWay = (nebulaWarm + nebulaCool) * (1.0 - 0.68 * dustLane * exp(-galLat * 9.0));
+
+          // Çok katmanlı prosedürel yıldız alanı (3B küresel hücreleme ile kutup bozulmasız)
+          vec3 starCol = vec3(0.0);
+          for (int layer = 0; layer < 2; layer++) {
+            float scale = (layer == 0) ? 140.0 : 320.0;
+            vec3 p = gDir * scale;
+            vec3 cell = floor(p);
+            vec3 local = fract(p) - 0.5;
+
+            float rnd = hash13(cell + float(layer) * 71.7);
+            float prob = (layer == 0) ? (0.972 - 0.03 * galBand) : (0.985 - 0.02 * galBand);
+
+            if (rnd > prob) {
+              vec3 jitter = (vec3(
+                hash13(cell + 11.1),
+                hash13(cell + 23.7),
+                hash13(cell + 47.3)
+              ) - 0.5) * 0.65;
+
+              float d = length(local - jitter);
+              float starTemp = mix(3000.0, 22000.0, hash13(cell + 91.5));
+              float lum = pow((rnd - prob) / (1.0 - prob), 2.2);
+              float core = exp(-d * d * ((layer == 0) ? 95.0 : 140.0));
+              float halo = exp(-d * 14.0) * 0.25;
+              starCol += blackbodyColor(starTemp) * (core + halo) * lum * ((layer == 0) ? 3.8 : 1.8);
+            }
+          }
+
+          return milkyWay * 0.55 + starCol;
+        }
+
+        // --- Relativistik Jeodezik İvmesi (Schwarzschild + Kerr Lense-Thirring Çerçeve Sürüklenmesi) ---
+        vec3 geodesicAcceleration(vec3 pos, vec3 vel, float rs, float aStar) {
+          float r2 = dot(pos, pos);
+          float r = sqrt(r2);
+          vec3 h = cross(pos, vel);
+          float h2 = dot(h, h);
+
+          // Genel Görelilik 3GM/c^2 r^-5 terimi (r_s = 2GM/c^2 -> -1.5 * rs * h^2 / r^5)
+          float invR5 = 1.0 / (r2 * r2 * r + 1e-6);
+          vec3 accGR = -1.5 * rs * h2 * pos * invR5;
+
+          // Kerr Lense-Thirring (Çerçeve Sürüklenmesi / Frame Dragging)
+          vec3 spinVec = vec3(0.0, 1.0, 0.0) * (aStar * 0.5 * rs);
+          vec3 frameDrag = -2.0 * rs * cross(spinVec, vel) * (1.0 / (r2 * r + 1e-5));
+
+          return accGR + frameDrag;
+        }
+
+        // --- Yığılma Diski (Accretion Disk) Hacimsel Emisyon ve Opaklık ---
+        void sampleAccretionDisk(
+          vec3 pos,
+          vec3 rayDir,
+          float r,
+          float rs,
+          float rIsco,
+          float stepLen,
+          inout vec3 accumLight,
+          inout float transmittance
+        ) {
+          if (uDiskDensity <= 0.001) return;
+
+          // Disk kalınlığı yarıçapla hafif genişler (Shakura-Sunyaev modeli)
+          float radialNorm = (r - rIsco) / max(0.001, uDiskOuter - rIsco);
+          if (radialNorm < -0.05 || radialNorm > 1.05) return;
+
+          float diskHalfHeight = rs * (0.045 + 0.09 * pow(clamp(radialNorm, 0.0, 1.0), 1.35));
+          float verticalDist = abs(pos.y) / diskHalfHeight;
+          if (verticalDist > 2.4) return;
+
+          // Dikey Gauss profili + iç ve dış kenar yumuşatması
+          float vertProfile = exp(-verticalDist * verticalDist * 2.6);
+          float innerEdge = smoothstep(rIsco * 0.88, rIsco * 1.18, r);
+          float outerEdge = 1.0 - smoothstep(uDiskOuter * 0.65, uDiskOuter, r);
+          float baseEnvelope = vertProfile * innerEdge * outerEdge;
+
+          if (baseEnvelope < 0.001) return;
+
+          // Keplerian + Relativistik açısal hız ile sarmal koordinatlar
+          float angle = atan(pos.z, pos.x);
+          float spinDir = (uSpin >= 0.0) ? 1.0 : -1.0;
+          float omega = spinDir * 2.4 / (pow(r / rs, 1.42) + abs(uSpin) * 0.35);
+          float rotAngle = angle + uTime * omega;
+
+          // Diferansiyel kayma (Keplerian shear) ile spiral kollar ve FBM türbülans
+          float logR = log(max(r / rs, 0.2)) * 5.5;
+          float spiralPhase = rotAngle * 3.0 - logR * spinDir * 3.2;
+
+          vec3 noiseCoord = vec3(
+            cos(rotAngle) * (r / rs) * 1.8,
+            pos.y * 8.0 / rs,
+            sin(rotAngle) * (r / rs) * 1.8
+          );
+
+          // İki farklı ölçekte dönen plazma filamentleri
+          float fbm1 = fbm3D(noiseCoord + vec3(spiralPhase * 0.4, uTime * 0.35, -spiralPhase * 0.4));
+          float fbm2 = fbm3D(noiseCoord * 2.7 + vec3(-spiralPhase * 0.8, -uTime * 0.6, spiralPhase * 0.8));
+
+          float rings = 0.55 + 0.45 * sin(logR * 4.5 + fbm1 * 5.0);
+          float filaments = smoothstep(0.22, 0.82, fbm1 * 0.65 + fbm2 * 0.35);
+          float plasmaDensity = baseEnvelope * mix(0.35, 1.45, filaments * rings) * uDiskDensity;
+
+          if (plasmaDensity <= 0.001) return;
+
+          // --- Relativistik Yörünge Hızı ve Doppler Kayması ---
+          vec3 tangent = normalize(vec3(-pos.z, 0.0, pos.x)) * spinDir;
+          // Yörünge hızı beta = v/c
+          float beta = clamp(sqrt(0.5 * rs / max(r - 0.45 * rs, 0.15 * rs)), 0.0, 0.88);
+          float gamma = inversesqrt(1.0 - beta * beta);
+
+          // Foton yayılım yönüne göre bağıl hız (rayDir kameradan çıkıyor, foton yönü -rayDir)
+          float cosTheta = dot(tangent, -normalize(rayDir));
+          float dopplerFactor = 1.0 / (gamma * (1.0 + beta * cosTheta * uDoppler));
+
+          // Kütleçekimsel kırmızıya kayma: sqrt(1 - r_s / r)
+          float gravFactor = mix(1.0, sqrt(clamp(1.0 - 0.85 * rs / max(r, rs * 0.9), 0.12, 1.0)), uGravRedshift);
+
+          // Toplam frekans kayması çarpanı g = nu_obs / nu_emit
+          float gShift = clamp(dopplerFactor * gravFactor, 0.25, 3.2);
+
+          // Novikov-Thorne / Shakura-Sunyaev radyal sıcaklık profili: iç kısım çok daha sıcak
+          float radialTempFactor = pow(max(rIsco / r, 0.05), 0.68) * pow(max(1.0 - sqrt(rIsco / max(r, rIsco * 1.001)), 0.08), 0.22) * 2.15;
+          float localTemp = uDiskTemp * clamp(radialTempFactor, 0.35, 2.3) * (0.85 + 0.35 * fbm2);
+          float observedTemp = localTemp * gShift;
+
+          // Relativistik Işıma Şiddeti (Liouville Teoremi: I_obs = g^4 * I_emit)
+          float beamingIntensity = pow(gShift, 3.4);
+
+          vec3 emitColor = blackbodyColor(observedTemp);
+          // İç ISCO halkasında ekstra sıcak X-ışını korona parlaması
+          float innerGlow = exp(-max(r - rIsco, 0.0) / (0.65 * rs)) * 1.6;
+
+          float sampleAlpha = 1.0 - exp(-plasmaDensity * stepLen * 1.85);
+          vec3 sampleLight = emitColor * (plasmaDensity * 2.6 + innerGlow) * beamingIntensity * stepLen * 2.2;
+
+          accumLight += transmittance * sampleLight;
+          transmittance *= (1.0 - sampleAlpha * 0.72);
+        }
+
+        // --- Relativistik Kutup Plazma Jetleri (Blandford-Znajek Mekanizması) ---
+        void sampleRelativisticJet(
+          vec3 pos,
+          vec3 rayDir,
+          float r,
+          float rs,
+          float stepLen,
+          inout vec3 accumLight,
+          inout float transmittance
+        ) {
+          if (uJetPower <= 0.01) return;
+
+          float absY = abs(pos.y);
+          if (absY < rs * 0.8) return;
+
+          float cylR = length(pos.xz);
+          // Parabolik manyetik kolimasyon hunisi
+          float jetRadius = rs * (0.18 + 0.22 * pow(absY / rs, 0.62));
+          float radialNorm = cylR / jetRadius;
+          if (radialNorm > 1.8) return;
+
+          // İçi boş manyetik kılıf (sheath) + eksenel çekirdek
+          float sheath = exp(-pow(radialNorm - 0.55, 2.0) * 5.0) + 0.6 * exp(-radialNorm * radialNorm * 4.0);
+          float heightFade = exp(-absY / (rs * 16.0)) * smoothstep(rs * 0.8, rs * 1.8, absY);
+
+          // Helisel manyetik alan çizgileri boyunca yüksek hızlı plazma akışı
+          float twist = atan(pos.z, pos.x) * 2.0 - (absY / rs) * 1.4 + uTime * 5.5;
+          vec3 jetNoisePos = vec3(pos.x * 1.5, absY * 0.6 - uTime * 6.5, pos.z * 1.5);
+          float jetTurb = fbm3D(jetNoisePos + vec3(cos(twist), 0.0, sin(twist)) * 0.6);
+
+          // Kutup yönünde relativistik hızlanma (beta ~ 0.92c)
+          vec3 jetVelDir = vec3(0.0, sign(pos.y), 0.0);
+          float betaJet = 0.85;
+          float gammaJet = inversesqrt(1.0 - betaJet * betaJet);
+          float cosJet = dot(jetVelDir, -normalize(rayDir));
+          float jetDoppler = 1.0 / (gammaJet * (1.0 - betaJet * cosJet * 0.65));
+
+          vec3 syncColor = mix(vec3(0.25, 0.55, 1.0), vec3(0.75, 0.45, 1.0), clamp(absY / (rs * 10.0), 0.0, 1.0));
+          vec3 coreColor = blackbodyColor(14000.0 * clamp(jetDoppler, 0.6, 2.0));
+
+          float intensity = sheath * heightFade * (0.4 + 0.9 * jetTurb) * uJetPower * pow(clamp(jetDoppler, 0.5, 2.2), 2.2);
+          accumLight += transmittance * mix(syncColor, coreColor, 0.5) * intensity * stepLen * 0.65;
+        }
+
+        void main() {
+          vec2 ndc = (vUv * 2.0 - 1.0);
+          ndc.x *= uResolution.x / uResolution.y;
+
+          float rs = uMass; // Schwarzschild yarıçapı birimi
+          float aStar = clamp(uSpin, -0.99, 0.99);
+          // Kerr dış olay ufku: r_+ = M + sqrt(M^2 - a^2), M = 0.5 * rs
+          float rHorizon = 0.5 * rs * (1.0 + sqrt(max(0.01, 1.0 - aStar * aStar)));
+          float rIsco = computeISCO(rs, aStar);
+
+          vec3 ro = uCamPos;
+          vec3 rd = normalize(uCamMat * vec3(ndc * tan(uFov * 0.5), -1.0));
+
+          vec3 pos = ro;
+          vec3 vel = rd;
+
+          vec3 accumLight = vec3(0.0);
+          float transmittance = 1.0;
+          bool swallowed = false;
+
+          float minR = 1e5;
+          float totalAngleTurned = 0.0;
+
+          for (int i = 0; i < MAX_STEPS; i++) {
+            float r = length(pos);
+            minR = min(minR, r);
+
+            // Olay ufkuna giriş kontrolü
+            if (r <= rHorizon * 1.01) {
+              swallowed = true;
+              break;
+            }
+
+            // Uzay-zaman dışına kaçış kontrolü
+            if (r > 36.0 && dot(pos, vel) > 0.0) {
+              break;
+            }
+
+            // Uyarlamalı adım boyutu: olay ufkuna ve disk düzlemine yaklaştıkça hassaslaşır
+            float distToHorizon = max(r - rHorizon, 0.04 * rs);
+            float diskProximity = clamp(abs(pos.y) / (rs * 1.5), 0.25, 1.0);
+            float h = clamp(distToHorizon * 0.14 * diskProximity, 0.018, 0.55);
+            if (r > uDiskOuter * 1.15) {
+              h = clamp(r * 0.12, 0.15, 1.2);
+            }
+
+            vec3 oldVel = vel;
+
+            // --- 4. Mertebe Runge-Kutta (RK4) Relativistik Jeodezik İntegrasyonu ---
+            vec3 k1_x = vel;
+            vec3 k1_v = geodesicAcceleration(pos, vel, rs, aStar);
+
+            vec3 p2 = pos + 0.5 * h * k1_x;
+            vec3 v2 = normalize(vel + 0.5 * h * k1_v);
+            vec3 k2_x = v2;
+            vec3 k2_v = geodesicAcceleration(p2, v2, rs, aStar);
+
+            vec3 p3 = pos + 0.5 * h * k2_x;
+            vec3 v3 = normalize(vel + 0.5 * h * k2_v);
+            vec3 k3_x = v3;
+            vec3 k3_v = geodesicAcceleration(p3, v3, rs, aStar);
+
+            vec3 p4 = pos + h * k3_x;
+            vec3 v4 = normalize(vel + h * k3_v);
+            vec3 k4_x = v4;
+            vec3 k4_v = geodesicAcceleration(p4, v4, rs, aStar);
+
+            vec3 nextPos = pos + (h / 6.0) * (k1_x + 2.0 * k2_x + 2.0 * k3_x + k4_x);
+            vec3 nextVel = normalize(vel + (h / 6.0) * (k1_v + 2.0 * k2_v + 2.0 * k3_v + k4_v));
+
+            float stepLen = length(nextPos - pos);
+            totalAngleTurned += acos(clamp(dot(oldVel, nextVel), -1.0, 1.0));
+
+            // Orta noktada hacimsel yığılma diski ve jet örneklemesi
+            vec3 midPos = 0.5 * (pos + nextPos);
+            float midR = length(midPos);
+
+            if (midR > rHorizon * 1.02 && midR < uDiskOuter * 1.05) {
+              sampleAccretionDisk(midPos, nextVel, midR, rs, rIsco, stepLen, accumLight, transmittance);
+            }
+
+            if (uJetPower > 0.01 && midR < rs * 22.0) {
+              sampleRelativisticJet(midPos, nextVel, midR, rs, stepLen, accumLight, transmittance);
+            }
+
+            if (transmittance < 0.015) break;
+
+            pos = nextPos;
+            vel = nextVel;
+          }
+
+          // --- Kritik Foton Küresi İnce Halka Parlaması (n=1,2 Asimptotik Foton Halkası) ---
+          if (uPhotonRing > 0.5) {
+            float rPhoton = 1.5 * rs * (1.0 - aStar * 0.18);
+            float ringDist = abs(minR - rPhoton);
+            // Çok tur atan fotonlar (totalAngleTurned > PI) jilet keskinliğinde parlak halka oluşturur
+            float multiOrbitBoost = smoothstep(PI * 0.75, PI * 1.85, totalAngleTurned);
+            float razorRing = exp(-ringDist * 26.0 / rs) * multiOrbitBoost;
+            vec3 ringColor = blackbodyColor(uDiskTemp * 1.25);
+            accumLight += transmittance * ringColor * razorRing * (0.4 + 0.8 * min(uDiskDensity, 1.5));
+          }
+
+          // --- Arka Plan Gökyüzü Küresi (Olay ufkuna düşmeyen ışınlar için) ---
+          if (!swallowed && transmittance > 0.001) {
+            vec3 bgSky = sampleCelestialSphere(vel);
+            // Einstein halkası yakınında kütleçekimsel mercek büyütmesi etkisi
+            float lensingBoost = 1.0 + 0.55 * smoothstep(0.4, 2.2, totalAngleTurned);
+            accumLight += transmittance * bgSky * lensingBoost;
+          }
+
+          fragColor = vec4(max(accumLight, vec3(0.0)), 1.0);
+        }
+      `;
+
+      // --- FRAGMENT SHADER 2: HDR PARLAMA & ANAMORFİK SİNEMA LENS FLARE ---
+      const fsBloomSource = `#version 300 es
+        precision highp float;
+        in vec2 vUv;
+        out vec4 fragColor;
+
+        uniform sampler2D uTex;
+        uniform vec2 uTexelSize;
+        uniform vec2 uDir;
+
+        void main() {
+          // 9-tap Gauss + Yatay Anamorfik uzama
+          float weights[5] = float[](0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+          vec3 sum = texture(uTex, vUv).rgb * weights[0];
+
+          for (int i = 1; i < 5; i++) {
+            vec2 offset = uDir * uTexelSize * float(i) * 2.4;
+            sum += texture(uTex, vUv + offset).rgb * weights[i];
+            sum += texture(uTex, vUv - offset).rgb * weights[i];
+          }
+
+          fragColor = vec4(sum, 1.0);
+        }
+      `;
+
+      // --- FRAGMENT SHADER 3: ACES FİLMİK TON EŞLEME & SİNEMATİK LENS ---
+      const fsCompositeSource = `#version 300 es
+        precision highp float;
+        in vec2 vUv;
+        out vec4 fragColor;
+
+        uniform sampler2D uSceneTex;
+        uniform sampler2D uBloomTex;
+        uniform float uBloomStrength;
+        uniform float uExposure;
+
+        // ACES Filmic Tone Mapping Curve (Narkowicz 2015)
+        vec3 acesToneMap(vec3 x) {
+          const float a = 2.51;
+          const float b = 0.03;
+          const float c = 2.43;
+          const float d = 0.59;
+          const float e = 0.14;
+          return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+        }
+
+        void main() {
+          vec2 centerVec = vUv - 0.5;
+          float dist2 = dot(centerVec, centerVec);
+
+          // Kenarlarda hafif optik kromatik aberasyon (renk ayrışması)
+          vec2 caOffset = centerVec * dist2 * 0.006;
+          float r = texture(uSceneTex, vUv + caOffset).r;
+          float g = texture(uSceneTex, vUv).g;
+          float b = texture(uSceneTex, vUv - caOffset).b;
+          vec3 hdrScene = vec3(r, g, b);
+
+          vec3 bloom = texture(uBloomTex, vUv).rgb;
+
+          // IMAX tarzı yatay anamorfik mavi-kehribar parıltı
+          vec3 anamorphicStreak = vec3(0.0);
+          for (int i = -4; i <= 4; i++) {
+            vec2 sUv = clamp(vUv + vec2(float(i) * 0.018, 0.0), 0.0, 1.0);
+            vec3 sampleB = max(texture(uBloomTex, sUv).rgb - vec3(0.35), vec3(0.0));
+            anamorphicStreak += sampleB * exp(-abs(float(i)) * 0.45);
+          }
+          anamorphicStreak *= vec3(0.45, 0.72, 1.15) * 0.12;
+
+          vec3 color = hdrScene + (bloom * 0.65 + anamorphicStreak) * uBloomStrength;
+          color *= uExposure;
+
+          // ACES Ton Eşleme + Gamma Düzeltmesi
+          color = acesToneMap(color);
+          color = pow(color, vec3(1.0 / 2.2));
+
+          // Hafif sinematik vinyet
+          float vignette = 1.0 - dist2 * 0.38;
+          color *= vignette;
+
+          fragColor = vec4(color, 1.0);
+        }
+      `;
+
+      // --- Shader Derleme Yardımcıları ---
+      function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.error('Shader derleme hatası:', gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      function createProgram(vsSrc, fsSrc) {
+        const vs = compileShader(gl.VERTEX_SHADER, vsSrc);
+        const fs = compileShader(gl.FRAGMENT_SHADER, fsSrc);
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+          console.error('Program bağlama hatası:', gl.getProgramInfoLog(prog));
+          return null;
+        }
+        return prog;
+      }
+
+      const progRaytrace = createProgram(vsSource, fsRaytraceSource);
+      const progBloom = createProgram(vsSource, fsBloomSource);
+      const progComposite = createProgram(vsSource, fsCompositeSource);
+
+      const vao = gl.createVertexArray();
+      gl.bindVertexArray(vao);
+
+      // --- Framebuffer (HDR Çizim + Çift geçişli Bloom) ---
+      let fboScene = null;
+      let fboBloomA = null;
+      let fboBloomB = null;
+      let renderWidth = 0;
+      let renderHeight = 0;
+
+      function createFBO(w, h) {
+        const tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        let internalFormat = extColorBufferFloat ? gl.RGBA16F : gl.RGBA8;
+        let type = extColorBufferFloat ? gl.HALF_FLOAT : gl.UNSIGNED_BYTE;
+
+        gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, gl.RGBA, type, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        const fbo = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+
+        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        }
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        return { fbo, tex, w, h };
+      }
+
+      function rebuildFramebuffers() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const scale = state.resScale;
+        const w = Math.max(320, Math.floor(window.innerWidth * dpr * scale));
+        const h = Math.max(240, Math.floor(window.innerHeight * dpr * scale));
+
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+
+        if (w === renderWidth && h === renderHeight && fboScene) return;
+        renderWidth = w;
+        renderHeight = h;
+
+        if (fboScene) {
+          gl.deleteTexture(fboScene.tex);
+          gl.deleteFramebuffer(fboScene.fbo);
+          gl.deleteTexture(fboBloomA.tex);
+          gl.deleteFramebuffer(fboBloomA.fbo);
+          gl.deleteTexture(fboBloomB.tex);
+          gl.deleteFramebuffer(fboBloomB.fbo);
+        }
+
+        fboScene = createFBO(w, h);
+        const bw = Math.max(128, Math.floor(w * 0.5));
+        const bh = Math.max(128, Math.floor(h * 0.5));
+        fboBloomA = createFBO(bw, bh);
+        fboBloomB = createFBO(bw, bh);
+      }
+
+      // --- Simülasyon Durumu & Kamera ---
+      const state = {
+        distance: 11.5,
+        yaw: 0.4,
+        pitch: 8.0 * Math.PI / 180.0,
+        roll: -12.0 * Math.PI / 180.0,
+        fov: 52.0 * Math.PI / 180.0,
+
+        spin: 0.94,
+        mass: 1.0,
+        diskTemp: 6800,
+        diskDensity: 1.35,
+        diskOuter: 14.0,
+        doppler: 1.0,
+        jetPower: 0.15,
+        bloom: 0.85,
+        exposure: 1.15,
+        resScale: 1.0,
+
+        autoOrbit: true,
+        gravRedshift: true,
+        photonRing: true
+      };
+
+      // --- Hazır Senaryolar (Presets) ---
+      const presets = {
+        gargantua: {
+          distance: 11.5, pitch: 8, roll: -12,
+          spin: 0.94, mass: 1.0, diskTemp: 6800, diskDensity: 1.35,
+          diskOuter: 14.0, doppler: 1.0, jetPower: 0.15, bloom: 0.85, exposure: 1.15
+        },
+        eht: {
+          distance: 9.2, pitch: 18, roll: 24,
+          spin: 0.88, mass: 1.15, diskTemp: 3300, diskDensity: 1.75,
+          diskOuter: 8.5, doppler: 1.45, jetPower: 0.0, bloom: 1.25, exposure: 1.35
+        },
+        quasar: {
+          distance: 15.5, pitch: 22, roll: -8,
+          spin: 0.98, mass: 1.0, diskTemp: 12500, diskDensity: 1.85,
+          diskOuter: 18.5, doppler: 1.15, jetPower: 1.75, bloom: 1.1, exposure: 1.05
+        },
+        kerr_extreme: {
+          distance: 6.4, pitch: 5, roll: 0,
+          spin: 0.99, mass: 1.05, diskTemp: 9200, diskDensity: 1.5,
+          diskOuter: 13.0, doppler: 1.35, jetPower: 0.4, bloom: 0.95, exposure: 1.1
+        },
+        lensing: {
+          distance: 8.0, pitch: 2, roll: 0,
+          spin: 0.7, mass: 1.25, diskTemp: 6500, diskDensity: 0.0,
+          diskOuter: 12.0, doppler: 1.0, jetPower: 0.0, bloom: 0.55, exposure: 1.35
+        },
+        close_orbit: {
+          distance: 2.85, pitch: 4, roll: -6,
+          spin: 0.96, mass: 1.0, diskTemp: 7600, diskDensity: 1.25,
+          diskOuter: 15.0, doppler: 1.2, jetPower: 0.25, bloom: 0.9, exposure: 1.1
+        }
+      };
+
+      // --- UI Bağlantıları ---
+      const ui = {
+        slSpin: document.getElementById('slSpin'),
+        valSpin: document.getElementById('valSpin'),
+        slMass: document.getElementById('slMass'),
+        valMass: document.getElementById('valMass'),
+        slTemp: document.getElementById('slTemp'),
+        valTemp: document.getElementById('valTemp'),
+        slDensity: document.getElementById('slDensity'),
+        valDensity: document.getElementById('valDensity'),
+        slDiskOuter: document.getElementById('slDiskOuter'),
+        valDiskOuter: document.getElementById('valDiskOuter'),
+        slDoppler: document.getElementById('slDoppler'),
+        valDoppler: document.getElementById('valDoppler'),
+        slJet: document.getElementById('slJet'),
+        valJet: document.getElementById('valJet'),
+        slPitch: document.getElementById('slPitch'),
+        valPitch: document.getElementById('valPitch'),
+        slRoll: document.getElementById('slRoll'),
+        valRoll: document.getElementById('valRoll'),
+        slBloom: document.getElementById('slBloom'),
+        valBloom: document.getElementById('valBloom'),
+        slExposure: document.getElementById('slExposure'),
+        valExposure: document.getElementById('valExposure'),
+        slScale: document.getElementById('slScale'),
+        valScale: document.getElementById('valScale'),
+        chkAutoOrbit: document.getElementById('chkAutoOrbit'),
+        chkGravRedshift: document.getElementById('chkGravRedshift'),
+        chkPhotonRing: document.getElementById('chkPhotonRing'),
+
+        telDist: document.getElementById('telDist'),
+        telDilation: document.getElementById('telDilation'),
+        telProperTime: document.getElementById('telProperTime'),
+        telCoordTime: document.getElementById('telCoordTime'),
+        telRadii: document.getElementById('telRadii'),
+        telFps: document.getElementById('telFps'),
+        horizonWarning: document.getElementById('horizonWarning')
+      };
+
+      function syncUIFromState() {
+        ui.slSpin.value = state.spin;
+        ui.valSpin.textContent = `${state.spin.toFixed(2)} c`;
+
+        ui.slMass.value = state.mass;
+        ui.valMass.textContent = `${state.mass.toFixed(2)} M`;
+
+        ui.slTemp.value = state.diskTemp;
+        ui.valTemp.textContent = `${Math.round(state.diskTemp)} K`;
+
+        ui.slDensity.value = state.diskDensity;
+        ui.valDensity.textContent = state.diskDensity.toFixed(2);
+
+        ui.slDiskOuter.value = state.diskOuter;
+        ui.valDiskOuter.textContent = `${state.diskOuter.toFixed(1)} r_s`;
+
+        ui.slDoppler.value = state.doppler;
+        ui.valDoppler.textContent = state.doppler.toFixed(2);
+
+        ui.slJet.value = state.jetPower;
+        ui.valJet.textContent = state.jetPower.toFixed(2);
+
+        const degPitch = Math.round(state.pitch * 180 / Math.PI);
+        ui.slPitch.value = degPitch;
+        ui.valPitch.textContent = `${degPitch}°`;
+
+        const degRoll = Math.round(state.roll * 180 / Math.PI);
+        ui.slRoll.value = degRoll;
+        ui.valRoll.textContent = `${degRoll}°`;
+
+        ui.slBloom.value = state.bloom;
+        ui.valBloom.textContent = state.bloom.toFixed(2);
+
+        ui.slExposure.value = state.exposure;
+        ui.valExposure.textContent = state.exposure.toFixed(2);
+
+        ui.slScale.value = state.resScale;
+        ui.valScale.textContent = `${Math.round(state.resScale * 100)}%`;
+
+        ui.chkAutoOrbit.checked = state.autoOrbit;
+        ui.chkGravRedshift.checked = state.gravRedshift;
+        ui.chkPhotonRing.checked = state.photonRing;
+      }
+
+      ui.slSpin.addEventListener('input', e => { state.spin = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slMass.addEventListener('input', e => { state.mass = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slTemp.addEventListener('input', e => { state.diskTemp = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slDensity.addEventListener('input', e => { state.diskDensity = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slDiskOuter.addEventListener('input', e => { state.diskOuter = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slDoppler.addEventListener('input', e => { state.doppler = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slJet.addEventListener('input', e => { state.jetPower = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slPitch.addEventListener('input', e => { state.pitch = parseFloat(e.target.value) * Math.PI / 180; syncUIFromState(); });
+      ui.slRoll.addEventListener('input', e => { state.roll = parseFloat(e.target.value) * Math.PI / 180; syncUIFromState(); });
+      ui.slBloom.addEventListener('input', e => { state.bloom = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slExposure.addEventListener('input', e => { state.exposure = parseFloat(e.target.value); syncUIFromState(); });
+      ui.slScale.addEventListener('input', e => {
+        state.resScale = parseFloat(e.target.value);
+        syncUIFromState();
+        rebuildFramebuffers();
+      });
+
+      ui.chkAutoOrbit.addEventListener('change', e => { state.autoOrbit = e.target.checked; });
+      ui.chkGravRedshift.addEventListener('change', e => { state.gravRedshift = e.target.checked; });
+      ui.chkPhotonRing.addEventListener('change', e => { state.photonRing = e.target.checked; });
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const p = presets[btn.dataset.preset];
+          if (!p) return;
+          state.distance = p.distance;
+          state.pitch = p.pitch * Math.PI / 180;
+          state.roll = p.roll * Math.PI / 180;
+          state.spin = p.spin;
+          state.mass = p.mass;
+          state.diskTemp = p.diskTemp;
+          state.diskDensity = p.diskDensity;
+          state.diskOuter = p.diskOuter;
+          state.doppler = p.doppler;
+          state.jetPower = p.jetPower;
+          state.bloom = p.bloom;
+          state.exposure = p.exposure;
+          syncUIFromState();
+        });
+      });
+
+      // --- Fare, Dokunmatik ve Klavye Kamera Kontrolleri ---
+      let isDragging = false;
+      let dragButton = 0;
+      let lastX = 0;
+      let lastY = 0;
+      const keys = {};
+
+      canvas.addEventListener('mousedown', e => {
+        isDragging = true;
+        dragButton = e.button;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      });
+
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+
+        if (dragButton === 2 || e.shiftKey) {
+          state.roll = Math.max(-Math.PI, Math.min(Math.PI, state.roll + dx * 0.005));
+        } else {
+          state.yaw -= dx * 0.006;
+          state.pitch = Math.max(-1.48, Math.min(1.48, state.pitch + dy * 0.005));
+        }
+        syncUIFromState();
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+      canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        const factor = Math.exp(e.deltaY * 0.001);
+        state.distance = Math.max(1.55, Math.min(32.0, state.distance * factor));
+      }, { passive: false });
+
+      // Dokunmatik ekran desteği
+      let touchDist = 0;
+      canvas.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          lastX = e.touches[0].clientX;
+          lastY = e.touches[0].clientY;
+        } else if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          touchDist = Math.hypot(dx, dy);
+        }
+      }, { passive: true });
+
+      canvas.addEventListener('touchmove', e => {
+        if (e.touches.length === 1 && isDragging) {
+          const dx = e.touches[0].clientX - lastX;
+          const dy = e.touches[0].clientY - lastY;
+          lastX = e.touches[0].clientX;
+          lastY = e.touches[0].clientY;
+          state.yaw -= dx * 0.006;
+          state.pitch = Math.max(-1.48, Math.min(1.48, state.pitch + dy * 0.005));
+          syncUIFromState();
+        } else if (e.touches.length === 2) {
+          const dx = e.touches[0].clientX - e.touches[1].clientX;
+          const dy = e.touches[0].clientY - e.touches[1].clientY;
+          const newDist = Math.hypot(dx, dy);
+          if (touchDist > 10) {
+            state.distance = Math.max(1.55, Math.min(32.0, state.distance * (touchDist / newDist)));
+          }
+          touchDist = newDist;
+        }
+      }, { passive: true });
+
+      canvas.addEventListener('touchend', () => { isDragging = false; });
+
+      window.addEventListener('keydown', e => {
+        keys[e.code] = true;
+        if (e.code === 'KeyH') togglePanel();
+        if (e.code === 'KeyR') resetCamera();
+      });
+      window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+      const controlPanel = document.getElementById('controlPanel');
+      function togglePanel() {
+        controlPanel.classList.toggle('collapsed');
+      }
+      function resetCamera() {
+        state.distance = 11.5;
+        state.pitch = 8 * Math.PI / 180;
+        state.roll = -12 * Math.PI / 180;
+        syncUIFromState();
+      }
+
+      document.getElementById('btnToggleUI').addEventListener('click', togglePanel);
+      document.getElementById('btnResetCam').addEventListener('click', resetCamera);
+      document.getElementById('btnScreenshot').addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = `karadelik-simulasyon-${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+
+      window.addEventListener('resize', rebuildFramebuffers);
+      rebuildFramebuffers();
+      syncUIFromState();
+
+      // --- Kamera Matrisi Hesaplama ---
+      function getCameraVectors() {
+        const cp = Math.cos(state.pitch);
+        const sp = Math.sin(state.pitch);
+        const cy = Math.cos(state.yaw);
+        const sy = Math.sin(state.yaw);
+
+        const camPos = [
+          state.distance * cp * sinYaw(state.yaw),
+          state.distance * sp,
+          state.distance * cp * cosYaw(state.yaw)
+        ];
+
+        // İleri vektör (merkeze doğru: -normalize(camPos))
+        const fwd = normalizeVec([-camPos[0], -camPos[1], -camPos[2]]);
+        const worldUp = [0, 1, 0];
+        let right = normalizeVec(crossVec(fwd, worldUp));
+        let up = crossVec(right, fwd);
+
+        // Kamera yatışı (Roll)
+        const cr = Math.cos(state.roll);
+        const sr = Math.sin(state.roll);
+        const rolledRight = [
+          right[0] * cr + up[0] * sr,
+          right[1] * cr + up[1] * sr,
+          right[2] * cr + up[2] * sr
+        ];
+        const rolledUp = [
+          -right[0] * sr + up[0] * cr,
+          -right[1] * sr + up[1] * cr,
+          -right[2] * sr + up[2] * cr
+        ];
+
+        // Sütun-ana (column-major) 3x3 matris: [right, up, -fwd]
+        const mat = new Float32Array([
+          rolledRight[0], rolledRight[1], rolledRight[2],
+          rolledUp[0],    rolledUp[1],    rolledUp[2],
+          -fwd[0],        -fwd[1],        -fwd[2]
+        ]);
+
+        return { camPos, mat };
+      }
+
+      function sinYaw(y) { return Math.sin(y); }
+      function cosYaw(y) { return Math.cos(y); }
+      function normalizeVec(v) {
+        const l = Math.hypot(v[0], v[1], v[2]) || 1;
+        return [v[0] / l, v[1] / l, v[2] / l];
+      }
+      function crossVec(a, b) {
+        return [
+          a[1] * b[2] - a[2] * b[1],
+          a[2] * b[0] - a[0] * b[2],
+          a[0] * b[1] - a[1] * b[0]
+        ];
+      }
+
+      function computeISCOJS(rs, aStar) {
+        const a = Math.min(Math.abs(aStar), 0.995);
+        const z1 = 1 + Math.cbrt(1 - a * a) * (Math.cbrt(1 + a) + Math.cbrt(1 - a));
+        const z2 = Math.sqrt(3 * a * a + z1 * z1);
+        const sgn = aStar >= 0 ? -1 : 1;
+        const rIscoM = 3 + z2 + sgn * Math.sqrt((3 - z1) * (3 + z1 + 2 * z2));
+        return Math.max(0.55 * rs, rIscoM * 0.5 * rs);
+      }
+
+      function formatClock(sec) {
+        const mins = Math.floor(sec / 60);
+        const rem = (sec % 60).toFixed(1).padStart(4, '0');
+        return `${String(mins).padStart(2, '0')}:${rem}`;
+      }
+
+      // --- Uniform Konum Önbelleği ---
+      const locRay = {
+        uResolution: gl.getUniformLocation(progRaytrace, 'uResolution'),
+        uTime: gl.getUniformLocation(progRaytrace, 'uTime'),
+        uCamPos: gl.getUniformLocation(progRaytrace, 'uCamPos'),
+        uCamMat: gl.getUniformLocation(progRaytrace, 'uCamMat'),
+        uFov: gl.getUniformLocation(progRaytrace, 'uFov'),
+        uSpin: gl.getUniformLocation(progRaytrace, 'uSpin'),
+        uMass: gl.getUniformLocation(progRaytrace, 'uMass'),
+        uDiskTemp: gl.getUniformLocation(progRaytrace, 'uDiskTemp'),
+        uDiskDensity: gl.getUniformLocation(progRaytrace, 'uDiskDensity'),
+        uDiskOuter: gl.getUniformLocation(progRaytrace, 'uDiskOuter'),
+        uDoppler: gl.getUniformLocation(progRaytrace, 'uDoppler'),
+        uJetPower: gl.getUniformLocation(progRaytrace, 'uJetPower'),
+        uGravRedshift: gl.getUniformLocation(progRaytrace, 'uGravRedshift'),
+        uPhotonRing: gl.getUniformLocation(progRaytrace, 'uPhotonRing')
+      };
+
+      const locBloom = {
+        uTex: gl.getUniformLocation(progBloom, 'uTex'),
+        uTexelSize: gl.getUniformLocation(progBloom, 'uTexelSize'),
+        uDir: gl.getUniformLocation(progBloom, 'uDir')
+      };
+
+      const locComp = {
+        uSceneTex: gl.getUniformLocation(progComposite, 'uSceneTex'),
+        uBloomTex: gl.getUniformLocation(progComposite, 'uBloomTex'),
+        uBloomStrength: gl.getUniformLocation(progComposite, 'uBloomStrength'),
+        uExposure: gl.getUniformLocation(progComposite, 'uExposure')
+      };
+
+      // --- Ana Simülasyon Döngüsü ---
+      let lastTime = performance.now();
+      let simTime = 0;
+      let properTime = 0;
+      let coordTime = 0;
+      let frameCount = 0;
+      let fpsTimer = 0;
+
+      function render(now) {
+        const dt = Math.min((now - lastTime) * 0.001, 0.1);
+        lastTime = now;
+
+        // Klavye navigasyonu
+        if (keys['KeyW'] || keys['ArrowUp']) state.distance = Math.max(1.55, state.distance - dt * 4.5);
+        if (keys['KeyS'] || keys['ArrowDown']) state.distance = Math.min(32.0, state.distance + dt * 4.5);
+        if (keys['KeyA'] || keys['ArrowLeft']) state.yaw += dt * 0.8;
+        if (keys['KeyD'] || keys['ArrowRight']) state.yaw -= dt * 0.8;
+
+        if (state.autoOrbit && !isDragging) {
+          state.yaw -= dt * 0.14;
+        }
+
+        // Kütleçekimsel Zaman Genişlemesi Hesabı: dτ/dt = sqrt(1 - r_s / r)
+        const rRatio = state.distance / state.mass;
+        const dilation = Math.sqrt(Math.max(0.02, 1.0 - 1.0 / Math.max(1.01, rRatio)));
+
+        coordTime += dt;
+        properTime += dt * dilation;
+        simTime += dt;
+
+        // Telemetri Güncellemesi
+        frameCount++;
+        fpsTimer += dt;
+        if (fpsTimer >= 0.25) {
+          const fps = Math.round(frameCount / fpsTimer);
+          ui.telFps.textContent = `${fps} FPS`;
+          frameCount = 0;
+          fpsTimer = 0;
+
+          ui.telDist.textContent = `${rRatio.toFixed(2)} r_s`;
+          ui.telDilation.textContent = `${dilation.toFixed(4)}x`;
+          ui.telProperTime.textContent = formatClock(properTime);
+          ui.telCoordTime.textContent = formatClock(coordTime);
+
+          const isco = computeISCOJS(1.0, state.spin);
+          const rPh = 1.5 * (1.0 - state.spin * 0.18);
+          ui.telRadii.textContent = `${isco.toFixed(2)} / ${rPh.toFixed(2)} r_s`;
+
+          if (rRatio < 2.6) {
+            ui.horizonWarning.classList.add('visible');
+          } else {
+            ui.horizonWarning.classList.remove('visible');
+          }
+        }
+
+        const { camPos, mat } = getCameraVectors();
+
+        // 1. AŞAMA: Relativistik Raytracing -> fboScene
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fboScene.fbo);
+        gl.viewport(0, 0, fboScene.w, fboScene.h);
+        gl.useProgram(progRaytrace);
+
+        gl.uniform2f(locRay.uResolution, fboScene.w, fboScene.h);
+        gl.uniform1f(locRay.uTime, simTime);
+        gl.uniform3f(locRay.uCamPos, camPos[0], camPos[1], camPos[2]);
+        gl.uniformMatrix3fv(locRay.uCamMat, false, mat);
+        gl.uniform1f(locRay.uFov, state.fov);
+
+        gl.uniform1f(locRay.uSpin, state.spin);
+        gl.uniform1f(locRay.uMass, state.mass);
+        gl.uniform1f(locRay.uDiskTemp, state.diskTemp);
+        gl.uniform1f(locRay.uDiskDensity, state.diskDensity);
+        gl.uniform1f(locRay.uDiskOuter, state.diskOuter);
+        gl.uniform1f(locRay.uDoppler, state.doppler);
+        gl.uniform1f(locRay.uJetPower, state.jetPower);
+        gl.uniform1f(locRay.uGravRedshift, state.gravRedshift ? 1.0 : 0.0);
+        gl.uniform1f(locRay.uPhotonRing, state.photonRing ? 1.0 : 0.0);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        // 2. AŞAMA: Yatay & Dikey HDR Bloom
+        gl.useProgram(progBloom);
+        gl.uniform2f(locBloom.uTexelSize, 1.0 / fboBloomA.w, 1.0 / fboBloomA.h);
+
+        // Yatay bulanıklaştırma
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fboBloomA.fbo);
+        gl.viewport(0, 0, fboBloomA.w, fboBloomA.h);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, fboScene.tex);
+        gl.uniform1i(locBloom.uTex, 0);
+        gl.uniform2f(locBloom.uDir, 1.0, 0.0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        // Dikey bulanıklaştırma
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fboBloomB.fbo);
+        gl.bindTexture(gl.TEXTURE_2D, fboBloomA.tex);
+        gl.uniform2f(locBloom.uDir, 0.0, 1.0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        // 3. AŞAMA: ACES Filmic Composite -> Ekran
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.useProgram(progComposite);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, fboScene.tex);
+        gl.uniform1i(locComp.uSceneTex, 0);
+
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, fboBloomB.tex);
+        gl.uniform1i(locComp.uBloomTex, 1);
+
+        gl.uniform1f(locComp.uBloomStrength, state.bloom);
+        gl.uniform1f(locComp.uExposure, state.exposure);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>
