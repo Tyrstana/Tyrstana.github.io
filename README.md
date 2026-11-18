@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 18 Kasım 2026 arasında, 36 günde 104 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 19 Kasım 2026 arasında, 37 günde 106 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -32,7 +32,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Aero Drift** | Frutiger Aero tarzında 3D keşif oyunu | PC · Mobil |
 | **Backrooms: Kaset #1994** | VHS kaset atmosferli 3D korku oyunu | PC · Mobil |
 | **AeroSim 3D PRO** | Uçuş, hava trafik kontrolü ve havayolu simülatörü | PC · Mobil |
-| **Aetheria** | Liquid glass arayüzlü web deneyimi | PC · Mobil |
+| **Aetheria** | Mini oyunlar, eğlence araçları ve müzik stüdyosu olan web deneyimi | PC · Mobil |
 | **Küllerin Saltanatı** | Birinci şahıs, co-op oynanabilen açık dünya dark fantasy RPG | PC · Mobil |
 | **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
 
@@ -42,7 +42,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 - **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet. Gece ve gündüz, Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, uçan adalar, monoray ve kendi film müziği.
 - **Backrooms: Kaset #1994:** Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu.
 - **AeroSim 3D PRO:** Mega bir havalimanı, gerçekçi hava trafik kontrolü ve havayolu yönetimi: hat aç, kapı kur, filonu büyüt.
-- **Aetheria:** Akıcı animasyonlu, sakinleştirici bir dijital evren.
+- **Aetheria:** Sıkılmanın yasak olduğu bir dijital evren: 11 mini oyun, çark ve emoji bulmacası gibi eğlence araçları, seçimli hikâyeler, ritim kurabildiğin bir müzik stüdyosu ve nefes, pomodoro ve notlarla zen modu.
 - **Küllerin Saltanatı:** Ebedi gecenin altında, istersen arkadaşlarınla birlikte: Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, sis kapılı arenalarda boss savaşları, hedefe kilitlenmeli dövüş, büyü kitabı, Kayıp Sayfalar ve gizli bir son.
 - **Portal Silahı: Çoklu Evren:** Portal silahını al ve evrenler arasında zıpla; skor sistemi ve shader efektleri.
 
@@ -70,7 +70,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 18, 2026: 104 releases in 36 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 19, 2026: 106 releases in 37 days.
 
 ### Projects
 
@@ -82,7 +82,7 @@ This repository hosts my personal website and the latest version of each project
 | **Aero Drift** | 3D exploration game in the Frutiger Aero style | PC · Mobile |
 | **Backrooms: Kaset #1994** | 3D horror game with a VHS tape look | PC · Mobile |
 | **AeroSim 3D PRO** | Flight, air traffic control and airline simulator | PC · Mobile |
-| **Aetheria** | Web experience with a liquid glass interface | PC · Mobile |
+| **Aetheria** | Web experience with mini games, fun tools and a music studio | PC · Mobile |
 | **Küllerin Saltanatı** | First-person open-world dark fantasy RPG with co-op | PC · Mobile |
 | **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
 
@@ -92,7 +92,7 @@ This repository hosts my personal website and the latest version of each project
 - **Aero Drift:** Glide over meadows and explore a glass city. Day and night, a shopping mall, a Ferris wheel, a beach with a lighthouse, a crystal valley, floating islands, a monorail and an original soundtrack.
 - **Backrooms: Kaset #1994:** A first-person horror game set in endless fluorescent-lit corridors, watched through a found VHS tape.
 - **AeroSim 3D PRO:** A mega airport, realistic air traffic control and airline management: open routes, build gates and grow your fleet.
-- **Aetheria:** A calming digital world with smooth animations.
+- **Aetheria:** A digital world where boredom is not allowed: 11 mini games, fun tools like a spin wheel and emoji puzzles, choose-your-path stories, a music studio with a step sequencer and a zen corner with breathing, pomodoro and notes.
 - **Küllerin Saltanatı:** An eternal night you can now share with friends in co-op: three new regions, boss fights in fog-gated arenas, lock-on combat, a spellbook, lost pages and a secret ending.
 - **Portal Silahı: Çoklu Evren:** Grab the portal gun and jump between universes, with a scoring system and shader effects.
 
