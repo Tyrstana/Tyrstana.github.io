@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 14 Kasım 2026 arasında, 32 günde 93 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 18 Kasım 2026 arasında, 36 günde 104 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -36,7 +36,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Küllerin Saltanatı** | Birinci şahıs, co-op oynanabilen açık dünya dark fantasy RPG | PC · Mobil |
 | **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
 
-- **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, Kabusların Efendisi ile final savaşı ve on Backrooms seviyesi (Kararmış Banliyö, Mağara Sistemi, Neon Cennet, Sonsuz Kütüphane ve daha fazlası) ve End portalının ardında gizli bir son.
+- **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on üç kabus, Kabusların Efendisi ile final savaşı ve görevli bulmacalarıyla on Backrooms seviyesi (Level Fun+, The Hub kapılar tüneli, Kararmış Banliyö, Kütüphane ve daha fazlası) ve End portalının ardında gizli bir son.
 - **ZENİT:** Akışı bozmadan koşmaya dayalı birinci şahıs parkur: duvar koşusu, duvardan sekme, kayma ve tırmanma. Sekiz bölüm, gizli kristaller, madalyalar, hayalet koşu ve arkadaşlarınla 8 kişilik çevrim içi yarış.
 - **Pardux:** Alt+Space ile açılır, ekranın üstünde dinamik ada olarak yaşar. Müzik, hatırlatıcı, hava durumu, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları; ses tanıma çevrimdışı çalışır.
 - **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet. Gece ve gündüz, Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, uçan adalar, monoray ve kendi film müziği.
@@ -70,7 +70,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 14, 2026: 93 releases in 32 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 18, 2026: 104 releases in 36 days.
 
 ### Projects
 
@@ -86,7 +86,7 @@ This repository hosts my personal website and the latest version of each project
 | **Küllerin Saltanatı** | First-person open-world dark fantasy RPG with co-op | PC · Mobile |
 | **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
 
-- **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, thirteen nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels (a darkened suburb, a cave system, a neon city, an endless library and more) and a secret ending behind the End portal.
+- **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, thirteen nightmares, a final fight against the Lord of Nightmares and ten Backrooms levels with puzzle quests (Level Fun+, The Hub tunnel of doors, a darkened suburb, a library and more) and a secret ending behind the End portal.
 - **ZENİT:** A first-person parkour game about keeping your flow: wall runs, wall jumps, slides and ledge climbs. Eight levels, hidden crystals, medals, a ghost of your best run and online races for up to 8 friends.
 - **Pardux:** Opens with Alt+Space and lives at the top of the screen as a dynamic island. Music, reminders, weather, exchange rates, WhatsApp messages and "Hey Pardux" voice commands; speech recognition works offline.
 - **Aero Drift:** Glide over meadows and explore a glass city. Day and night, a shopping mall, a Ferris wheel, a beach with a lighthouse, a crystal valley, floating islands, a monorail and an original soundtrack.
