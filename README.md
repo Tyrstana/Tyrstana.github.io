@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 20 Kasım 2026 arasında, 38 günde 111 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 20 Kasım 2026 arasında, 38 günde 113 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -29,7 +29,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **Skin Stealer** | Minecraft 1.20.1 Forge korku modu | Java · Minecraft |
 | **ZENİT** | Çevrim içi yarışlı 3D parkur oyunu | PC |
 | **Pardux** | Türkçe komut anlayan Windows asistanı | Windows |
-| **Aero Drift** | Frutiger Aero tarzında 3D keşif oyunu | PC · Mobil |
+| **Aero Drift** | Frutiger Aero tarzında, çevrim içi oynanabilen 3D keşif oyunu | PC · Mobil |
 | **Backrooms: Kaset #1994** | VHS kaset atmosferli 3D korku oyunu | PC · Mobil |
 | **AeroSim 3D PRO** | Uçuş, hava trafik kontrolü ve havayolu simülatörü | PC · Mobil |
 | **Aetheria** | Mini oyunlar, eğlence araçları ve müzik stüdyosu olan web deneyimi | PC · Mobil |
@@ -39,7 +39,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 - **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on iki kabus, Kabusların Efendisi ile final savaşı, görevli bulmacalarıyla Backrooms seviyeleri (Level Fun+, The Hub kapılar tüneli, Kararmış Banliyö, Kütüphane, rüya zinciri ve daha fazlası) ve üç gizli son: Merdivenin Dibi, Pembe Ev ve Boş Şehir.
 - **ZENİT:** Akışı bozmadan koşmaya dayalı birinci şahıs parkur: duvar koşusu, duvardan sekme, kayma ve tırmanma. Sekiz bölüm, gizli kristaller, madalyalar, hayalet koşu ve arkadaşlarınla 8 kişilik çevrim içi yarış.
 - **Pardux:** Alt+Space ile açılır, ekranın üstünde dinamik ada olarak yaşar. Müzik, hatırlatıcı, hava durumu, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları; ses tanıma çevrimdışı çalışır.
-- **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet. Gece ve gündüz, Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, uçan adalar, monoray ve kendi film müziği.
+- **Aero Drift:** Çayırlarda süzül, cam bir şehri keşfet; istersen arkadaşlarınla birlikte. Gökkuşağı rayları, Melodi Taşları, fotoğraf safarisi, Gece ve gündüz, Aero Plaza AVM, dönme dolap, deniz fenerli sahil, Kristal Vadisi, uçan adalar, monoray ve kendi film müziği.
 - **Backrooms: Kaset #1994:** Bulunmuş bir VHS kasetinden izlenen, floresan ışıklı sonsuz koridorlarda geçen birinci şahıs korku oyunu.
 - **AeroSim 3D PRO:** Mega bir havalimanı, gerçekçi hava trafik kontrolü ve havayolu yönetimi: hat aç, kapı kur, filonu büyüt.
 - **Aetheria:** Sıkılmanın yasak olduğu bir dijital evren: 11 mini oyun, çark ve emoji bulmacası gibi eğlence araçları, seçimli hikâyeler, ritim kurabildiğin bir müzik stüdyosu ve nefes, pomodoro ve notlarla zen modu.
@@ -70,7 +70,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 20, 2026: 111 releases in 38 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 20, 2026: 113 releases in 38 days.
 
 ### Projects
 
@@ -79,7 +79,7 @@ This repository hosts my personal website and the latest version of each project
 | **Skin Stealer** | Horror mod for Minecraft 1.20.1 Forge | Java · Minecraft |
 | **ZENİT** | 3D parkour game with online races | PC |
 | **Pardux** | Windows assistant that understands Turkish commands | Windows |
-| **Aero Drift** | 3D exploration game in the Frutiger Aero style | PC · Mobile |
+| **Aero Drift** | 3D exploration game in the Frutiger Aero style with online play | PC · Mobile |
 | **Backrooms: Kaset #1994** | 3D horror game with a VHS tape look | PC · Mobile |
 | **AeroSim 3D PRO** | Flight, air traffic control and airline simulator | PC · Mobile |
 | **Aetheria** | Web experience with mini games, fun tools and a music studio | PC · Mobile |
@@ -89,7 +89,7 @@ This repository hosts my personal website and the latest version of each project
 - **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, twelve nightmares, a final fight against the Lord of Nightmares, Backrooms levels with puzzle quests (Level Fun+, The Hub tunnel of doors, a darkened suburb, a library, a chain of dreams and more) and three secret endings.
 - **ZENİT:** A first-person parkour game about keeping your flow: wall runs, wall jumps, slides and ledge climbs. Eight levels, hidden crystals, medals, a ghost of your best run and online races for up to 8 friends.
 - **Pardux:** Opens with Alt+Space and lives at the top of the screen as a dynamic island. Music, reminders, weather, exchange rates, WhatsApp messages and "Hey Pardux" voice commands; speech recognition works offline.
-- **Aero Drift:** Glide over meadows and explore a glass city. Day and night, a shopping mall, a Ferris wheel, a beach with a lighthouse, a crystal valley, floating islands, a monorail and an original soundtrack.
+- **Aero Drift:** Glide over meadows and explore a glass city, alone or online with friends. Rainbow rails, singing stones, a photo safari, Day and night, a shopping mall, a Ferris wheel, a beach with a lighthouse, a crystal valley, floating islands, a monorail and an original soundtrack.
 - **Backrooms: Kaset #1994:** A first-person horror game set in endless fluorescent-lit corridors, watched through a found VHS tape.
 - **AeroSim 3D PRO:** A mega airport, realistic air traffic control and airline management: open routes, build gates and grow your fleet.
 - **Aetheria:** A digital world where boredom is not allowed: 11 mini games, fun tools like a spin wheel and emoji puzzles, choose-your-path stories, a music studio with a step sequencer and a zen corner with breathing, pomodoro and notes.
