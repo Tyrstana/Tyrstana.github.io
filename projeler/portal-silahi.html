@@ -7,8 +7,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Rick Sanchez: Portal Silahı — Çoklu Evren Kaşifi (Update 7)</title>
+    <title>Rick Sanchez: Portal Silahı — Çoklu Evren Kaşifi (Update 8)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -402,6 +403,41 @@
         .map-foot .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
         /* Responsive */
+        /* ---- Update 8: radar, multiplayer, chat ---- */
+        #hud-left-stack { position: fixed; left: calc(14px + var(--sl)); top: calc(70px + var(--st)); display: flex; flex-direction: column; gap: 8px; pointer-events: none; align-items: flex-start; }
+        #radar { width: 132px; height: 132px; border-radius: 50%; border: 1px solid rgba(77,255,106,.3); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+        #mp-chip { display: flex; align-items: center; gap: 8px; border-radius: 999px; padding: 5px 12px; font-family: var(--font-mono); font-size: 11px; color: #cfeaff; }
+        #mp-chip .live { width: 8px; height: 8px; border-radius: 50%; background: var(--g); box-shadow: 0 0 8px var(--g); animation: orbSpin 1.4s ease-in-out infinite; }
+        #chat-box { position: fixed; left: calc(14px + var(--sl)); bottom: calc(90px + var(--sb)); width: min(420px, 60vw); display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+        #chat-feed { display: flex; flex-direction: column; gap: 4px; }
+        .chat-row { font-size: 13px; padding: 4px 10px; border-radius: 10px; background: rgba(6,10,18,.62); width: fit-content; max-width: 100%; transition: opacity .8s ease; text-shadow: 0 1px 2px #000; word-break: break-word; }
+        .chat-row.sys { color: #9aa6bd; font-style: italic; }
+        .chat-row.old { opacity: 0; }
+        #chat-input-wrap { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 12px; pointer-events: auto; }
+        #chat-input-wrap.hidden { display: none; }
+        #chat-input { flex: 1; background: transparent; border: 0; outline: 0; color: #fff; font: 500 14px var(--font-ui); user-select: text; -webkit-user-select: text; }
+        .txt { background: rgba(0,0,0,.3); border: 1px solid var(--line-2); border-radius: 10px; padding: 8px 12px; color: #fff; font: 600 13px var(--font-ui); outline: none; width: 180px; user-select: text; -webkit-user-select: text; }
+        .txt:focus { border-color: var(--g); }
+        .txt.code { width: 96px; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: .2em; text-align: center; }
+        .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+        .swatch { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,.2); cursor: pointer; }
+        .swatch.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,.35); }
+        .mp-status { font-size: 12.5px; color: var(--mut); padding: 10px 0 4px; }
+        .mp-status.ok { color: var(--g); } .mp-status.err { color: #ff7a7a; } .mp-status.wait { color: var(--am); }
+        .mp-room { display: flex; align-items: center; gap: 10px; padding: 8px 0 12px; flex-wrap: wrap; }
+        .mp-room .k { font-size: 10px; letter-spacing: .18em; color: var(--mut); font-weight: 700; }
+        .mp-room b { font-family: var(--font-mono); font-size: 26px; letter-spacing: .25em; color: #fff; text-shadow: 0 0 14px rgba(60,232,255,.6); }
+        .mp-row .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+        .mp-where { font-family: var(--font-mono); font-size: 12px; color: var(--cy); display: flex; align-items: center; gap: 8px; }
+        .mp-help { font-size: 12px; color: var(--mut); line-height: 1.5; }
+        .mut { color: var(--mut); }
+        .ucard .seedmark { position: absolute; right: 10px; bottom: 8px; z-index: 2; font-size: 12px; opacity: .45; }
+        .ucard .seedmark.got { opacity: 1; }
+        .ucard .mpmark { position: absolute; left: 10px; top: 32px; z-index: 2; font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: rgba(60,232,255,.85); color: #021015; }
+        .is-touch #radar { width: 96px; height: 96px; }
+        .is-touch #chat-box { bottom: auto; top: calc(110px + var(--st)); left: 50%; transform: translateX(-50%); width: min(420px, 70vw); }
+        .is-touch #hud-left-stack { top: calc(108px + var(--st)); }
+        @media (orientation: portrait) and (max-width: 600px) { .is-touch #hud-left-stack { top: calc(56px + var(--st)); } .is-touch #radar { width: 80px; height: 80px; } }
         @media (max-width: 760px) {
             .pause-panel { flex-direction: column; height: 100%; }
             .pause-side { width: auto; flex-direction: row; padding: 10px; gap: 4px; border-right: 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
@@ -486,6 +522,7 @@
                     <button class="tgt-btn" id="tgt-next" aria-label="Sonraki evren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
                 </div>
                 <button class="glass icon-btn" id="btn-touch-map" aria-label="Evren haritası"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg></button>
+                <button class="glass icon-btn" id="btn-touch-chat" aria-label="Sohbet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg></button>
                 <button class="glass icon-btn" id="btn-touch-pause" aria-label="Duraklat"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg></button>
             </div>
         </div>
@@ -495,6 +532,14 @@
             <div id="portal-hint" class="glass prompt"><span class="key">PORTAL</span><span id="portal-hint-label">Evrene gir</span></div>
         </div>
         <div id="toast-wrap"><div id="toast" class="glass"><div id="toast-speaker">RICK SANCHEZ</div><div id="toast-text">"Wubba Lubba Dub Dub!"</div></div></div>
+        <div id="hud-left-stack">
+            <div id="mp-chip" class="glass hidden"><span class="live"></span><span id="mp-chip-text">1 oyuncu</span></div>
+            <canvas id="radar" width="132" height="132"></canvas>
+        </div>
+        <div id="chat-box">
+            <div id="chat-feed"></div>
+            <div id="chat-input-wrap" class="glass hidden"><span class="kbd">T</span><input id="chat-input" maxlength="140" placeholder="Mesaj yaz, Enter ile gönder…" autocomplete="off"></div>
+        </div>
         <div id="cruiser-badge" class="glass hidden">● UZAY KRUVAZÖRÜ — UÇUŞ MODU</div>
         <div id="cruiser-hud" class="glass hidden">
             <div class="ch-cell"><span class="ch-v" id="ch-speed">0</span><span class="ch-k">km/s</span></div>
@@ -522,17 +567,18 @@
     <div id="start-screen" class="overlay">
         <div class="panel start-card">
             <div class="start-portal"></div>
-            <div class="eyebrow">Update 7 · Merkez Sonlu Eğri</div>
+            <div class="eyebrow">Update 8 · Merkez Sonlu Eğri</div>
             <h1 class="h-display start-title">PORTAL SİLAHI<br><span>ÇOKLU EVREN KAŞİFİ</span></h1>
-            <p class="start-sub">25 detaylı paralel evreni keşfet, gerçek Rick &amp; Morty portalları aç, Uzay Kruvazörü ile boyutlar arası uç.</p>
+            <p class="start-sub">35 detaylı paralel evreni keşfet, gerçek Rick &amp; Morty portalları aç, Uzay Kruvazörü ile boyutlar arası uç.</p>
             <div class="start-meta">
-                <span class="tag">25 EVREN</span><span class="tag">UZAY KRUVAZÖRÜ</span><span class="tag">DOKUNMATİK DESTEK</span>
+                <span class="tag">35 EVREN</span><span class="tag">UZAY KRUVAZÖRÜ</span><span class="tag">ÇOK OYUNCULU</span><span class="tag">DOKUNMATİK</span>
             </div>
             <div class="start-actions">
                 <button class="btn btn-primary" id="btn-start"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 001.5.86l10.5-6.5a1 1 0 000-1.72L9.5 4.64A1 1 0 008 5.5z"/></svg>OYNA</button>
+                <button class="btn btn-cyan" id="btn-start-mp">Çok Oyunculu</button>
                 <button class="btn" id="btn-start-map">Evren Haritası</button>
             </div>
-            <p class="start-hint desktop-only" id="start-hint-desktop"><kbd>WASD</kbd> hareket · <kbd>Sol tık</kbd> portal · <kbd>Tekerlek</kbd> hedef evren · <kbd>Tab</kbd> harita · <kbd>G</kbd> etkileşim · <kbd>Esc</kbd> menü</p>
+            <p class="start-hint desktop-only" id="start-hint-desktop"><kbd>WASD</kbd> hareket · <kbd>Sol tık</kbd> portal · <kbd>Tekerlek</kbd> hedef evren · <kbd>Tab</kbd> harita · <kbd>G</kbd> etkileşim · <kbd>T</kbd> sohbet · <kbd>Esc</kbd> menü</p>
             <p class="start-hint touch-only hidden" id="start-hint-touch">Sol taraf: hareket · Sağ taraf: bakış · Yeşil tuş: portal aç · ‹ › ile hedef evreni değiştir</p>
         </div>
     </div>
@@ -548,6 +594,7 @@
                 <button class="nav-btn active" data-tab="tab-game"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Oyun<span class="lbl-long"> &amp; Kamera</span></span></button>
                 <button class="nav-btn" data-tab="tab-gfx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Grafik<span class="lbl-long"> &amp; Performans</span></span></button>
                 <button class="nav-btn" data-tab="tab-audio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg><span>Ses</span></button>
+                <button class="nav-btn" data-tab="tab-mp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M15 14c3 0 6 1.5 6 4.5"/></svg><span>Çok Oyunculu</span></button>
                 <button class="nav-btn" data-tab="tab-keys"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg><span>Kontroller</span></button>
                 <div class="spacer"></div>
                 <button class="btn btn-cyan side-extra" id="btn-pause-map">Evren Haritası</button>
@@ -606,6 +653,25 @@
                         </div>
                         <button class="btn btn-cyan" id="btn-test-sound">Portal sesini test et</button>
                     </div>
+                    <!-- MULTIPLAYER -->
+                    <div class="tab-panel" id="tab-mp">
+                        <div class="group-title">Profil</div>
+                        <div class="group">
+                            <div class="row"><div class="row-label">Oyuncu adı</div><input id="mp-name" class="txt" maxlength="16" autocomplete="off"></div>
+                            <div class="row"><div class="row-label">Takım rengi<small>Avatarının vizörü, beresi ve isim etiketi</small></div><div class="swatches" id="mp-colors"></div></div>
+                        </div>
+                        <div class="group-title">Bağlantı</div>
+                        <div class="group">
+                            <div class="row"><div class="row-label">Mod<small>Online: internet üzerinden 4 haneli oda koduyla (WebRTC, sunucu kurulumu gerekmez). Yerel: aynı tarayıcıdaki sekmeler arasında.</small></div><div class="seg" id="seg-mpmode"><button data-v="peer" class="active">Online</button><button data-v="local">Yerel</button></div></div>
+                            <div class="row"><div class="row-label">Yeni oda kur<small>Kodu arkadaşlarınla paylaş</small></div><button class="btn btn-primary btn-sm" id="mp-host">Oda Kur</button></div>
+                            <div class="row"><div class="row-label">Odaya katıl</div><div class="row-ctrl"><input id="mp-code" class="txt code" maxlength="6" placeholder="KOD" autocomplete="off"><button class="btn btn-cyan btn-sm" id="mp-join">Katıl</button></div></div>
+                            <div class="mp-status" id="mp-status">Bağlı değil</div>
+                            <div class="mp-room hidden" id="mp-room"><span class="k">ODA KODU</span><b id="mp-room-code">----</b><button class="btn btn-sm" id="mp-copy">Kopyala</button><button class="btn btn-sm btn-ghost" id="mp-leave">Ayrıl</button></div>
+                        </div>
+                        <div class="group-title">Oyuncular</div>
+                        <div class="group" id="mp-list"></div>
+                        <p class="mp-help">Odadaki herkes birbirini, açtığı portalları ve sohbeti görür. Bir arkadaşının portalından geçersen onun hedef evrenine gidersin. Sohbet: <span class="kbd">T</span> veya <span class="kbd">Enter</span>.</p>
+                    </div>
                     <!-- KEYS -->
                     <div class="tab-panel" id="tab-keys">
                         <div class="keys-grid">
@@ -656,7 +722,7 @@
             <div class="map-head">
                 <div>
                     <div class="eyebrow">Çoklu Evren Koordinat Sistemi</div>
-                    <h2 class="h-display" id="map-title">25 Paralel Evren</h2>
+                    <h2 class="h-display" id="map-title">35 Paralel Evren</h2>
                 </div>
                 <div class="chips" id="map-chips"></div>
                 <button class="btn btn-sm" id="btn-map-close">Kapat <span class="kbd desktop-only">Tab</span></button>
@@ -897,6 +963,87 @@
             sky: { top: 0x2a6ad8, mid: 0xbfe0ff, bot: 0x9cc6e8, stars: 0, sun: { dir: [0.4, 0.5, -0.75], color: 0xffffff, size: 0.025 } },
             fog: { color: 0xbfe0ff, density: 0.0035 }, hemi: [0xffffff, 0x5a7a3a, 0.95], sun: { color: 0xfff4e0, intensity: 1.1, pos: [40, 70, -50] },
             amb: { type: 'wind', vol: 0.05 }
+        },
+        // ---------------- UPDATE 8 ----------------
+        {
+            code: 'J-BOREE', name: 'Jerryboree (Jerry Kreşi)', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Rick'lerin Jerry'lerini bıraktığı kreş: top havuzu, kaydıraklı oyun kulesi, puding masaları, hiç kapanmayan TV köşesi ve bilekliğini arayan onlarca Jerry.",
+            gravity: 22, jump: 10.4, speed: 9.6, floor: 'carpet', indoor: true, bounds: 44,
+            sky: { top: 0xfff4c2, mid: 0xffe0f0, bot: 0xd8f0ff, stars: 0 },
+            fog: { color: 0xfff0e8, density: 0.008 }, hemi: [0xffffff, 0xffd8e8, 1.05],
+            amb: { type: 'arcade', f: 330, vol: 0.02 }
+        },
+        {
+            code: 'X-CUSTOMS', name: 'Boyutlar Arası Gümrük', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Çoklu evrenin en kalabalık terminali: uzaya açılan dev cam cephe, geçen gemiler, lazer tarayıcı kapılar, bagaj bantları, kalkış panosu, duty free ve her renkten yolcu.",
+            gravity: 22, jump: 10.2, speed: 10, floor: 'metal', indoor: true, bounds: 60,
+            sky: { top: 0x02030a, mid: 0x101a3a, bot: 0x020308, stars: 1.6 },
+            fog: { color: 0x9aa8c0, density: 0.006 }, hemi: [0xeef4ff, 0x404a5a, 1.0], sun: { color: 0xffffff, intensity: 0.5, pos: [10, 60, 30] },
+            amb: { type: 'pad', f: 98, wave: 'sine', cut: 600, vol: 0.04 }
+        },
+        {
+            code: 'B-WORLD', name: 'Kuş Dünyası', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Kuş Adam'ın memleketi: üzerinde yuva-evler olan dev kızıl kayalıklar, ip köprüler, şelale, süzülen kaya adaları, rüzgâr asansörleri, tüy totemleri ve gagalı kuş halkı.",
+            gravity: 18, jump: 11.4, speed: 10.2, floor: 'grass', bounds: 80,
+            sky: { top: 0x3a7ad8, mid: 0xffd89a, bot: 0xc8a070, stars: 0, sun: { dir: [-0.5, 0.3, -0.8], color: 0xfff0c0, size: 0.03 } },
+            fog: { color: 0xf0d0a0, density: 0.006 }, hemi: [0xfff0d0, 0x8a6a3a, 0.95], sun: { color: 0xffe0b0, intensity: 1.0, pos: [-50, 40, -70] },
+            amb: { type: 'wind', vol: 0.06 }
+        },
+        {
+            code: 'G-GEAR', name: 'Dişli Dünyası (Gear World)', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Her şeyin dişliyle döndüğü sanayi gezegeni: dev pirinç dişliler, üzerinde durulabilen dönen dişli platformlar, pistonlar, saat kulesi, şanzıman kolu ve dişli kafalı halk.",
+            gravity: 23, jump: 10.6, speed: 9.8, floor: 'metal', bounds: 75,
+            sky: { top: 0x3a2a1a, mid: 0xa8784a, bot: 0x2a1a0a, stars: 0, sun: { dir: [0.3, 0.25, -0.9], color: 0xffc070, size: 0.04 } },
+            fog: { color: 0x8a6a4a, density: 0.012 }, hemi: [0xffd8a8, 0x3a2a1a, 0.9], sun: { color: 0xffc890, intensity: 0.8, pos: [30, 40, -80] },
+            amb: { type: 'pad', f: 55, wave: 'sawtooth', cut: 260, vol: 0.06 }
+        },
+        {
+            code: 'U-HIVE', name: "Unity'nin Kovan Şehri", cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Bir kovan zihninin yönettiği kusursuz şehir: bembeyaz binalar, simetrik ağaç sıraları, seni izleyen Uyum Anıtı ve tam bir senkronla yürüyen vatandaş birlikleri.",
+            gravity: 22, jump: 10.4, speed: 10, floor: 'concrete', bounds: 80,
+            sky: { top: 0x3a8ae8, mid: 0xd8ecff, bot: 0xb8d8f8, stars: 0, sun: { dir: [0.2, 0.7, -0.6], color: 0xffffff, size: 0.025 } },
+            fog: { color: 0xe0eeff, density: 0.005 }, hemi: [0xffffff, 0xc8d8e8, 1.1], sun: { color: 0xffffff, intensity: 0.9, pos: [20, 80, -40] },
+            amb: { type: 'pad', f: 262, wave: 'sine', cut: 900, vol: 0.025 }
+        },
+        {
+            code: 'D-35C', name: 'Boyut 35-C (Mega Tohum Ormanı)', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Mega Tohumların yetiştiği biyolüminesan orman: göğe uzanan Mega Ağaç, parlayan dev mantar ağaçları, ışıldayan nehir, zıplayan yaratıklar ve iki ay.",
+            gravity: 19, jump: 11.2, speed: 10, floor: 'grass', bounds: 80,
+            sky: { top: 0x080420, mid: 0x2a1060, bot: 0x05020c, stars: 1.3 },
+            fog: { color: 0x1a0a40, density: 0.011 }, hemi: [0x9a8aff, 0x10081a, 0.7],
+            amb: { type: 'pad', f: 82, wave: 'sine', cut: 380, vol: 0.06 }
+        },
+        {
+            code: 'P-PLUTO', name: 'Plüton (Bilim Kongresi)', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "'Plüton bir gezegendir!' diyenlerin buz dünyası: kar fırtınası, kaydırak gibi buz gölü, buz kristalleri, dönen sondaj kuleleri ve cam kubbeli Bilim Salonu.",
+            gravity: 14, jump: 10.5, speed: 9.6, floor: 'sand', bounds: 80,
+            sky: { top: 0x050818, mid: 0x3a4a7a, bot: 0x0a1020, stars: 1.2 },
+            fog: { color: 0xa8b8d8, density: 0.012 }, hemi: [0xdde8ff, 0x5a6a8a, 0.9], sun: { color: 0xfff4d0, intensity: 0.5, pos: [60, 80, -100] },
+            amb: { type: 'wind', vol: 0.08 }
+        },
+        {
+            code: 'G-ZORP', name: 'Gazorpazorp', cat: 'rick', tag: 'RICK & MORTY',
+            desc: "Turuncu çöllerde hurda kulübeler, ateş varilli savaş arenası ve gongu, dikenli hurda kuleler, kum fırtınası... ve gökyüzünde süzülen kadınların kristal ütopyası.",
+            gravity: 23, jump: 10.2, speed: 10.2, floor: 'sand', bounds: 80,
+            sky: { top: 0x5a1a0a, mid: 0xffa05a, bot: 0x3a1a0a, stars: 0, sun: { dir: [0, 0.2, -0.98], color: 0xfff0b0, size: 0.06 } },
+            fog: { color: 0xd8804a, density: 0.009 }, hemi: [0xffd0a0, 0x6a2a0a, 0.95], sun: { color: 0xffc080, intensity: 1.0, pos: [0, 30, -100] },
+            amb: { type: 'wind', vol: 0.08 }
+        },
+        {
+            code: 'L-MALL', name: 'Ölü AVM (Liminal)', cat: 'liminal', tag: 'LİMİNAL',
+            desc: "Kimsenin olmadığı iki katlı alışveriş merkezi: kepenkli mağazalar, titreyen neonlar, kurumuş çeşme, yürüyen merdivenler, yemek katı, terk edilmiş arabalar ve uzaklarda muzak.",
+            gravity: 23, jump: 10.2, speed: 9.6, floor: 'concrete', indoor: true, bounds: 44, spawn: [0, 22, 0],
+            sky: { top: 0xfff4e0, mid: 0xe8dcc8, bot: 0xb8a890, stars: 0 },
+            fog: { color: 0xd8ccb8, density: 0.013 }, hemi: [0xfff4e0, 0x8a7a6a, 1.0],
+            amb: { type: 'synth', f: 98, vol: 0.03 }
+        },
+        {
+            code: 'R-RAINBOW', name: 'Gökkuşağı Yolu (Uzay Pisti)', cat: 'game', tag: 'YARIŞ',
+            desc: "Uzayda süzülen, iniş çıkışlı gökkuşağı yarış pisti: hızlandırıcı oklar, sürpriz kutuları, başlangıç kapısı, tur zamanlayıcı, asteroit kuşağı ve dev gezegen. Düşme!",
+            gravity: 22, jump: 10.6, speed: 13, floor: 'metal', bounds: 92,
+            sky: { top: 0x02010a, mid: 0x1a0838, bot: 0x02010a, stars: 2 },
+            fog: { color: 0x0a0420, density: 0.003 }, hemi: [0xd8c8ff, 0x200a40, 0.8],
+            amb: { type: 'synth', f: 131, vol: 0.04 }
         }
     ];
     UNIVERSES.forEach((u, i) => { u.id = i; });
@@ -4393,18 +4540,795 @@
         addParticles({ count: 120, spread: 80, minY: 1, maxY: 20, color: 0xfff6c8, size: 0.16, speed: 0.3, drift: 2, opacity: 0.6 });
     }
 
+    // ============================================================================
+    // 11C. UPDATE 8 — CROWDS, TEN NEW DIMENSIONS, MAP ENRICHMENT, MEGA SEEDS
+    // ============================================================================
+    let groundFriction = 1;
+
+    // Instanced crowd of wandering original characters (3–4 draw calls for the whole crowd)
+    function addCrowd(o) {
+        const n = o.count, area = o.area || [-30, 30, -30, 30];
+        const r = mulberry32(o.seed || 7);
+        const H = o.h || 1.6, W = o.w || 0.36, HR = o.head || 0.34;
+        const bodyM = new THREE.InstancedMesh(GEO.cyl, std(0xffffff, { roughness: 0.6 }), n);
+        const headM = new THREE.InstancedMesh(GEO.sphere, std(0xffffff, { roughness: 0.55 }), n);
+        const eyeM = new THREE.InstancedMesh(GEO.sphereLo, bas(o.eyeColor || 0x111111), n * 2);
+        const per = o.extra === 'spikes' ? 3 : 1;
+        const extraM = o.extra ? new THREE.InstancedMesh(GEO.cone, std(o.extraColor || 0xffc040, { roughness: 0.5 }), n * per) : null;
+        [bodyM, headM, eyeM, extraM].forEach(m => { if (m) { m.frustumCulled = false; worldGroup.add(m); } });
+        const free = (x, z) => {
+            for (let i = 0; i < colliders.length; i++) { const c = colliders[i]; if (c.active && c.maxY > baseFloorY + 0.5 && x > c.minX - 0.8 && x < c.maxX + 0.8 && z > c.minZ - 0.8 && z < c.maxZ + 0.8) return false; }
+            return !(worldRadius && Math.hypot(x, z) > worldRadius - 1);
+        };
+        const pick = (a) => { for (let k = 0; k < 12; k++) { const x = lerp(area[0], area[1], r()), z = lerp(area[2], area[3], r()); if (free(x, z)) { a.tx = x; a.tz = z; return; } } a.tx = a.x; a.tz = a.z; };
+        const agents = [];
+        const skins = o.skins || [0xe8c8a8];
+        for (let i = 0; i < n; i++) {
+            const a = { x: 0, z: 0, tx: 0, tz: 0, yaw: r() * 6.28, wait: r() * 3, sp: (o.speed || 1.4) * (0.75 + r() * 0.5), s: (o.scale || 1) * (0.88 + r() * 0.24), ph: r() * 6, moving: false };
+            if (o.positions) { a.x = a.tx = o.positions[i][0]; a.z = a.tz = o.positions[i][1]; }
+            else { pick(a); a.x = a.tx; a.z = a.tz; pick(a); }
+            a.bx = a.x; a.bz = a.z;
+            agents.push(a);
+            _c.setHex(o.colors[i % o.colors.length]); bodyM.setColorAt(i, _c);
+            _c.setHex(skins[i % skins.length]); headM.setColorAt(i, _c);
+        }
+        bodyM.instanceColor.needsUpdate = true; headM.instanceColor.needsUpdate = true;
+        const qy = new THREE.Quaternion(), qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2), up = new THREE.Vector3(0, 1, 0), off = new THREE.Vector3(), qq = new THREE.Quaternion();
+        addAnim((dt, t) => {
+            for (let i = 0; i < n; i++) {
+                const a = agents[i];
+                if (o.sync) {
+                    // Hive-mind: everyone marches in perfect lockstep
+                    const s = Math.sin(t * 0.45), c = Math.cos(t * 0.45);
+                    a.x = a.bx + s * 3.5; a.z = a.bz; a.yaw = c > 0 ? Math.PI / 2 : -Math.PI / 2; a.moving = true;
+                } else if (o.idle) {
+                    a.moving = false;
+                    if (o.facePlayer) a.yaw = Math.atan2(player.pos.x - a.x, player.pos.z - a.z);
+                } else if (a.wait > 0) { a.wait -= dt; a.moving = false; }
+                else {
+                    const dx = a.tx - a.x, dz = a.tz - a.z, d = Math.hypot(dx, dz);
+                    if (d < 0.3) { a.wait = 0.8 + r() * 3.5; pick(a); }
+                    else {
+                        const st = Math.min(d, a.sp * dt); a.x += dx / d * st; a.z += dz / d * st; a.moving = true;
+                        const ty = Math.atan2(dx, dz); a.yaw += Math.atan2(Math.sin(ty - a.yaw), Math.cos(ty - a.yaw)) * Math.min(1, dt * 6);
+                    }
+                }
+                const fy = floorFn ? floorFn(a.x, a.z) : getFloorHeightAt(a.x, a.z, baseFloorY + 0.5);
+                const bob = a.moving ? Math.abs(Math.sin(t * 8 + a.ph)) * 0.07 : Math.sin(t * 1.5 + a.ph) * 0.015;
+                qy.setFromAxisAngle(up, a.yaw);
+                const s = a.s;
+                _m4.compose(_p.set(a.x, fy + H * s / 2 + bob, a.z), qy, _s.set(W * s, H * s, W * s * 0.85)); bodyM.setMatrixAt(i, _m4);
+                const hy = fy + H * s + HR * s * 0.8 + bob;
+                _m4.compose(_p.set(a.x, hy, a.z), qy, _s.setScalar(HR * s)); headM.setMatrixAt(i, _m4);
+                for (let e = 0; e < 2; e++) {
+                    off.set((e ? 0.36 : -0.36) * HR * s, 0.1 * HR * s, 0.86 * HR * s).applyQuaternion(qy);
+                    _m4.compose(_p.set(a.x + off.x, hy + off.y, a.z + off.z), qy, _s.setScalar(HR * s * (o.eyeSize || 0.22))); eyeM.setMatrixAt(i * 2 + e, _m4);
+                }
+                if (extraM) {
+                    if (o.extra === 'beak') { off.set(0, -0.1 * HR * s, HR * s * 1.15).applyQuaternion(qy); qq.copy(qy).multiply(qx); _m4.compose(_p.set(a.x + off.x, hy + off.y, a.z + off.z), qq, _s.set(HR * s * 0.35, HR * s * 0.9, HR * s * 0.35)); extraM.setMatrixAt(i, _m4); }
+                    else if (o.extra === 'antenna') { _m4.compose(_p.set(a.x, hy + HR * s * 1.3, a.z), qy, _s.set(HR * s * 0.12, HR * s * 1.2, HR * s * 0.12)); extraM.setMatrixAt(i, _m4); }
+                    else for (let k = 0; k < 3; k++) {
+                        off.set((k - 1) * 0.45 * HR * s, HR * s * 0.95, -0.2 * HR * s).applyQuaternion(qy);
+                        qq.setFromAxisAngle(_vUp2.set(0, 0, 1).applyQuaternion(qy), (1 - k) * 0.5); qq.multiply(qy);
+                        _m4.compose(_p.set(a.x + off.x, hy + off.y, a.z + off.z), qq, _s.set(HR * s * 0.3, HR * s * 0.8, HR * s * 0.3)); extraM.setMatrixAt(i * 3 + k, _m4);
+                    }
+                }
+            }
+            bodyM.instanceMatrix.needsUpdate = true; headM.instanceMatrix.needsUpdate = true; eyeM.instanceMatrix.needsUpdate = true;
+            if (extraM) extraM.instanceMatrix.needsUpdate = true;
+        });
+        if (o.lines) registerInteractable(bodyM, o.label || 'Konuş', () => { audio.playInteract('meeseeks'); showToast(o.speaker || 'YERLİ', o.lines[(Math.random() * o.lines.length) | 0], o.toastColor || '#4dff6a'); });
+        return { agents, bodyM };
+    }
+    const _vUp2 = new THREE.Vector3();
+
+    // ---------------------------------------------------------------- 25. JERRYBOREE
+    function buildJerryboree() {
+        ceilingY = 12;
+        const tileTex = TEX.make('jbtile', 128, (ctx, s) => { const cs = ['#ffd9e6', '#d9f0ff', '#fff4c2', '#dcffd9']; for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) { ctx.fillStyle = cs[(x + y * 2) % 4]; ctx.fillRect(x * 64, y * 64, 64, 64); } ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2; ctx.strokeRect(0, 0, s, s); }, 30, 24);
+        addGround(100, std(0xffffff, { map: tileTex, roughness: 0.5 }));
+        const mural = TEX.make('jbmural', 512, (ctx, w, h) => {
+            const g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#8fd3ff'); g.addColorStop(0.65, '#d8f4ff'); g.addColorStop(0.66, '#7ad86a'); g.addColorStop(1, '#4cb84a'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+            ctx.fillStyle = '#ffe14d'; ctx.beginPath(); ctx.arc(70, 50, 30, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#ffe14d'; ctx.lineWidth = 5; for (let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; ctx.beginPath(); ctx.moveTo(70 + Math.cos(a) * 38, 50 + Math.sin(a) * 38); ctx.lineTo(70 + Math.cos(a) * 52, 50 + Math.sin(a) * 52); ctx.stroke(); }
+            ctx.fillStyle = '#ffffff'; [[200, 50], [330, 70], [450, 40]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 18, 0, 7); ctx.arc(x + 20, y - 8, 22, 0, 7); ctx.arc(x + 42, y, 18, 0, 7); ctx.fill(); });
+            ctx.fillStyle = '#e04a3a'; ctx.fillRect(300, 120, 70, 50); ctx.fillStyle = '#8a3a1a'; ctx.beginPath(); ctx.moveTo(290, 122); ctx.lineTo(335, 92); ctx.lineTo(380, 122); ctx.fill();
+            for (let k = 0; k < 14; k++) { ctx.fillStyle = ['#ff4fd8', '#ffe14d', '#3ca8ff', '#ffffff'][k % 4]; ctx.beginPath(); ctx.arc(20 + k * 36, 150 + (k % 3) * 18, 6, 0, 7); ctx.fill(); }
+        }, 4, 1, { w: 512, h: 192 });
+        const wall = std(0xffffff, { map: mural, roughness: 0.8 });
+        [[0, -45, 92, 1], [0, 35, 92, 1], [-46, -5, 1, 80], [46, -5, 1, 80]].forEach(([x, z, w, d]) => addBox(w, 12, d, wall, x, 6, z, { collide: true }));
+        addBox(92, 0.4, 82, std(0xfffaf0, { roughness: 0.9, emissive: 0x302820, emissiveIntensity: 0.5 }), 0, 12.2, -5, { shoot: false });
+        addInstances(GEO.box, bas(0xfffef4), Array.from({ length: 24 }, (_, i) => ({ x: -36 + (i % 6) * 14.4, y: 11.95, z: -36 + Math.floor(i / 6) * 18, sx: 5, sy: 0.08, sz: 1.4 })), { shoot: false });
+        [[0, 10, -10], [-26, 10, -26], [26, 10, 10]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xfff4e0, 1.0, 40, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        // Check-in desk
+        const desk = addBox(10, 1.3, 2, std(0x3ca8ff, { roughness: 0.4 }), 0, 0.65, -14, { collide: true });
+        addBox(10.4, 0.12, 2.4, std(0xffffff), 0, 1.36, -14, { shoot: false });
+        addSign('JERRYBOREE', '#ff4f8a', 14, 2.6, 0, 8.5, -44.4, { bg: '#fff4c2', tw: 1024, th: 180, font: '900 120px "Comic Sans MS", "Segoe Print", cursive' });
+        addSign('KİMLİK BİLEKLİĞİNİ TAK!', '#2a6ad8', 7, 0.8, 0, 2.6, -13, { bg: '#ffffff', tw: 1024, th: 120, font: '900 64px Inter, sans-serif' });
+        const clerk = simpleFigure(null, { body: 0x2ab3a6, skin: 0x9adf7a, h: 1.5, head: 0.45 }); clerk.position.set(0, 0, -15.6);
+        registerInteractable(desk, 'Kayıt Masası: Bir Jerry Bırak', () => { audio.playInteract('coin'); showToast('JERRYBOREE GÖREVLİSİ', '"Jerry\'nizi bırakın, bilekliğini takalım! Alırken bilekliği getirmeyi unutmayın — karışıyorlar, hepsi aynı."', '#3ca8ff'); });
+        // Ball pit (sunken)
+        const pitZone = addFloorZone(12, 30, -30, -14, -0.9, true);
+        const pitWall = std(0xff4f8a, { roughness: 0.5 });
+        [[21, -30.2, 18.4, 0.4], [21, -13.8, 18.4, 0.4], [11.8, -22, 0.4, 16.4], [30.2, -22, 0.4, 16.4]].forEach(([x, z, w, d]) => addBox(w, 0.9, d, pitWall, x, 0.45, z, { collide: true }));
+        const pitFloor = new THREE.Mesh(GEO.plane, std(0x2a3a8a)); pitFloor.scale.set(18, 16, 1); pitFloor.rotation.x = -Math.PI / 2; pitFloor.position.set(21, -0.95, -22); worldGroup.add(pitFloor);
+        const r = mulberry32(25);
+        const balls = []; const bc = [0xff3a5a, 0xffe14d, 0x3ca8ff, 0x4dff6a, 0xff9be8, 0xff8a2a];
+        for (let i = 0; i < 700; i++) balls.push({ x: 12.4 + r() * 17.2, y: -0.75 + r() * 0.75, z: -29.6 + r() * 15.2, s: 0.26, color: bc[i % 6] });
+        addInstances(GEO.sphereLo, std(0xffffff, { roughness: 0.3 }), balls, { shoot: true });
+        // Playground tower (climb the colourful steps) + slide
+        const play = [0xff3a3a, 0x3ca8ff, 0xffe14d, 0x4dff6a];
+        addBox(6, 3, 6, std(play[1], { roughness: 0.4 }), -24, 1.5, -24, { platform: true });
+        addBox(4, 1.5, 4, std(play[2], { roughness: 0.4 }), -24, 3.75, -24, { platform: true });
+        for (let k = 0; k < 6; k++) addBox(0.8, 0.5 * (k + 1), 2.4, std(play[k % 4], { roughness: 0.4 }), -16.5 - k * 0.8 + 0, 0.25 * (k + 1), -24, { platform: true });
+        addInstances(GEO.cyl8, std(0xffffff), [[-27, -27], [-21, -27], [-27, -21], [-21, -21]].map(([x, z]) => ({ x, y: 5.5, z, sx: 0.12, sy: 3, sz: 0.12 })), { shoot: false });
+        addRoof(6.4, 6.4, 2, std(0xff3a3a, { roughness: 0.4 }), -24, 7, -24);
+        const slide = addBox(2.2, 0.2, 9, std(0xffe14d, { roughness: 0.25 }), -24, 2.1, -15.5, { rx: 0.42, shoot: true });
+        registerInteractable(slide, 'Kaydırak: Kay!', () => { player.pos.set(-24, 4.5 + player.height, -19.5); player.vel.set(0, 2, 14); player.onGround = false; audio.playBounce(); showToast('JERRYBOREE', '"Wheeee! Jerry\'ler bu kaydıraktan günde 400 kez kayıyor."', '#ffe14d'); });
+        addCyl(1.1, 1.1, 8, std(0x4dff6a, { roughness: 0.4, side: THREE.DoubleSide }), -32, 1.1, -24, { rz: Math.PI / 2, shoot: true });
+        // TV corner (Jerrys love TV)
+        const tvMats = [];
+        [-30, -24, -18].forEach((x, i) => { addBox(4.4, 3, 0.8, std(0x1a1a24), x, 3.4, 33.5, { collide: true }); const m = bas(0x3ca8ff); tvMats.push(m); addBox(3.9, 2.5, 0.05, m, x, 3.4, 33.05, { shoot: false }); });
+        addAnim((dt, t) => tvMats.forEach((m, i) => m.color.setHSL(((t * 0.08 + i * 0.3) % 1), 0.7, 0.55 + Math.sin(t * 9 + i) * 0.08)));
+        addBox(12, 1, 3, std(0x8a5a3a, { roughness: 0.8 }), -24, 0.5, 26, { collide: true }); addBox(12, 1.6, 0.8, std(0x8a5a3a), -24, 1.3, 27.2, { shoot: false });
+        // Pudding tables + nap mats
+        addInstances(GEO.cyl, std(0xffffff), [[14, 12], [22, 12], [30, 12], [14, 22], [22, 22], [30, 22]].map(([x, z]) => ({ x, y: 0.75, z, sx: 1.6, sy: 0.08, sz: 1.6 })), { collide: true, cw: 2, cd: 2, ch: 6 });
+        addInstances(GEO.cyl, std(0xffffff), [[14, 12], [22, 12], [30, 12], [14, 22], [22, 22], [30, 22]].flatMap(([x, z]) => [0, 1, 2].map(k => ({ x: x + Math.cos(k * 2.1) * 0.8, y: 0.95, z: z + Math.sin(k * 2.1) * 0.8, sx: 0.18, sy: 0.3, sz: 0.18, color: 0xc88a3a }))), { shoot: false });
+        addInstances(GEO.box, std(0xffffff, { roughness: 0.9 }), Array.from({ length: 10 }, (_, i) => ({ x: -8 + (i % 5) * 3.6, y: 0.08, z: 18 + Math.floor(i / 5) * 6, sx: 2.4, sy: 0.16, sz: 4.4, color: play[i % 4] })), { shoot: false });
+        // The Jerrys
+        addCrowd({ count: 26, area: [-40, 40, -10, 30], colors: [0x6a9a4a, 0x7aa85a, 0x5a8a3a], skins: [0xf0c8a0, 0xe8bc90], h: 1.55, speed: 0.9, seed: 9, label: 'Bir Jerry: Konuş', speaker: 'BİR JERRY', toastColor: '#7aa85a',
+            lines: ['"Burada her gün puding var! Ve kimse beni yargılamıyor!"', '"Ben de bir Jerry\'yim, sen de bir Jerry misin? Bilekliğin nerede?"', '"Eşim beni almaya gelecek... Gelecek, değil mi?"', '"Şu kaydıraktan 400 kez kaydım, tek bir kez bile sıkılmadım."', '"TV\'de yine aynı bölüm var. Harika!"'] });
+        addParticles({ count: 50, spread: 60, minY: 0.5, maxY: 11, color: 0xffffff, size: 0.12, speed: 0.1, drift: 1, opacity: 0.5 });
+    }
+
+    // ---------------------------------------------------------------- 26. INTERDIMENSIONAL CUSTOMS
+    function buildCustoms() {
+        ceilingY = 16;
+        addGround(140, std(0xc8d0dc, { map: TEX.metalPanels(28, '#c8cfda', 'rgba(60,140,255,0.4)'), roughness: 0.15, metalness: 0.5 }));
+        const wallM = std(0xdde3ea, { roughness: 0.5 });
+        [[0, 52, 124, 1], [-62, -4, 1, 112], [62, -4, 1, 112]].forEach(([x, z, w, d]) => addBox(w, 16, d, wallM, x, 8, z, { collide: true }));
+        addBox(124, 0.5, 112, std(0x2a3240, { metalness: 0.6 }), 0, 16.25, -4, { shoot: false });
+        addInstances(GEO.box, bas(0xe8f4ff), [-48, -32, -16, 0, 16, 32, 48].map(x => ({ x, y: 15.95, z: -4, sx: 1, sy: 0.08, sz: 100 })), { shoot: false });
+        // Huge window to space with ships flying past
+        addBox(124, 16, 0.3, std(0x9fd8ff, { transparent: true, opacity: 0.12, roughness: 0.02, metalness: 0.5, depthWrite: false }), 0, 8, -60, { collide: true });
+        addInstances(GEO.box, std(0x2a3240, { metalness: 0.7 }), Array.from({ length: 9 }, (_, i) => ({ x: -60 + i * 15, y: 8, z: -60, sx: 0.8, sy: 16, sz: 0.8 })), { shoot: false });
+        const ships = new THREE.Group(); worldGroup.add(ships);
+        const shipM = std(0xb8c0cc, { metalness: 0.8, roughness: 0.25 });
+        const shipList = [];
+        for (let i = 0; i < 7; i++) {
+            const s = new THREE.Group();
+            const hull = new THREE.Mesh(GEO.sphere, shipM); hull.scale.set(4 + i % 3, 1.4, 9 + (i % 2) * 4); s.add(hull);
+            const eng = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow(), color: [0x3ce8ff, 0xff7a3c, 0x9a5cff][i % 3], blending: THREE.AdditiveBlending, transparent: true, depthWrite: false })); eng.scale.set(6, 6, 1); eng.position.z = 9; s.add(eng);
+            s.position.set(-200 + i * 60, 10 + (i % 4) * 14, -110 - (i % 3) * 40); s.rotation.y = Math.PI / 2; ships.add(s); shipList.push({ s, sp: 8 + (i % 4) * 5 });
+        }
+        addAnim((dt) => shipList.forEach(o => { o.s.position.x += o.sp * dt; if (o.s.position.x > 240) o.s.position.x = -240; }));
+        addSphere(30, bas(0xd86a4a, { fog: false }), -120, 70, -250, { shoot: false }); addGlow(-120, 70, -245, 0xff9a6a, 110, 0.25);
+        // Departure board
+        const board = TEX.make('customsboard', 512, (ctx, w, h) => {
+            ctx.fillStyle = '#05080f'; ctx.fillRect(0, 0, w, h); ctx.font = 'bold 26px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#ffd21a'; ctx.fillText('KALKIŞ / DEPARTURES', 20, 40);
+            const rows = [['GAZORPAZORP', '13:37', 'GECİKMELİ'], ['CITADEL OF RICKS', '14:05', 'KAPI 3'], ['BIRD WORLD', '14:20', 'BİNİŞ'], ['PLANET SQUANCH', '15:10', 'İPTAL'], ['DIMENSION 35-C', '15:45', 'KAPI 7'], ['ANATOMY PARK', '16:00', 'KARANTİNA'], ['CRONENBERG EARTH', '--:--', 'YASAK'], ['BLIPS AND CHITZ', '17:30', 'ZAMANINDA']];
+            rows.forEach(([a, b, c], i) => { const y = 84 + i * 40; ctx.fillStyle = '#e8eef8'; ctx.fillText(a, 20, y); ctx.fillStyle = '#9fd8ff'; ctx.fillText(b, 330, y); ctx.fillStyle = c === 'İPTAL' || c === 'YASAK' ? '#ff4a4a' : c === 'GECİKMELİ' || c === 'KARANTİNA' ? '#ffb23a' : '#4dff6a'; ctx.fillText(c, 420, y); });
+        }, 1, 1, { w: 600, h: 420 });
+        const bm = new THREE.Mesh(GEO.plane, bas(0xffffff, { map: board })); bm.scale.set(14, 9.8, 1); bm.position.set(0, 10.5, 51.4); bm.rotation.y = Math.PI; worldGroup.add(bm);
+        registerInteractable(bm, 'Kalkış Panosu: Oku', () => { audio.playInteract('generic'); showToast('BOYUTLAR ARASI GÜMRÜK', '"Gazorpazorp uçuşu yine gecikmeli. Cronenberg Dünyası\'na uçuşlar ise kalıcı olarak yasaklanmıştır."', '#ffd21a'); });
+        // Security scanner gates
+        const scanMat = bas(0x3ce8ff, { transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+        const scans = [];
+        const frameM = std(0xe8edf3, { metalness: 0.4, roughness: 0.35 });
+        [-24, -12, 0, 12, 24].forEach((x, i) => {
+            addBox(0.5, 4, 1.4, frameM, x - 1.6, 2, -10, { collide: true }); addBox(0.5, 4, 1.4, frameM, x + 1.6, 2, -10, { collide: true }); addBox(3.7, 0.5, 1.4, frameM, x, 4.25, -10, { shoot: false });
+            const p = new THREE.Mesh(GEO.plane, scanMat); p.scale.set(2.7, 0.08, 1); p.rotation.x = -Math.PI / 2; p.position.set(x, 1, -10); worldGroup.add(p); scans.push(p);
+            addGlow(x, 4.3, -9.2, i % 2 ? 0x4dff6a : 0xff3a3a, 1.2, 0.9);
+        });
+        addAnim((dt, t) => scans.forEach((p, i) => { p.position.y = 0.3 + (Math.sin(t * 2 + i) * 0.5 + 0.5) * 3.6; }));
+        const scanGate = addBox(3, 0.3, 1.4, std(0x2a3240), 0, 0.15, -10, { shoot: false });
+        registerInteractable(scanGate, 'Güvenlik Tarayıcısı: İçinden Geç', () => { audio.playInteract('laser'); showToast('GÜMRÜK TARAYICISI', '"Bip! Bildirilmemiş bir portal silahı tespit edildi. ...Ama sen bir Rick\'e benziyorsun. Geç, geç."', '#3ce8ff'); });
+        // Baggage conveyor belts with suitcases
+        const beltTex = TEX.make('belt', 64, (ctx, s) => { ctx.fillStyle = '#1a1c22'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#2c2f38'; for (let y = 0; y < s; y += 8) ctx.fillRect(0, y, s, 3); }, 1, 20);
+        [[-40, 14], [40, 14]].forEach(([x, z]) => { addBox(3, 1, 40, std(0xffffff, { map: beltTex, roughness: 0.6 }), x, 0.5, z, { collide: true }); });
+        addAnim((dt, t) => { beltTex.offset.y = -t * 0.8; });
+        const bags = []; for (let i = 0; i < 24; i++) bags.push({ side: i % 2 ? 40 : -40, z: -6 + (i >> 1) * 3.3, c: [0xc0392b, 0x2a6ad8, 0x4a4a4a, 0x8a5a2a, 0x9a5cff][i % 5] });
+        const bagM = new THREE.InstancedMesh(GEO.box, std(0xffffff, { roughness: 0.6 }), bags.length); bagM.frustumCulled = false; worldGroup.add(bagM);
+        bags.forEach((b, i) => { _c.setHex(b.c); bagM.setColorAt(i, _c); }); bagM.instanceColor.needsUpdate = true;
+        addAnim((dt, t) => { bags.forEach((b, i) => { const z = -6 + ((b.z + 6 + t * 1.6) % 40); _m4.compose(_p.set(b.side, 1.35, z), _q.identity(), _s.set(1.2, 0.7, 1.6)); bagM.setMatrixAt(i, _m4); }); bagM.instanceMatrix.needsUpdate = true; });
+        // Queue rails
+        const posts = []; for (let k = 0; k < 10; k++) for (const x of [-18, -6, 6, 18]) posts.push({ x, y: 0.5, z: 0 + k * 2.2, sx: 0.08, sy: 1, sz: 0.08 });
+        addInstances(GEO.cyl8, std(0xc8c8c8, { metalness: 0.8 }), posts, { shoot: false });
+        [-18, -6, 6, 18].forEach(x => addBox(0.05, 0.08, 20, bas(0xd8202a), x, 0.95, 10, { shoot: false }));
+        // Officer booth + duty-free
+        const booth = addBox(4, 2.4, 3, std(0x2a3240, { metalness: 0.5 }), -32, 1.2, -18, { collide: true });
+        addBox(3.6, 1, 0.08, std(0x9fd8ff, { transparent: true, opacity: 0.4 }), -32, 2.9, -16.5, { shoot: false });
+        const officer = simpleFigure(null, { body: 0x1e3a5f, skin: 0x8acb6a, h: 1.5, head: 0.5 }); officer.position.set(-32, 0.2, -18.6);
+        registerInteractable(booth, 'Gümrük Memuru: Pasaport Göster', () => { audio.playInteract('generic'); showToast('GÜMRÜK MEMURU', '"Beyan edilecek bir şey var mı? Mega Tohum, Plumbus, kayıtsız bir Meeseeks? ...Kıçında bir şey taşıyorsan şimdi söyle."', '#8acb6a'); });
+        addBox(18, 4, 0.8, std(0x2a1a3a), 34, 2, -18, { collide: true });
+        addInstances(GEO.cyl, std(0xffffff, { emissive: 0x222222 }), Array.from({ length: 30 }, (_, i) => ({ x: 26 + (i % 10) * 1.7, y: 1 + Math.floor(i / 10) * 1.2, z: -17.4, sx: 0.22, sy: 0.7, sz: 0.22, color: [0x4dff6a, 0xff4fd8, 0xffe14d, 0x3ce8ff][i % 4] })), { shoot: false });
+        addSign('DUTY FREE · SCHMECKLE KABUL EDİLİR', '#ff4fd8', 16, 1.1, 34, 4.8, -17.5, { bg: '#12081c', tw: 1024, th: 80, font: '900 46px Orbitron, sans-serif' });
+        // Travellers from all over the multiverse
+        addCrowd({ count: 34, area: [-55, 55, -50, 45], colors: [0x6a3a9a, 0xc06a2a, 0x2a8a8a, 0x8a2a4a, 0x3a5a9a, 0x9a9a3a], skins: [0x8acb6a, 0x9b6bd6, 0xd98a5a, 0x5ab8c9, 0xc9c95a, 0xff9be8], h: 1.5, speed: 1.3, seed: 26, extra: 'antenna', extraColor: 0x3a3a3a,
+            label: 'Yolcu: Konuş', speaker: 'BOYUTLAR ARASI YOLCU', toastColor: '#9b6bd6',
+            lines: ['"Bavulum Gazorpazorp\'a gitti, ben buradayım. Klasik."', '"Üç saattir sıradayım. Kendimi klonlasam daha hızlı olurdu."', '"Duty free\'de Plumbus indirimi var, kaçırma!"', '"Sen de mi Citadel\'e gidiyorsun? Orada her şey Rick kokuyor."'] });
+        addParticles({ count: 60, spread: 80, minY: 0.5, maxY: 15, color: 0xcfe8ff, size: 0.12, speed: 0.1, drift: 1, opacity: 0.4 });
+    }
+
+    // ---------------------------------------------------------------- 27. BIRD WORLD
+    function buildBirdWorld() {
+        const H = (x, z) => { const river = Math.exp(-Math.pow((z + 10 + Math.sin(x * 0.04) * 8) / 5, 2)) * 1.4; return Math.sin(x * 0.03) * 1.2 + Math.cos(z * 0.035) * 1.0 + 1.4 - river * 2 + Math.max(0, Math.hypot(x, z) - 75) * 0.8; };
+        floorFn = (x, z) => Math.max(-0.4, H(x, z) * (clamp((Math.hypot(x, z - 4) - 7) / 15, 0, 1)));
+        const tg = new THREE.PlaneGeometry(220, 220, 100, 100); tg.rotateX(-Math.PI / 2);
+        const tp = tg.attributes.position; for (let i = 0; i < tp.count; i++) tp.setY(i, floorFn(tp.getX(i), tp.getZ(i)));
+        tg.computeVertexNormals();
+        const ground = new THREE.Mesh(tg, std(0xc8a060, { map: TEX.make('birdgrass', 256, (ctx, s) => TEX.speckle(ctx, s, '#a88a4a', 9000, 110, 170, [30, 10, -30], 3), 40, 40), roughness: 0.95 }));
+        worldGroup.add(ground); shootableMeshes.push(ground);
+        const river = new THREE.Mesh(new THREE.PlaneGeometry(220, 7, 60, 1), std(0x4aa8d8, { transparent: true, opacity: 0.75, roughness: 0.05, metalness: 0.3 }));
+        river.rotation.x = -Math.PI / 2; const rp = river.geometry.attributes.position;
+        for (let i = 0; i < rp.count; i++) rp.setY(i, rp.getY(i) - 10 - Math.sin(rp.getX(i) * 0.04) * 8);
+        river.position.y = -0.35; worldGroup.add(river);
+        // Mesas with nest-houses on top
+        const rock = std(0xb06a3a, { map: TEX.make('mesarock', 256, (ctx, s) => { for (let y = 0; y < s; y += 6) { const v = 140 + Math.random() * 60 | 0; ctx.fillStyle = `rgb(${v},${v * 0.6 | 0},${v * 0.38 | 0})`; ctx.fillRect(0, y, s, 6); } }, 3, 4), roughness: 0.95 });
+        const mesas = [[-30, -40, 9, 26], [28, -48, 11, 32], [52, -10, 8, 22], [-50, -8, 10, 28], [0, -70, 12, 36], [-18, 34, 7, 18], [34, 30, 8, 24]];
+        const nestM = std(0x8a6a3a, { roughness: 0.9 });
+        mesas.forEach(([x, z, r, h], i) => {
+            addCyl(r * 0.85, r * 1.15, h, rock, x, h / 2 - 1, z, { collide: true, seg: 12 });
+            const top = h - 1;
+            addFloorZone(x - r * 0.6, x + r * 0.6, z - r * 0.6, z + r * 0.6, top);
+            const nest = new THREE.Mesh(new THREE.TorusGeometry(r * 0.5, r * 0.18, 8, 20), nestM); nest.rotation.x = Math.PI / 2; nest.position.set(x, top + 0.4, z); worldGroup.add(nest);
+            addCyl(r * 0.28, r * 0.32, 3, std(0xf0e0c0, { roughness: 0.8 }), x, top + 1.5, z, { shoot: false });
+            addSphere(r * 0.36, std(0xd84a3a, { roughness: 0.6 }), x, top + 3.2, z, { sy: 0.6, shoot: false });
+            addGlow(x, top + 1.6, z + r * 0.3, 0xffd27a, 2.5, 0.7);
+            // Wind lift at the base of each mesa
+            const ang = i * 1.3, lx = x + Math.cos(ang) * (r * 1.15 + 2.5), lz = z + Math.sin(ang) * (r * 1.15 + 2.5), ly = floorFn(lx, lz);
+            const pad = addCyl(1.3, 1.5, 0.3, bas(0x9fe8ff), lx, ly + 0.15, lz, { shoot: false });
+            addGlow(lx, ly + 1, lz, 0x9fe8ff, 3, 0.5);
+            registerInteractable(pad, 'Rüzgâr Asansörü: Yuvaya Çık', () => { player.pos.set(x, top + player.height + 0.2, z + r * 0.35); player.vel.set(0, 2, 0); audio.playBounce(); showToast('KUŞ DÜNYASI', '"Kuş Dünyası\'nda asansör yok, rüzgâr var. Kanatsızsan bu hile sayılır."', '#ffd27a'); });
+        });
+        // Rope bridges between some mesas
+        [[0, 1], [3, 0], [0, 4], [1, 4]].forEach(([a, b]) => {
+            const [x1, z1, , h1] = mesas[a], [x2, z2, , h2] = mesas[b];
+            const pts = []; for (let k = 0; k <= 16; k++) { const f = k / 16; pts.push(new THREE.Vector3(lerp(x1, x2, f), lerp(h1, h2, f) - 1 - Math.sin(f * Math.PI) * 3, lerp(z1, z2, f))); }
+            worldGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.25, 5, false), std(0x6a4a2a, { roughness: 0.9 })));
+        });
+        // Feather totems
+        const totem = std(0xe8d8b8, { roughness: 0.7 });
+        [[-8, -14], [10, -18], [-14, 10]].forEach(([x, z], i) => {
+            const y = floorFn(x, z);
+            const t = addCyl(0.6, 0.8, 7, totem, x, y + 3.5, z, { collide: true });
+            for (let k = 0; k < 5; k++) { const f = new THREE.Mesh(GEO.cone, std([0xff4a3a, 0xffd21a, 0x3ca8ff, 0x4dff6a, 0xffffff][k], { roughness: 0.5 })); f.scale.set(0.35, 2.2, 0.08); f.position.set(x + Math.cos(k * 1.25) * 0.6, y + 7.2, z + Math.sin(k * 1.25) * 0.6); f.rotation.set(Math.sin(k * 1.25) * 0.5, 0, -Math.cos(k * 1.25) * 0.5); worldGroup.add(f); }
+            if (i === 0) registerInteractable(t, 'Tüy Totemi: İncele', () => { audio.playInteract('bell'); showToast('KUŞ DÜNYASI TOTEMİ', '"Kanatlı atalarımızın tüyleri. Kuş halkı ölülerini yemez; sadece çok, çok uzun süre yasta kalır."', '#ffd21a'); });
+        });
+        // Floating rocks
+        const floaters = [];
+        for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(GEO.ico, std(0xa0663a, { flatShading: true, roughness: 0.9 })); m.scale.set(3 + i % 3, 2 + i % 2, 3); m.position.set(-60 + i * 15, 30 + (i % 3) * 8, -60 + (i % 4) * 20); worldGroup.add(m); floaters.push({ m, y: m.position.y, ph: i }); }
+        addAnim((dt, t) => floaters.forEach(f => { f.m.position.y = f.y + Math.sin(t * 0.4 + f.ph) * 1.5; f.m.rotation.y = t * 0.05 + f.ph; }));
+        // Waterfall from the big mesa
+        const fallTex = TEX.make('birdfall', 64, (ctx, s) => { ctx.fillStyle = '#7ac8ff'; ctx.fillRect(0, 0, s, s); for (let i = 0; i < 50; i++) { ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.7})`; ctx.fillRect(Math.random() * s, Math.random() * s, 2, 10 + Math.random() * 18); } }, 1, 3);
+        const fall = new THREE.Mesh(new THREE.PlaneGeometry(4, 34), bas(0xffffff, { map: fallTex, transparent: true, opacity: 0.8, side: THREE.DoubleSide }));
+        fall.position.set(0, 17, -57.2); worldGroup.add(fall);
+        addAnim((dt, t) => { fallTex.offset.y = -t * 1.2; });
+        // Bird flock
+        const flock = new THREE.InstancedMesh(GEO.cone, bas(0x2a1a14), 40); flock.frustumCulled = false; worldGroup.add(flock);
+        const fe = new THREE.Euler();
+        addAnim((dt, t) => { for (let i = 0; i < 40; i++) { const a = t * 0.15 + i * 0.16, rr = 40 + Math.sin(i) * 12; fe.set(Math.PI / 2, -a, Math.sin(t * 6 + i) * 0.4); _q.setFromEuler(fe); _m4.compose(_p.set(Math.cos(a) * rr, 26 + Math.sin(i * 1.7 + t) * 3, Math.sin(a) * rr - 20), _q, _s.set(0.5, 0.9, 0.15)); flock.setMatrixAt(i, _m4); } flock.instanceMatrix.needsUpdate = true; });
+        addCrowd({ count: 18, area: [-40, 40, -30, 30], colors: [0x8a5a3a, 0x6a4a2a, 0xb08a5a], skins: [0x9a7a5a, 0x7a5a3a], h: 1.7, speed: 1.1, seed: 27, extra: 'beak', extraColor: 0xffb23a, eyeColor: 0xffd21a,
+            label: 'Kuş Halkı: Selamla', speaker: 'KUŞ DÜNYASI SAKİNİ', toastColor: '#ffb23a',
+            lines: ['"Kuş Adam\'ı tanıyor musun? Bizim en büyük savaşçımız ve en kötü dansçımız."', '"Burada yuvalar mülk değil, duygudur."', '"Kanatsız misafir! Merdivenlerimiz yok, rüzgâr asansörlerini kullan."'] });
+        addParticles({ count: 90, spread: 90, minY: 1, maxY: 25, color: 0xfff0c0, size: 0.18, speed: 0.4, drift: 2.5, opacity: 0.6 });
+    }
+
+    // ---------------------------------------------------------------- 28. GEAR WORLD
+    function buildGearWorld() {
+        const plate = std(0x8a6a4a, { map: TEX.make('rustplate', 256, (ctx, s) => { TEX.speckle(ctx, s, '#6a5038', 7000, 70, 120, [30, 10, -10], 3); ctx.strokeStyle = 'rgba(30,20,10,0.6)'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, s - 4, s - 4); ctx.fillStyle = '#3a2a1a'; for (const [x, y] of [[14, 14], [s - 14, 14], [14, s - 14], [s - 14, s - 14]]) { ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill(); } }, 30, 30), roughness: 0.6, metalness: 0.6 });
+        addGround(220, plate);
+        const brass = std(0xc8902a, { metalness: 0.85, roughness: 0.3 }), iron = std(0x4a4a50, { metalness: 0.8, roughness: 0.4 });
+        const makeGear = (R, thick, teeth, mat) => {
+            const g = new THREE.Group();
+            const disc = new THREE.Mesh(new THREE.CylinderGeometry(R, R, thick, 40), mat); g.add(disc);
+            const tm = new THREE.InstancedMesh(GEO.box, mat, teeth);
+            for (let k = 0; k < teeth; k++) { const a = k / teeth * Math.PI * 2; _e.set(0, -a, 0); _q.setFromEuler(_e); _m4.compose(_p.set(Math.cos(a) * (R + 0.35), 0, Math.sin(a) * (R + 0.35)), _q, _s.set(0.8, thick, 0.7)); tm.setMatrixAt(k, _m4); }
+            g.add(tm);
+            const hub = new THREE.Mesh(GEO.cyl, iron); hub.scale.set(R * 0.22, thick * 1.6, R * 0.22); g.add(hub);
+            return g;
+        };
+        // Giant vertical background gears
+        const bigGears = [];
+        [[-40, 22, -70, 20, 1], [5, 30, -85, 26, -1], [48, 18, -64, 15, 1], [-70, 15, -20, 14, -1], [72, 20, -20, 17, 1]].forEach(([x, y, z, R, dir]) => {
+            const g = makeGear(R, 2.5, Math.round(R * 2.2), brass); g.rotation.x = Math.PI / 2; g.position.set(x, y, z); worldGroup.add(g); bigGears.push({ g, dir, R });
+        });
+        let speedMult = 1;
+        addAnim((dt, t) => bigGears.forEach(b => { b.g.rotation.y += dt * 0.25 * b.dir * speedMult * (20 / b.R); }));
+        // Rotating gear platforms you can ride
+        const plats = [[-6, -12, 6, 0.6], [6, -24, 5, 1.2], [-8, -36, 6.5, 1.8], [8, -46, 5, 2.4], [-2, -56, 7, 3.0]];
+        const riders = [];
+        plats.forEach(([x, z, R, top], i) => {
+            const g = makeGear(R, 0.6, Math.round(R * 2.4), i % 2 ? iron : brass); g.position.set(x, top - 0.3, z); worldGroup.add(g);
+            g.children.forEach(c => shootableMeshes.push(c));
+            addColliderBox(x, z, R * 1.4, R * 1.4, top);
+            addFloorZone(x - R * 0.72, x + R * 0.72, z - R * 0.72, z + R * 0.72, top);
+            addCyl(0.6, 0.8, top - 0.3, iron, x, (top - 0.3) / 2, z, { shoot: false });
+            riders.push({ g, x, z, R, top, w: (i % 2 ? -0.5 : 0.5) });
+        });
+        addAnim((dt) => riders.forEach(p => {
+            const w = p.w * speedMult; p.g.rotation.y += w * dt;
+            if (cruiserState.active || !player.onGround) return;
+            const dx = player.pos.x - p.x, dz = player.pos.z - p.z, feet = player.pos.y - player.height;
+            if (Math.abs(feet - p.top) < 0.12 && Math.abs(dx) < p.R * 0.72 && Math.abs(dz) < p.R * 0.72) {
+                const c = Math.cos(w * dt), s = Math.sin(w * dt);
+                player.pos.x = p.x + dx * c + dz * s; player.pos.z = p.z - dx * s + dz * c; player.yaw += w * dt;
+            }
+        }));
+        // Pistons
+        const pistons = [];
+        for (let i = 0; i < 8; i++) { const x = -30 + i * 8.5, z = 18; addBox(2.6, 1, 2.6, iron, x, 0.5, z, { collide: true }); const p = addBox(1.6, 5, 1.6, std(0xb8b8c0, { metalness: 0.9, roughness: 0.2 }), x, 3, z, { shoot: false }); pistons.push(p); }
+        addAnim((dt, t) => pistons.forEach((p, i) => { p.position.y = 3.2 + Math.max(0, Math.sin(t * 2.2 * speedMult + i * 0.8)) * 2.5; }));
+        // Clock tower
+        addBox(8, 34, 8, std(0x5a4a3a, { roughness: 0.8 }), -30, 17, -28, { collide: true });
+        addRoof(9, 9, 6, iron, -30, 34, -28);
+        const clockTex = TEX.make('gearclock', 256, (ctx, s) => { ctx.fillStyle = '#f0e0c0'; ctx.beginPath(); ctx.arc(s / 2, s / 2, s / 2 - 4, 0, 7); ctx.fill(); ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 8; ctx.stroke(); ctx.fillStyle = '#3a2a1a'; for (let k = 0; k < 12; k++) { const a = k / 12 * Math.PI * 2; ctx.fillRect(s / 2 + Math.cos(a) * (s / 2 - 30) - 4, s / 2 + Math.sin(a) * (s / 2 - 30) - 4, 8, 8); } });
+        const face = addSign('', '#000', 6, 6, -30, 27, -23.95, {}); face.material.map = clockTex; face.material.needsUpdate = true;
+        const hourH = addBox(0.35, 1.8, 0.1, bas(0x2a1a0a), -30, 27, -23.85, { shoot: false }); hourH.geometry = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.45, 0);
+        const minH = addBox(0.25, 2.6, 0.1, bas(0x2a1a0a), -30, 27, -23.8, { shoot: false }); minH.geometry = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.45, 0);
+        addAnim((dt, t) => { minH.rotation.z = -t * 0.8 * speedMult; hourH.rotation.z = -t * 0.8 / 12 * speedMult; });
+        registerInteractable(face, 'Saat Kulesi: Zamanı Oku', () => { audio.playInteract('bell'); showToast('DİŞLİ DÜNYASI', '"Burada zaman da bir dişlidir. Bir dişli takılırsa, bütün gezegen geç kalır."', '#c8902a'); });
+        // Speed lever
+        const lever = addBox(0.3, 1.6, 0.3, std(0xd8202a, { metalness: 0.5 }), 3, 0.8, -6, { shoot: false });
+        addBox(1.2, 0.5, 1.2, iron, 3, 0.25, -6, { collide: true });
+        const SPEEDS = [1, 2.5, 0.3]; let speedIdx = 0;
+        registerInteractable(lever, 'Ana Şanzıman Kolu: Vites Değiştir', () => {
+            speedIdx = (speedIdx + 1) % SPEEDS.length; speedMult = SPEEDS[speedIdx];
+            lever.rotation.z = speedMult > 1 ? 0.6 : speedMult < 1 ? -0.6 : 0; audio.playInteract('hatch');
+            showToast('ŞANZIMAN', speedMult > 1 ? 'Dişliler 2.5x hızlandı! Platformlara dikkat!' : speedMult < 1 ? 'Dişliler yavaşladı.' : 'Normal hız.', '#c8902a');
+        });
+        // Steam pipes
+        addInstances(GEO.cyl, std(0x6a6a70, { metalness: 0.8, roughness: 0.35 }), [[-45, 10], [-20, 30], [25, 30], [45, 8]].map(([x, z]) => ({ x, y: 7, z, sx: 1, sy: 14, sz: 1 })), { collide: true, cw: 2, cd: 2 });
+        addCrowd({ count: 16, area: [-50, 50, -20, 40], colors: [0x5a5a64, 0x7a6a5a, 0x8a7a6a], skins: [0xa8a8b0, 0xc8902a], h: 1.7, speed: 1.0, seed: 28, extra: 'antenna', extraColor: 0xc8902a, eyeColor: 0xff8a2a,
+            label: 'Dişli İnsan: Konuş', speaker: 'DİŞLİ DÜNYASI SAKİNİ', toastColor: '#c8902a',
+            lines: ['"Bir dişlimi kaybettim, artık sadece sola dönebiliyorum."', '"Rick bir keresinde buraya geldi ve tüm gezegeni yeniden kalibre etti. Hâlâ kızgınız."', '"Yağlanmamış bir dişli, mutsuz bir dişlidir."'] });
+        addParticles({ count: 140, spread: 70, minY: 0, maxY: 20, color: 0xd8c8b0, size: 0.7, speed: 0.6, drift: 1.2, opacity: 0.12, additive: false });
+    }
+
+    // ---------------------------------------------------------------- 29. UNITY'S HIVE CITY
+    function buildHiveCity() {
+        addGround(240, std(0xf2f4f8, { map: TEX.make('hivepave', 128, (ctx, s) => { ctx.fillStyle = '#f2f4f8'; ctx.fillRect(0, 0, s, s); ctx.strokeStyle = '#d8dee8'; ctx.lineWidth = 2; for (let i = 0; i <= s; i += 32) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, s); ctx.moveTo(0, i); ctx.lineTo(s, i); ctx.stroke(); } }, 60, 60), roughness: 0.4 }));
+        const glass = std(0x9fd0ff, { map: TEX.make('hivewin', 128, (ctx, s) => { ctx.fillStyle = '#f4f6fa'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#6aaee8'; for (let y = 0; y < 8; y++) for (let x = 0; x < 4; x++) ctx.fillRect(x * 32 + 4, y * 16 + 3, 24, 10); }, 2, 6), roughness: 0.2, metalness: 0.3 });
+        const blds = [];
+        for (let gx = -4; gx <= 4; gx++) for (let gz = -4; gz <= 3; gz++) {
+            if (Math.abs(gx) <= 1 && gz >= -2 && gz <= 1) continue;
+            const h = 14 + ((gx * 7 + gz * 13) % 4 + 4) % 4 * 7;
+            blds.push({ x: gx * 18, y: h / 2, z: gz * 18 - 6, sx: 10, sy: h, sz: 10 });
+        }
+        addInstances(GEO.box, glass, blds, { collide: true });
+        addInstances(GEO.cyl, std(0xffffff, { roughness: 0.3 }), blds.map(b => ({ x: b.x, y: b.sy + 0.6, z: b.z, sx: 3, sy: 1.2, sz: 3 })), { shoot: false });
+        // Perfect topiary rows
+        const trees = []; for (let x = -40; x <= 40; x += 5) for (const z of [-30, 18]) trees.push(x);
+        addInstances(GEO.cyl8, std(0x8a7a6a), [-30, 18].flatMap(z => Array.from({ length: 17 }, (_, i) => ({ x: -40 + i * 5, y: 1, z, sx: 0.18, sy: 2, sz: 0.18 }))), { collide: true, cw: 3, cd: 3 });
+        addInstances(GEO.sphere, std(0x6ac86a, { roughness: 0.6 }), [-30, 18].flatMap(z => Array.from({ length: 17 }, (_, i) => ({ x: -40 + i * 5, y: 2.8, z, s: 1.3 }))), { shoot: true });
+        // Central monument: the all-seeing harmony eye
+        addCyl(6, 7, 1, std(0xe8ecf2), 0, 0.5, -16, { platform: true });
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(4, 0.45, 12, 48), std(0x3a8ae8, { metalness: 0.6, roughness: 0.25 })); ring.position.set(0, 7, -16); worldGroup.add(ring);
+        const eye = new THREE.Mesh(GEO.sphere, std(0xffffff, { roughness: 0.2 })); eye.scale.setScalar(2.4); eye.position.set(0, 7, -16); worldGroup.add(eye);
+        const iris = new THREE.Mesh(GEO.sphere, bas(0x2a6ad8)); iris.scale.set(1.1, 1.1, 0.5); worldGroup.add(iris);
+        addCyl(0.6, 0.8, 5.5, std(0xe8ecf2), 0, 3.75, -16, { collide: true });
+        addAnim((dt, t) => { ring.rotation.y = t * 0.4; _tmp.set(player.pos.x, player.pos.y, player.pos.z).sub(eye.position).normalize(); iris.position.copy(eye.position).addScaledVector(_tmp, 2.15); iris.lookAt(player.pos); });
+        registerInteractable(eye, 'Uyum Anıtı: Bak', () => { audio.playInteract('bell'); showToast('UNITY', '"Biz hepimiz biriz. Sen hariç. Sen hep hariçtin, Rick."', '#3a8ae8'); });
+        addSign('BİZ BİRİZ', '#2a6ad8', 16, 3, 0, 22, -78.9, { bg: '#ffffff', tw: 1024, th: 180, font: '900 130px Orbitron, sans-serif' });
+        addSign('UNITY · MUTLULUK ZORUNLUDUR', '#ffffff', 14, 1.3, 26, 9, -12.9, { ry: -Math.PI / 2, bg: '#2a6ad8', tw: 1024, th: 96, font: '900 52px Orbitron, sans-serif', double: true });
+        // Fountain
+        const fnt = addCyl(4, 4.4, 0.8, std(0xe8ecf2), 16, 0.4, 6, { collide: true });
+        const water = addCyl(3.6, 3.6, 0.05, std(0x6ac8ff, { transparent: true, opacity: 0.8, roughness: 0.05, metalness: 0.3 }), 16, 0.82, 6, { shoot: false });
+        addCyl(0.3, 0.3, 3, std(0xe8ecf2), 16, 1.5, 6, { shoot: false });
+        addParticles({ count: 40, spread: 6, minY: 0.8, maxY: 3.5, color: 0xcfefff, size: 0.2, speed: -2, opacity: 0.7 });
+        registerInteractable(fnt, 'Çeşme: Bozuk Para At', () => { audio.playInteract('coin'); showToast('UNITY', '"Dilek dilemene gerek yok. Herkes zaten aynı şeyi diliyor."', '#6ac8ff'); });
+        // Hive-mind citizens marching in perfect sync (grid formation)
+        const pos = []; for (let x = -4; x <= 4; x++) for (let z = 0; z < 4; z++) pos.push([x * 2.4 - 0, -36 + z * 2.4]);
+        addCrowd({ count: pos.length, positions: pos, sync: true, colors: [0xf4f6fa], skins: [0xe8d0b8], h: 1.6, eyeColor: 0x2a6ad8, label: 'Birlik Vatandaşı: Konuş', speaker: 'UNITY (HEPSİ AYNI ANDA)', toastColor: '#3a8ae8',
+            lines: ['"Merhaba. Biz Unity\'yiz. Hepimiz seni aynı anda selamlıyoruz."', '"Savaş yok, açlık yok, bireysellik yok. Harika, değil mi?"', '"Rick ile bir şeyler yaşadık. Bunu konuşmayalım. Konuşalım. Konuşmayalım."'] });
+        addCrowd({ count: 14, area: [-50, 50, -30, 30], colors: [0xf4f6fa, 0xdde8f8], skins: [0xe8d0b8], h: 1.6, speed: 1.2, seed: 29, eyeColor: 0x2a6ad8 });
+        addParticles({ count: 60, spread: 80, minY: 2, maxY: 30, color: 0xffffff, size: 0.2, speed: 0.2, drift: 1.4, opacity: 0.5 });
+    }
+
+    // ---------------------------------------------------------------- 30. DIMENSION 35-C (MEGA SEED FOREST)
+    function buildMegaForest() {
+        floorFn = (x, z) => (Math.sin(x * 0.05) * 1.6 + Math.cos(z * 0.06) * 1.3 + Math.sin((x - z) * 0.1) * 0.5) * clamp((Math.hypot(x, z - 4) - 8) / 14, 0, 1);
+        const tg = new THREE.PlaneGeometry(220, 220, 100, 100); tg.rotateX(-Math.PI / 2);
+        const tp = tg.attributes.position; for (let i = 0; i < tp.count; i++) tp.setY(i, floorFn(tp.getX(i), tp.getZ(i))); tg.computeVertexNormals();
+        const ground = new THREE.Mesh(tg, std(0x3a2a6a, { map: TEX.make('alienmoss', 256, (ctx, s) => { TEX.speckle(ctx, s, '#2a1a5a', 9000, 30, 80, [10, -10, 60], 3); for (let i = 0; i < 70; i++) { ctx.fillStyle = `rgba(80,255,220,${Math.random() * 0.3})`; ctx.beginPath(); ctx.arc(Math.random() * s, Math.random() * s, 2 + Math.random() * 3, 0, 7); ctx.fill(); } }, 40, 40), roughness: 0.9, emissive: 0x0a0a20 }));
+        worldGroup.add(ground); shootableMeshes.push(ground);
+        // Mega Tree
+        const bark = std(0x4a2a5a, { roughness: 0.8, map: TEX.make('megabark', 128, (ctx, s) => { for (let x = 0; x < s; x += 4) { const v = 50 + Math.random() * 40 | 0; ctx.fillStyle = `rgb(${v},${v * 0.6 | 0},${v * 1.1 | 0})`; ctx.fillRect(x, 0, 4, s); } }, 6, 4) });
+        const tx = 0, tz = -45, ty = floorFn(tx, tz);
+        addCyl(5, 8, 46, bark, tx, ty + 22, tz, { collide: true, seg: 16 });
+        const pods = [], podGlow = [];
+        for (let i = 0; i < 9; i++) {
+            const a = i / 9 * Math.PI * 2, len = 18 + (i % 3) * 5, y = ty + 26 + (i % 4) * 6;
+            const br = new THREE.Mesh(GEO.cyl, bark); br.scale.set(1.4, len, 1.4); br.position.set(tx + Math.cos(a) * len * 0.45, y + 4, tz + Math.sin(a) * len * 0.45); br.rotation.set(Math.sin(a) * 1.1, 0, -Math.cos(a) * 1.1); worldGroup.add(br);
+            const ex = tx + Math.cos(a) * len * 0.9, ez = tz + Math.sin(a) * len * 0.9, ey = y + 8;
+            addSphere(7, std(0x7a3ab8, { roughness: 0.7, emissive: 0x1a0830 }), ex, ey + 2, ez, { sy: 0.6, shoot: false, lo: true });
+            for (let k = 0; k < 4; k++) { pods.push({ x: ex + Math.cos(k * 1.6) * 3, y: ey - 3, z: ez + Math.sin(k * 1.6) * 3, sx: 0.45, sy: 1.1, sz: 0.45, color: 0xc8ff4a }); podGlow.push([ex + Math.cos(k * 1.6) * 3, ey - 3, ez + Math.sin(k * 1.6) * 3]); }
+        }
+        addSphere(14, std(0x8a4ad8, { roughness: 0.7, emissive: 0x200a40 }), tx, ty + 50, tz, { sy: 0.55, shoot: false, lo: true });
+        addInstances(GEO.sphere, bas(0xffffff), pods, { shoot: false });
+        const pg = addGlowPoints(podGlow, 0xc8ff4a, 3, 0.8);
+        addAnim((dt, t) => { pg.material.opacity = 0.6 + Math.sin(t * 2) * 0.2; });
+        const root = addBox(6, 1.5, 3, bark, tx, ty + 0.75, tz + 9, { collide: true });
+        registerInteractable(root, 'Mega Ağaç Kökü: Bir Tohum Pod\'una Dokun', () => { audio.playInteract('laser'); showToast('RICK SANCHEZ', '"Mega Tohumlar araştırmalarım için çok önemli Morty! Gümrükten nasıl geçireceğimizi sonra düşünürüz."', '#c8ff4a'); });
+        // Giant glowing mushroom trees
+        const r = mulberry32(35), stalks = [], capsM = [], gills = [];
+        for (let i = 0; i < 34; i++) {
+            const a = r() * Math.PI * 2, d = 18 + r() * 60, x = Math.cos(a) * d, z = Math.sin(a) * d - 10;
+            if (Math.hypot(x - tx, z - tz) < 16) continue;
+            const y = floorFn(x, z), h = 6 + r() * 12, rr = 2.5 + r() * 4;
+            stalks.push({ x, y: y + h / 2, z, sx: 0.6 + rr * 0.12, sy: h, sz: 0.6 + rr * 0.12 });
+            capsM.push({ x, y: y + h, z, sx: rr, sy: rr * 0.45, sz: rr, color: [0x3ce8ff, 0xff4fd8, 0x9a5cff, 0x4dffc3][i % 4] });
+            gills.push([x, y + h - 0.4, z]);
+            addColliderBox(x, z, 1.4, 1.4, y + h);
+        }
+        addInstances(GEO.cyl8, std(0xe8d8ff, { roughness: 0.6, emissive: 0x201830 }), stalks);
+        addInstances(GEO.sphere, std(0xffffff, { roughness: 0.4, emissive: 0x101020 }), capsM, { shoot: true });
+        addGlowPoints(gills, 0x6af0ff, 6, 0.45);
+        // Glowing river
+        const riverTex = TEX.make('glowriver', 64, (ctx, s) => { ctx.fillStyle = '#0a4a6a'; ctx.fillRect(0, 0, s, s); for (let i = 0; i < 30; i++) { ctx.fillStyle = `rgba(120,255,240,${Math.random() * 0.6})`; ctx.fillRect(Math.random() * s, Math.random() * s, 6 + Math.random() * 10, 2); } }, 30, 1);
+        const rv = new THREE.Mesh(new THREE.PlaneGeometry(220, 6, 80, 1), bas(0xffffff, { map: riverTex, transparent: true, opacity: 0.85 }));
+        rv.rotation.x = -Math.PI / 2; const rp = rv.geometry.attributes.position;
+        for (let i = 0; i < rp.count; i++) { const x = rp.getX(i), zz = rp.getY(i) - 22 - Math.sin(x * 0.05) * 6; rp.setY(i, zz); rp.setZ(i, floorFn(x, -zz) + 0.12); }
+        worldGroup.add(rv);
+        addAnim((dt, t) => { riverTex.offset.x = -t * 0.05; });
+        // Alien plants and hopping critters
+        addInstances(GEO.cone, std(0xffffff, { roughness: 0.5, emissive: 0x111122 }), Array.from({ length: 120 }, () => { const x = (r() - 0.5) * 180, z = (r() - 0.5) * 180; return { x, y: floorFn(x, z) + 0.6, z, sx: 0.25, sy: 1.2 + r(), sz: 0.25, color: [0x4dffc3, 0xff4fd8, 0xffe14d][(r() * 3) | 0], rz: (r() - 0.5) * 0.4 }; }), { shoot: false });
+        const critters = [];
+        for (let i = 0; i < 10; i++) { const g = new THREE.Group(); const b = new THREE.Mesh(GEO.sphere, std(0xff9a3a, { roughness: 0.5 })); b.scale.set(0.5, 0.42, 0.5); b.position.y = 0.42; g.add(b); [-0.15, 0.15].forEach(ex => { const e = new THREE.Mesh(GEO.sphereLo, bas(0x111111)); e.scale.setScalar(0.08); e.position.set(ex, 0.55, 0.42); g.add(e); }); worldGroup.add(g); critters.push({ g, a: r() * 6, rr: 6 + r() * 20, sp: 0.2 + r() * 0.3 }); }
+        addAnim((dt, t) => critters.forEach((c, i) => { const a = c.a + t * c.sp, x = Math.cos(a) * c.rr + 10, z = Math.sin(a) * c.rr - 10; c.g.position.set(x, floorFn(x, z) + Math.abs(Math.sin(t * 5 + i)) * 0.9, z); c.g.rotation.y = -a; }));
+        addSphere(8, bas(0xd8f0ff, { fog: false }), 80, 90, -200, { shoot: false }); addGlow(80, 90, -195, 0xb8e8ff, 40, 0.35);
+        addSphere(4, bas(0xffb0e0, { fog: false }), -60, 110, -210, { shoot: false });
+        addParticles({ count: 260, spread: 70, minY: 0.3, maxY: 22, color: 0x9affd8, size: 0.25, speed: 0.4, drift: 1.8, opacity: 0.85 });
+        const pl = new THREE.PointLight(0xc8ff4a, 1.6, 50, 2); pl.position.set(tx, ty + 30, tz + 10); worldGroup.add(pl);
+    }
+
+    // ---------------------------------------------------------------- 31. PLUTO
+    function buildPluto() {
+        floorFn = (x, z) => { const lake = Math.hypot(x - 22, z + 18) < 16 ? 0 : 1; return lake * (Math.sin(x * 0.04) * 2.2 + Math.cos(z * 0.05) * 1.8 + Math.sin((x + z) * 0.11) * 0.6 + 2) * clamp((Math.hypot(x, z - 4) - 8) / 16, 0, 1) - (1 - lake) * 0.2; };
+        const tg = new THREE.PlaneGeometry(220, 220, 110, 110); tg.rotateX(-Math.PI / 2);
+        const tp = tg.attributes.position; for (let i = 0; i < tp.count; i++) tp.setY(i, floorFn(tp.getX(i), tp.getZ(i))); tg.computeVertexNormals();
+        const snow = new THREE.Mesh(tg, std(0xe8f0ff, { map: TEX.make('plutosnow', 256, (ctx, s) => TEX.speckle(ctx, s, '#dfe8f8', 6000, 200, 245, [0, 4, 10], 2), 40, 40), roughness: 0.75 }));
+        worldGroup.add(snow); shootableMeshes.push(snow);
+        const ice = new THREE.Mesh(new THREE.CircleGeometry(16, 48), std(0xbfe8ff, { roughness: 0.02, metalness: 0.5, transparent: true, opacity: 0.85 }));
+        ice.rotation.x = -Math.PI / 2; ice.position.set(22, -0.15, -18); worldGroup.add(ice);
+        addAnim(() => { const onIce = !cruiserState.active && Math.hypot(player.pos.x - 22, player.pos.z + 18) < 15.5; groundFriction = onIce ? 0.06 : 1; });
+        registerInteractable(ice, 'Buz Gölü: İncele', () => { audio.playInteract('generic'); showToast('PLÜTON', '"Donmuş nitrojen gölü. Üzerinde yürümek mi? Kaymak demek istiyorsun."', '#bfe8ff'); });
+        const r = mulberry32(31);
+        addInstances(new THREE.OctahedronGeometry(1, 0), std(0xbfe8ff, { roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.75, emissive: 0x1a3a5a }), Array.from({ length: 70 }, () => { const a = r() * 6.28, d = 14 + r() * 70, x = Math.cos(a) * d, z = Math.sin(a) * d; return { x, y: floorFn(x, z) + 1.5, z, sx: 0.8 + r(), sy: 2 + r() * 4, sz: 0.8 + r(), rz: (r() - 0.5) * 0.6, ry: r() * 3 }; }), { collide: true, cw: 1.2, cd: 1.2 });
+        // Mining rigs with spinning drills
+        const steel = std(0x8a929a, { metalness: 0.8, roughness: 0.3 }), yellow = std(0xf2c12e, { metalness: 0.4, roughness: 0.4 });
+        const drills = [];
+        [[-24, -30], [40, 20], [-40, 24]].forEach(([x, z], i) => {
+            const y = floorFn(x, z);
+            [[-2, -2], [2, -2], [-2, 2], [2, 2]].forEach(([dx, dz]) => addCyl(0.25, 0.25, 12, yellow, x + dx, y + 6, z + dz, { rz: dx * 0.04, rx: dz * 0.04, shoot: false }));
+            addBox(5.5, 1, 5.5, yellow, x, y + 12, z, { shoot: true });
+            const d = new THREE.Mesh(new THREE.ConeGeometry(1.2, 6, 10), steel); d.rotation.x = Math.PI; d.position.set(x, y + 3.5, z); worldGroup.add(d); drills.push(d);
+            addColliderBox(x, z, 5, 5, y + 12);
+            addGlow(x, y + 12.8, z, 0xff5a3a, 2, 0.9);
+            if (i === 0) registerInteractable(d, 'Sondaj Kulesi: Çalıştır', () => { audio.playInteract('boom'); showToast('PLÜTON MADENCİLİĞİ', '"Plüton\'un çekirdeğini kazıyoruz! Gezegen her gün biraz küçülüyor ama bunu kimseye söylemeyin."', '#f2c12e'); });
+        });
+        addAnim((dt, t) => drills.forEach((d, i) => { d.rotation.y = t * 6; d.position.y = d.position.y + Math.sin(t * 3 + i) * 0.004; }));
+        // Plutonian Science Hall (dome) + banner
+        const hx = -10, hz = -24, hy = floorFn(hx, hz);
+        const dome = new THREE.Mesh(new THREE.SphereGeometry(11, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), std(0x9fd8ff, { transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.4, side: THREE.DoubleSide, depthWrite: false }));
+        dome.position.set(hx, hy, hz); worldGroup.add(dome);
+        addCyl(11.2, 11.2, 0.6, steel, hx, hy + 0.3, hz, { shoot: false });
+        addSign('PLÜTON BİR GEZEGENDİR!', '#ffffff', 16, 2, hx, hy + 13, hz + 6, { bg: '#2a4a8a', tw: 1024, th: 130, font: '900 78px Orbitron, sans-serif', double: true });
+        const podium = addBox(1.6, 1.4, 1, std(0x5a3a1a), hx, hy + 0.7, hz + 4, { collide: true });
+        registerInteractable(podium, 'Bilim Kürsüsü: Konuşma Yap', () => { audio.playInteract('bell'); showToast('PLÜTON BİLİM KONSEYİ', '"Sevgili Plütonlular! Bilimsel olarak kanıtlandı: Plüton bir gezegendir! (Alkış.) Rick biraz farklı düşünüyor ama boş verin."', '#9fd8ff'); });
+        addCrowd({ count: 12, area: [hx - 9, hx + 9, hz - 7, hz + 7], colors: [0x5a7ab8, 0x3a5a8a], skins: [0xb8e0ff], h: 1.2, head: 0.45, speed: 0.6, seed: 31, eyeColor: 0x111111, label: 'Plütonlu Bilim İnsanı: Konuş', speaker: 'PLÜTONLU', toastColor: '#b8e0ff', lines: ['"Plüton gezegen mi? Tabii ki! Hatta sen bir cücesin."', '"Lütfen dünyadan gelen o propagandaya inanma."', '"Çekirdekten çıkardığımız madde çok değerli. Ne işe yaradığını bilmiyoruz ama değerli."'] });
+        addSphere(1.2, bas(0xfff4d0, { fog: false }), 60, 120, -220, { shoot: false }); addGlow(60, 120, -215, 0xfff4d0, 14, 0.7);
+        addParticles({ count: 420, spread: 70, minY: 0, maxY: 30, color: 0xffffff, size: 0.22, speed: -1.6, drift: 1.6, opacity: 0.85 });
+    }
+
+    // ---------------------------------------------------------------- 32. GAZORPAZORP
+    function buildGazorp() {
+        floorFn = (x, z) => (Math.sin(x * 0.06 + z * 0.02) * 1.3 + Math.cos(z * 0.045) * 1.6 + 1.6) * clamp((Math.hypot(x, z - 4) - 8) / 14, 0, 1) + Math.max(0, Math.hypot(x, z) - 78) * 0.9;
+        const tg = new THREE.PlaneGeometry(220, 220, 100, 100); tg.rotateX(-Math.PI / 2);
+        const tp = tg.attributes.position; for (let i = 0; i < tp.count; i++) tp.setY(i, floorFn(tp.getX(i), tp.getZ(i))); tg.computeVertexNormals();
+        const sand = new THREE.Mesh(tg, std(0xd8703a, { map: TEX.make('gazsand', 256, (ctx, s) => { TEX.speckle(ctx, s, '#c8602a', 9000, 150, 210, [40, -10, -40], 2); ctx.strokeStyle = 'rgba(120,40,10,0.15)'; ctx.lineWidth = 3; for (let y = 0; y < s; y += 14) { ctx.beginPath(); for (let x = 0; x <= s; x += 8) ctx.lineTo(x, y + Math.sin(x * 0.06 + y) * 4); ctx.stroke(); } }, 36, 36), roughness: 0.95 }));
+        worldGroup.add(sand); shootableMeshes.push(sand);
+        const rock = std(0x9a3a1a, { roughness: 0.95, flatShading: true });
+        const r = mulberry32(32);
+        addInstances(GEO.cyl8, rock, [[-60, -40, 14, 30], [55, -55, 16, 38], [70, 20, 12, 26], [-70, 30, 13, 34], [0, -90, 20, 44]].map(([x, z, rr, h]) => ({ x, y: h / 2 - 2, z, sx: rr, sy: h, sz: rr })), { collide: true, cw: 2, cd: 2 });
+        // Brutal scrap city
+        const scrap = std(0x5a4a40, { metalness: 0.6, roughness: 0.6 }), rust = std(0x8a3a1a, { metalness: 0.5, roughness: 0.7 });
+        const huts = [];
+        for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2, d = 24 + (i % 3) * 8, x = Math.cos(a) * d, z = Math.sin(a) * d - 8; huts.push([x, z, a]); }
+        huts.forEach(([x, z, a], i) => {
+            const y = floorFn(x, z);
+            addBox(5, 4, 5, i % 2 ? scrap : rust, x, y + 2, z, { ry: a, collide: true });
+            addCyl(0.1, 3.4, 4, scrap, x, y + 6, z, { seg: 5, shoot: false });
+        });
+        addInstances(GEO.cone, std(0xc8c8c8, { metalness: 0.9, roughness: 0.2 }), huts.flatMap(([x, z], i) => [0, 1, 2, 3].map(k => ({ x: x + Math.cos(k * 1.57 + i) * 2.6, y: floorFn(x, z) + 4.3, z: z + Math.sin(k * 1.57 + i) * 2.6, sx: 0.2, sy: 1.4, sz: 0.2, rz: Math.cos(k * 1.57) * 0.8, rx: Math.sin(k * 1.57) * 0.8 }))), { shoot: false });
+        [[-14, -30, 22], [16, -34, 28], [-34, 6, 18]].forEach(([x, z, h]) => { const y = floorFn(x, z); for (let k = 0; k < 6; k++) addBox(3.4 - k * 0.3, h / 6, 3.4 - k * 0.3, k % 2 ? scrap : rust, x + Math.sin(k) * 0.4, y + h / 12 + k * h / 6, z, { ry: k * 0.5, shoot: true }); addColliderBox(x, z, 3.6, 3.6, y + h); addGlow(x, y + h + 0.6, z, 0xff3a1a, 2.4, 0.9); });
+        // Arena with fire barrels and gong
+        const ax = 0, az = -14, ay = floorFn(ax, az);
+        addInstances(GEO.cyl8, scrap, Array.from({ length: 16 }, (_, k) => { const a = k / 16 * Math.PI * 2; return { x: ax + Math.cos(a) * 10, y: ay + 1.5, z: az + Math.sin(a) * 10, sx: 0.3, sy: 3, sz: 0.3 }; }), { collide: true, cw: 3, cd: 3 });
+        const flames = [];
+        [0, 4, 8, 12].forEach(k => { const a = k / 16 * Math.PI * 2, x = ax + Math.cos(a) * 11.5, z = az + Math.sin(a) * 11.5, y = floorFn(x, z); addCyl(0.6, 0.6, 1.2, rust, x, y + 0.6, z, { collide: true }); const f = new THREE.Mesh(GEO.cone, bas(0xff7a1a, { transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false })); f.position.set(x, y + 1.8, z); worldGroup.add(f); flames.push(f); addGlow(x, y + 1.8, z, 0xff7a1a, 3.5, 0.6); });
+        addAnim((dt, t) => flames.forEach((f, i) => f.scale.set(0.5, 1.2 + Math.sin(t * 10 + i * 2) * 0.35, 0.5)));
+        const gong = new THREE.Mesh(GEO.cyl, std(0xd8a02a, { metalness: 0.9, roughness: 0.25 })); gong.scale.set(2, 0.2, 2); gong.rotation.x = Math.PI / 2; gong.position.set(ax, ay + 3.2, az - 9); worldGroup.add(gong);
+        addBox(5, 0.4, 0.4, scrap, ax, ay + 5.4, az - 9, { shoot: false }); addBox(0.4, 5.4, 0.4, scrap, ax - 2.4, ay + 2.7, az - 9, { collide: true }); addBox(0.4, 5.4, 0.4, scrap, ax + 2.4, ay + 2.7, az - 9, { collide: true });
+        registerInteractable(gong, 'Savaş Gongu: Vur!', () => { audio.playInteract('bell'); audio.playInteract('boom'); showToast('GAZORPİAN ŞEF', '"GONG! Bugün kim en çok bağırırsa o lider olur! AAARGH!"', '#ff5a1a'); });
+        // The female utopia: floating crystal dome on a rock island
+        const isl = new THREE.Mesh(GEO.ico, std(0x7a3a2a, { flatShading: true })); isl.scale.set(22, 10, 22); isl.position.set(30, 58, -110); worldGroup.add(isl);
+        const crystal = new THREE.Mesh(new THREE.SphereGeometry(16, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), std(0xff9ad8, { transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.4, depthWrite: false, side: THREE.DoubleSide })); crystal.position.set(30, 66, -110); worldGroup.add(crystal);
+        addInstances(GEO.cyl, std(0xfff0f8, { emissive: 0x402030 }), [0, 1, 2, 3, 4].map(k => ({ x: 30 + Math.cos(k * 1.25) * 7, y: 72, z: -110 + Math.sin(k * 1.25) * 7, sx: 1.2, sy: 10 + k * 2, sz: 1.2 })), { shoot: false });
+        addGlow(30, 70, -110, 0xff9ad8, 60, 0.3);
+        addAnim((dt, t) => { isl.position.y = 58 + Math.sin(t * 0.3) * 1.5; crystal.position.y = isl.position.y + 8; });
+        addCrowd({ count: 22, area: [-36, 36, -40, 20], colors: [0x6a2a1a, 0x4a2a1a, 0x7a3a2a], skins: [0xb04a2a, 0x8a3a1a], h: 1.9, w: 0.5, head: 0.4, speed: 1.6, seed: 32, extra: 'spikes', extraColor: 0xd8d8d8, eyeColor: 0xffd21a,
+            label: 'Gazorpian Erkek: Konuş', speaker: 'GAZORPIAN ERKEK', toastColor: '#ff5a1a',
+            lines: ['"AAARGH! Yemek! Kavga! Uyku!"', '"Kadınlar yukarıdaki kristal kubbede yaşıyor. Biz burada... şey yapıyoruz. Bağırıyoruz."', '"Gazorpazorpfield bir efsane. ENCHILADA!"'] });
+        addParticles({ count: 300, spread: 80, minY: 0, maxY: 18, color: 0xd8902a, size: 0.4, speed: 0.3, drift: 4, opacity: 0.4, additive: false });
+    }
+
+    // ---------------------------------------------------------------- 33. DEAD MALL
+    function buildDeadMall() {
+        ceilingY = 24;
+        addGround(120, std(0xffffff, { map: TEX.make('malltile', 128, (ctx, s) => { ctx.fillStyle = '#d8ccb8'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#b8a890'; ctx.fillRect(0, 0, s / 2, s / 2); ctx.fillRect(s / 2, s / 2, s / 2, s / 2); ctx.fillStyle = 'rgba(80,60,40,0.12)'; for (let i = 0; i < 20; i++) ctx.fillRect(Math.random() * s, Math.random() * s, 10, 4); }, 40, 40), roughness: 0.25, metalness: 0.1 }));
+        const wallM = std(0xe8dcc8, { roughness: 0.8 });
+        [[0, -46, 92, 1], [0, 46, 92, 1], [-46, 0, 1, 92], [46, 0, 1, 92]].forEach(([x, z, w, d]) => addBox(w, 24, d, wallM, x, 12, z, { collide: true }));
+        // Upper ring floor (atrium void in the middle)
+        const slab = std(0xd0c4b0, { roughness: 0.6 });
+        [[0, -29, 92, 34], [0, 29, 92, 34], [-29, 0, 34, 24], [29, 0, 34, 24]].forEach(([x, z, w, d]) => {
+            addBox(w, 0.5, d, slab, x, 6.75, z, { shoot: true });
+            addColliderBox(x, z, w, d, 7, 6.5);
+            addFloorZone(x - w / 2, x + w / 2, z - d / 2, z + d / 2, 7);
+        });
+        // Glass railing around the atrium (gap on the north side where the stairs arrive)
+        const rails = [[-7.25, -12, 9.5, 0.1], [7.25, -12, 9.5, 0.1], [0, 12, 24, 0.1], [-12, 0, 0.1, 24], [12, 0, 0.1, 24]];
+        addInstances(GEO.box, std(0xffffff, { roughness: 0.2, metalness: 0.6, transparent: true, opacity: 0.4 }), rails.map(([x, z, w, d]) => ({ x, y: 7.6, z, sx: w, sy: 1.1, sz: d })), { shoot: false });
+        rails.forEach(([x, z, w, d]) => addColliderBox(x, z, Math.max(w, 0.3), Math.max(d, 0.3), 8.2, 6.8));
+        addInstances(GEO.cyl, std(0xe8dcc8), [[-12, -12], [12, -12], [-12, 12], [12, 12]].map(([x, z]) => ({ x, y: 12, z, sx: 0.8, sy: 24, sz: 0.8 })), { collide: true, cw: 2, cd: 2 });
+        // Stairs up to the ring (north side of the atrium)
+        for (let k = 0; k < 13; k++) addBox(4, 0.5 * (k + 1), 0.8, std(0xb8a890, { roughness: 0.5 }), 0, 0.25 * (k + 1), 0.9 - k * 0.8, { platform: true });
+        addBox(4, 7, 2.6, std(0xb8a890, { roughness: 0.5 }), 0, 3.5, -10.8, { platform: true });
+        // Decorative escalators with moving steps
+        const escTex = TEX.make('escal', 64, (ctx, s) => { ctx.fillStyle = '#3a3a3a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#8a8a8a'; for (let y = 0; y < s; y += 8) ctx.fillRect(0, y, s, 2); }, 1, 10);
+        [-6, 6].forEach((x, i) => { const e = addBox(2.2, 0.3, 14, std(0xffffff, { map: escTex, metalness: 0.6 }), x, 3.5, -6, { rx: 0.52, shoot: true }); addBox(0.3, 1.2, 14.5, std(0x9aa2aa, { metalness: 0.7 }), x - 1.2, 4.2, -6, { rx: 0.52, shoot: false }); addBox(0.3, 1.2, 14.5, std(0x9aa2aa, { metalness: 0.7 }), x + 1.2, 4.2, -6, { rx: 0.52, shoot: false }); addColliderBox(x, -6, 2.8, 12, 8); });
+        addAnim((dt, t) => { escTex.offset.y = t * 0.4; });
+        // Shop fronts on both floors (some with flickering neon)
+        const shops = [['PLUMBUS OUTLET', '#ff7ab8'], ['SCHMECKLE BANK', '#4dff6a'], ['MEESEEKS & CO', '#3ca8ff'], ['GAZORP FASHION', '#ff5a1a'], ['BLIPS EXPRESS', '#ff4fd8'], ['ANATOMY GIFTS', '#ffb3c1'], ['CITADEL PAWN', '#9fe8ff'], ['SZECHUAN EXPRESS', '#ffd21a']];
+        const shutter = TEX.make('shutter', 64, (ctx, s) => { ctx.fillStyle = '#8a8e94'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#6a6e74'; for (let y = 0; y < s; y += 6) ctx.fillRect(0, y, s, 2); }, 1, 4);
+        const shutM = std(0xffffff, { map: shutter, metalness: 0.6, roughness: 0.5 });
+        const signs = [];
+        for (let i = 0; i < 16; i++) {
+            const side = i % 4, floor = Math.floor(i / 8), k = (i >> 2) % 2;
+            const y = floor ? 10.5 : 3.2, along = -14 + k * 28;
+            const [name, col] = shops[i % shops.length];
+            let x, z, ry;
+            if (side === 0) { x = along; z = -45.4; ry = 0; } else if (side === 1) { x = along; z = 45.4; ry = Math.PI; } else if (side === 2) { x = -45.4; z = along; ry = Math.PI / 2; } else { x = 45.4; z = along; ry = -Math.PI / 2; }
+            const sh = addBox(12, 5, 0.2, shutM, x, y, z, { ry, shoot: true });
+            const s = addSign(name, col, 10, 1.2, x - Math.sin(ry) * -0.3, y + 3.3, z + Math.cos(ry) * 0.3, { ry, bg: '#160a12', tw: 1024, th: 120, font: '900 64px Orbitron, sans-serif' });
+            signs.push(s);
+            if (i === 0) registerInteractable(sh, 'Kapalı Mağaza: Kepengi Yokla', () => { audio.playInteract('hatch'); showToast('ÖLÜ AVM', '"Kepenk kilitli. İçeride ışık var ama kimse yok. Sanki sonsuza dek \'birazdan dönerim\' yazıyor."', col); });
+        }
+        addAnim((dt, t) => { signs[3].visible = Math.sin(t * 13) > -0.6 && Math.random() > 0.05; signs[10].visible = Math.random() > 0.15; });
+        // Dry fountain with plastic palms
+        addCyl(6, 6.5, 0.9, std(0xd8ccb8, { roughness: 0.4 }), 0, 0.45, 10 - 10, { collide: true });
+        addCyl(5.4, 5.4, 0.1, std(0x6a8aa0, { roughness: 0.3, metalness: 0.4 }), 0, 0.85, 0, { shoot: false });
+        [[-3, -2], [3, 2], [2, -3]].forEach(([x, z]) => { addCyl(0.3, 0.4, 7, std(0x8a6a3a), x, 4, z, { shoot: false }); addInstances(GEO.cone, std(0x3a8a3a), [0, 1, 2, 3, 4, 5].map(k => ({ x: x + Math.cos(k) * 1.4, y: 7.3, z: z + Math.sin(k) * 1.4, sx: 0.4, sy: 3, sz: 0.1, rz: Math.cos(k) * 1.2, rx: -Math.sin(k) * 1.2 })), { shoot: false }); });
+        // Food court + abandoned carts
+        addInstances(GEO.cyl, std(0xffffff, { roughness: 0.4 }), Array.from({ length: 12 }, (_, i) => ({ x: 18 + (i % 4) * 5, y: 0.8, z: 20 + Math.floor(i / 4) * 6, sx: 1.2, sy: 0.08, sz: 1.2, color: [0xff7a3a, 0x3ca8ff, 0xffd21a][i % 3] })), { collide: true, cw: 1.6, cd: 1.6, ch: 10 });
+        addInstances(GEO.box, std(0xa8b0b8, { metalness: 0.8, roughness: 0.3, wireframe: true }), [[-20, 18, 0.3], [-24, 22, 1.2], [26, -20, 2], [-30, -26, 0.7]].map(([x, z, ry]) => ({ x, y: 0.7, z, sx: 1, sy: 1, sz: 1.6, ry })), { shoot: false });
+        // Skylight + lighting
+        const sky = addBox(22, 0.2, 22, bas(0xfff4e0, { transparent: true, opacity: 0.8 }), 0, 23.9, 0, { shoot: false });
+        addGlow(0, 22, 0, 0xfff4e0, 30, 0.35);
+        addInstances(GEO.box, bas(0xfff8e8), Array.from({ length: 16 }, (_, i) => ({ x: -36 + (i % 4) * 24, y: 6.45, z: -36 + Math.floor(i / 4) * 24, sx: 3, sy: 0.08, sz: 3 })), { shoot: false });
+        [[0, 18, 0], [-30, 5, -30], [30, 5, 30]].forEach(([x, y, z]) => { const l = new THREE.PointLight(0xfff0d8, 1.1, 50, 2); l.position.set(x, y, z); worldGroup.add(l); });
+        const dir = addBox(1.6, 2.6, 0.3, std(0x2a2a3a), 8, 1.3, 4, { collide: true });
+        addBox(1.4, 2.2, 0.05, bas(0x9fe8ff), 8, 1.4, 4.17, { shoot: false });
+        registerInteractable(dir, 'AVM Haritası: "Buradasınız"', () => { audio.playInteract('generic'); showToast('AVM HARİTASI', '"BURADASINIZ ★ — Harita her baktığında biraz değişiyor. Çıkış işareti hiç yok."', '#9fe8ff'); });
+        const speaker = addCyl(0.5, 0.5, 0.3, std(0x2a2a2a), -8, 6.2, 8, { shoot: false });
+        registerInteractable(speaker, 'Hoparlör: Asansör Müziği', () => { audio.playInteract('generic'); showToast('MUZAK FM', '♪ ...yavaşlatılmış, yankılı bir 80\'ler pop şarkısı, boş koridorlarda kayboluyor... ♪', '#ffd27a'); });
+        addParticles({ count: 160, spread: 60, minY: 0.3, maxY: 22, color: 0xfff0d8, size: 0.12, speed: 0.05, drift: 1, opacity: 0.55 });
+    }
+
+    // ---------------------------------------------------------------- 34. RAINBOW ROAD
+    function buildRainbowRoad(u) {
+        const N = 480, HW = 7;
+        const P = [];
+        for (let i = 0; i < N; i++) {
+            const th = i / N * Math.PI * 2;
+            P.push({ x: 70 * Math.cos(th) + 12 * Math.sin(2 * th), z: 55 * Math.sin(th), y: 8 + 5 * Math.sin(2 * th) + 3 * Math.sin(3 * th) });
+        }
+        P.forEach((p, i) => { const n = P[(i + 1) % N], q = P[(i - 1 + N) % N]; const tx = n.x - q.x, tz = n.z - q.z, l = Math.hypot(tx, tz); p.tx = tx / l; p.tz = tz / l; });
+        let lastIdx = 0;
+        const nearest = (x, z) => { let bi = 0, bd = 1e9; for (let i = 0; i < N; i++) { const p = P[i], d = (p.x - x) * (p.x - x) + (p.z - z) * (p.z - z); if (d < bd) { bd = d; bi = i; } } return [bi, Math.sqrt(bd)]; };
+        floorFn = (x, z) => { const [i, d] = nearest(x, z); return d <= HW ? P[i].y : -200; };
+        const s0 = P[0];
+        u.spawn = [s0.x, s0.z, Math.atan2(-s0.tx, -s0.tz)];
+        // Ribbon geometry
+        const pos = [], uv = [], idx = [];
+        for (let i = 0; i <= N; i++) {
+            const p = P[i % N], nx = p.tz, nz = -p.tx;
+            pos.push(p.x - nx * HW, p.y, p.z - nz * HW, p.x + nx * HW, p.y, p.z + nz * HW);
+            uv.push(0, i / N * 60, 1, i / N * 60);
+            if (i < N) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+        }
+        const rg = new THREE.BufferGeometry(); rg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); rg.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); rg.setIndex(idx); rg.computeVertexNormals();
+        const rbTex = TEX.make('rainbow', 256, (ctx, s) => { const cs = ['#ff3a5a', '#ff9a3a', '#ffe14d', '#4dff6a', '#3ca8ff', '#7c4dff', '#ff4fd8']; cs.forEach((c, k) => { ctx.fillStyle = c; ctx.fillRect(k * s / 7, 0, s / 7 + 1, s); }); ctx.fillStyle = 'rgba(255,255,255,0.35)'; for (let y = 0; y < s; y += 32) ctx.fillRect(0, y, s, 3); });
+        const road = new THREE.Mesh(rg, bas(0xffffff, { map: rbTex, side: THREE.DoubleSide, transparent: true, opacity: 0.92 }));
+        worldGroup.add(road); shootableMeshes.push(road);
+        const railL = [], railR = [];
+        for (let i = 0; i < N; i += 4) { const p = P[i]; railL.push([p.x - p.tz * HW, p.y + 0.4, p.z + p.tx * HW]); railR.push([p.x + p.tz * HW, p.y + 0.4, p.z - p.tx * HW]); }
+        addGlowPoints(railL, 0xffffff, 1.4, 0.9); addGlowPoints(railR, 0xffe14d, 1.4, 0.9);
+        // Start gantry
+        const sp = P[0], gx = sp.tz, gz = -sp.tx;
+        [-1, 1].forEach(s => addCyl(0.4, 0.4, 9, std(0xe8e8e8, { metalness: 0.6 }), sp.x + gx * (HW + 0.6) * s, sp.y + 4.5, sp.z + gz * (HW + 0.6) * s, { shoot: false }));
+        const checker = TEX.make('checker', 64, (ctx, s) => { for (let y = 0; y < 4; y++) for (let x = 0; x < 16; x++) { ctx.fillStyle = (x + y) % 2 ? '#111' : '#fff'; ctx.fillRect(x * 4, y * 16, 4, 16); } }, 1, 1);
+        const ban = new THREE.Mesh(GEO.plane, bas(0xffffff, { map: checker, side: THREE.DoubleSide })); ban.scale.set(HW * 2 + 1.2, 1.6, 1); ban.position.set(sp.x, sp.y + 8.5, sp.z); ban.rotation.y = Math.atan2(sp.tx, sp.tz); worldGroup.add(ban);
+        // Boost pads, item boxes
+        const arrowTex = TEX.make('boostarrow', 128, (ctx, s) => { ctx.fillStyle = '#ff7a1a'; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#ffe14d'; for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.moveTo(s / 2, 10 + k * 40); ctx.lineTo(s - 16, 40 + k * 40); ctx.lineTo(16, 40 + k * 40); ctx.fill(); } });
+        const boosts = [60, 170, 290, 400].map(i => { const p = P[i]; const m = new THREE.Mesh(GEO.plane, bas(0xffffff, { map: arrowTex, transparent: true, opacity: 0.95 })); m.scale.set(4, 5, 1); m.rotation.set(-Math.PI / 2, 0, Math.atan2(-p.tx, -p.tz) + Math.PI, 'YXZ'); m.rotation.order = 'YXZ'; m.rotation.set(-Math.PI / 2, Math.atan2(p.tx, p.tz), 0); m.position.set(p.x, p.y + 0.06, p.z); worldGroup.add(m); return { p, cd: 0 }; });
+        const items = [];
+        [120, 240, 350].forEach(i => { const p = P[i]; [-3, 0, 3].forEach(o => { const m = new THREE.Mesh(GEO.box, std(0xffffff, { transparent: true, opacity: 0.7, emissive: 0x3a3a6a, map: TEX.make('rrbox', 64, (ctx, s) => { const g = ctx.createLinearGradient(0, 0, s, s); g.addColorStop(0, '#ff4fd8'); g.addColorStop(0.5, '#3ce8ff'); g.addColorStop(1, '#ffe14d'); ctx.fillStyle = g; ctx.fillRect(0, 0, s, s); ctx.fillStyle = '#fff'; ctx.font = 'bold 44px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', s / 2, s / 2 + 2); }) })); m.scale.setScalar(1.3); m.position.set(p.x + p.tz * o, p.y + 1.4, p.z - p.tx * o); worldGroup.add(m); items.push({ m, cd: 0 }); }); });
+        let lap = 0, lapStart = 0, prevIdx = 0, tNow = 0, checkpoint = 0;
+        addAnim((dt, t) => {
+            tNow = t;
+            items.forEach(it => { it.m.rotation.set(t, t * 1.3, 0); if (it.cd > 0) { it.cd -= dt; it.m.visible = it.cd <= 0; } });
+            if (cruiserState.active) return;
+            const [i, d] = nearest(player.pos.x, player.pos.z);
+            if (d <= HW) checkpoint = i;
+            if (player.pos.y - player.height < P[checkpoint].y - 25) {
+                const c = P[checkpoint]; player.pos.set(c.x, c.y + player.height + 0.5, c.z); player.vel.set(0, 0, 0); player.yaw = Math.atan2(-c.tx, -c.tz);
+                audio.playThud(0.2); showToast('GÖKKUŞAĞI YOLU', 'Yoldan düştün! Son kontrol noktasına geri döndün.', '#ff4fd8', 1800);
+            }
+            if (prevIdx > N - 30 && i < 30 && d <= HW) {
+                lap++; const lt = t - lapStart; lapStart = t;
+                [784, 988, 1175].forEach((f, k) => audio.tone('square', f, f, 0.12, 0.06, k * 0.1));
+                showToast('TUR ' + lap, lap > 1 ? `Tur süresi: ${lt.toFixed(1)} sn` : 'Yarış başladı! Hızlandırıcı oklarını kullan.', '#ffe14d', 2200);
+            }
+            prevIdx = i;
+            boosts.forEach(b => { if (b.cd > 0) b.cd -= dt; else if (Math.hypot(player.pos.x - b.p.x, player.pos.z - b.p.z) < 3 && Math.abs(player.pos.y - player.height - b.p.y) < 1) { b.cd = 1.5; speedBoostTimer = 2.5; audio.playBoost(); } });
+            items.forEach(it => { if (it.cd <= 0 && it.m.position.distanceTo(player.pos) < 2.2) { it.cd = 4; it.m.visible = false; const k = (Math.random() * 3) | 0; audio.playInteract('coin'); if (k === 0) { speedBoostTimer = 4; showToast('EŞYA KUTUSU', '🍄 Süper Mantar! 4 saniye hız.', '#ff4fd8', 1500); } else if (k === 1) { player.vel.y = 16; player.onGround = false; showToast('EŞYA KUTUSU', '⭐ Zıplama Yıldızı!', '#ffe14d', 1500); } else showToast('EŞYA KUTUSU', '🍌 Muz... Rick onu yedi bile.', '#ffe14d', 1500); } });
+        });
+        // Space dressing
+        addSphere(40, new THREE.MeshBasicMaterial({ map: TEX.make('rrplanet', 256, (ctx, s) => { for (let y = 0; y < s; y += 4) { const v = Math.sin(y * 0.07) * 0.5 + 0.5; ctx.fillStyle = `rgb(${120 + v * 100 | 0},${80 + v * 60 | 0},${200 - v * 50 | 0})`; ctx.fillRect(0, y, s, 4); } }), fog: false }), -140, 70, -220, { shoot: false });
+        addGlow(-140, 70, -215, 0xff9ad8, 160, 0.2);
+        const r = mulberry32(34);
+        addInstances(GEO.ico, std(0x6a6070, { flatShading: true, roughness: 0.9 }), Array.from({ length: 70 }, () => { const a = r() * 6.28, d = 110 + r() * 60; return { x: Math.cos(a) * d, y: -20 + r() * 60, z: Math.sin(a) * d, s: 1 + r() * 4, ry: r() * 3 }; }), { shoot: false });
+        addGlowPoints(Array.from({ length: 30 }, () => [(r() - 0.5) * 300, 40 + r() * 60, -150 - r() * 100]), 0xb06aff, 30, 0.25);
+        addParticles({ count: 200, spread: 120, minY: -10, maxY: 40, color: 0xffffff, size: 0.2, speed: 0, drift: 3, opacity: 0.7 });
+    }
+
+    // ---------------------------------------------------------------- Enrichment pass for older maps
+    function enrichWorld(u) {
+        switch (u.code) {
+            case 'C-CIT':
+                addCrowd({ count: 24, area: [-30, 30, -30, 20], colors: [0xf4f6f8, 0xe8ecf0], skins: [0xe8d4b8], h: 1.65, speed: 1.2, seed: 1, extra: 'spikes', extraColor: 0x9fc8e8,
+                    label: 'Bir Rick: Konuş', speaker: 'CITADEL SAKİNİ RICK', toastColor: '#9fdcff',
+                    lines: ['"Sen hangi Rick\'sin? Ah, C-137. Seni herkes tanıyor, maalesef."', '"Morty\'imi kreşe bıraktım. Hangisi benimdi, hatırlamıyorum."', '"Konsey yine toplantıda. Toplantı hakkında toplantı yapıyorlar."', '"Simple Rick\'s gofretini denedin mi? Gözlerim doldu."'] });
+                [['MORTY KREŞİ', '#ffe14d', -26], ["SHONEY'S", '#ff4f4f', 26], ['RICK PAWN SHOP', '#4dff6a', -26]].forEach(([n, c, x], i) => { const z = -34 + i * 0; const zz = i === 2 ? 12 : -26; addBox(8, 4, 5, std(0xdde5ef, { metalness: 0.6, roughness: 0.3 }), x, 2, zz, { collide: true }); addSign(n, c, 7, 1, x, 4.7, zz + 2.55, { bg: '#0a0f1e', tw: 1024, th: 140, font: '900 70px Orbitron, sans-serif' }); });
+                break;
+            case 'K-2099':
+                addCrowd({ count: 26, area: [-7.5, 7.5, -90, 30], colors: [0x1a1a24, 0x2a1a3a, 0x0a2a3a, 0x3a0a2a], skins: [0xe8c8a8, 0xc89878, 0x8a6a5a], h: 1.65, speed: 1.6, seed: 2, extra: 'antenna', extraColor: 0x3ce8ff, eyeColor: 0x3ce8ff,
+                    label: 'Yaya: Konuş', speaker: 'NEO-TOKYO SAKİNİ', toastColor: '#3ce8ff', lines: ['"Şemsiye mi? Hayır, implantlarım su geçirmez."', '"Siber-ramen standı şehrin en iyisi. Radyasyonu az."', '"Bir Rick hologram dükkânı açmış, her şey yarı fiyat."'] });
+                break;
+            case 'B-238':
+                addCrowd({ count: 16, area: [-24, 24, -14, 12], colors: [0x6a3a9a, 0x2a8a8a, 0x9a3a5a, 0x3a6a2a], skins: [0x8acb6a, 0x9b6bd6, 0x5ab8c9, 0xff9be8], h: 1.4, head: 0.4, speed: 1.4, seed: 3, extra: 'antenna', extraColor: 0xff4fd8,
+                    label: 'Oyuncu: Konuş', speaker: 'BLIPS AND CHITZ MÜŞTERİSİ', toastColor: '#ff4fd8', lines: ['"Roy\'u 3. kez oynuyorum. Bu sefer halıcılığa girmeyeceğim!"', '"Pençe makinesi hileli. Kesin hileli."', '"4.200 biletle bir silgi aldım. Pişman değilim."'] });
+                break;
+            case 'C-137': {
+                addCyl(1.2, 0.1, 0.4, std(0xd8d8d8, { metalness: 0.7, roughness: 0.3 }), -12, 13.5, -4, { rx: -0.7, seg: 18, shoot: false });
+                addInstances(GEO.cyl, std(0x2a5a2a, { roughness: 0.7 }), [[-9.5, 30.5], [-8.3, 30.5], [9.5, 30.5]].map(([x, z]) => ({ x, y: 0.6, z, sx: 0.5, sy: 1.2, sz: 0.5 })), { collide: true, cw: 2, cd: 2 });
+                addInstances(GEO.box, std(0x2f6a2a, { roughness: 0.9 }), [-30, -22, 22, 30].map(x => ({ x, y: 0.7, z: 7.8, sx: 6, sy: 1.4, sz: 1.2 })), { collide: true });
+                const bike = new THREE.Group(); bike.position.set(-9, 0, 9); bike.rotation.y = 0.4; worldGroup.add(bike);
+                [-0.6, 0.6].forEach(z => { const w = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.05, 6, 16), std(0x111111)); w.rotation.y = Math.PI / 2; w.position.set(0, 0.42, z); bike.add(w); });
+                const fr = new THREE.Mesh(GEO.box, std(0xd8202a)); fr.scale.set(0.06, 0.06, 1.2); fr.position.y = 0.7; bike.add(fr);
+                registerInteractable(fr, "Morty'nin Bisikleti", () => { audio.playInteract('generic'); showToast('MORTY', '"Bisikletimi mi arıyorsun? Rick onu bir kez \'ödünç\' alıp başka boyutta bıraktı. Bu yeni olanı."', '#ffe14d'); });
+                addCrowd({ count: 4, area: [-40, 40, 31, 34], colors: [0x3a5a8a, 0x8a3a3a], skins: [0xe8c8a8], h: 1.6, speed: 0.8, seed: 4, label: 'Komşu: Selam Ver', speaker: 'SMITH KOMŞUSU', toastColor: '#93c5fd', lines: ['"Garajdan yine garip sesler geliyor. Her gece."', '"Jerry\'yi gördün mü? Çim biçme makinemi geri vermedi."'] });
+                break;
+            }
+            case 'S-1984': {
+                const cars = [];
+                for (let i = 0; i < 6; i++) { const g = new THREE.Group(); const b = new THREE.Mesh(GEO.box, std(0x0b0614, { metalness: 0.9, roughness: 0.25 })); b.scale.set(2.6, 0.8, 4.6); b.position.y = 0.6; g.add(b); g.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.6, 0.8, 4.6)), new THREE.LineBasicMaterial({ color: i % 2 ? 0x3ce8ff : 0xff3fd8 }))); g.children[1].position.y = 0.6; addGlow(0, 0.6, 2.4, 0xff1a4a, 1.4, 0.9, g); worldGroup.add(g); cars.push({ g, lane: i % 2 ? 3.2 : -3.2, z: -250 + i * 45, sp: i % 2 ? -26 : 34 }); }
+                addAnim((dt) => cars.forEach(c => { c.z += c.sp * dt; if (c.z > 60) c.z = -260; if (c.z < -260) c.z = 60; c.g.position.set(c.lane, 0, c.z); c.g.rotation.y = c.sp < 0 ? Math.PI : 0; }));
+                break;
+            }
+            case 'E-INK':
+                addCrowd({ count: 10, area: [-30, 30, -30, 20], colors: [0xffffff], skins: [0xffffff], h: 1.7, w: 0.12, head: 0.36, speed: 1.1, seed: 5, label: 'Çöp Adam: Konuş', speaker: 'KARALAMA', toastColor: '#1a1a24', lines: ['"Beni bir çocuk çizdi. Kollarım biraz kısa."', '"Silgiden uzak dur, en iyi arkadaşımı sildi."'] });
+                break;
+            case 'A-PARK':
+                addCrowd({ count: 12, area: [-12, 12, -30, 0], colors: [0xffe14d, 0x3ca8ff, 0xff7a3a], skins: [0xe8c8a8], h: 1.1, head: 0.3, speed: 1.2, seed: 6, label: 'Turist: Konuş', speaker: 'MİKROSKOBİK TURİST', toastColor: '#ffb3c1', lines: ['"Pankreas Korsanları kuyruğu iki saat!"', '"Hepatit-A Alanı neden kapalı? ...Sorma, değil mi?"'] });
+                break;
+            case 'D-777':
+                addCrowd({ count: 6, area: [-2, 2, -100, -10], colors: [0xf4f0e8], skins: [0xe8c8a8], h: 1.6, speed: 0.5, seed: 7, label: 'Hacı: Selamla', speaker: 'GEZGİN HACI', toastColor: '#ff9ec8', lines: ['"Bin kapının sonunda ne var? Bilmiyorum. Ben 412. kapıdayım."', '"Kanlı ay her gece daha yakın görünüyor."'] });
+                break;
+        }
+    }
+
+    // ---------------------------------------------------------------- Mega Seed collectibles (one hidden per universe)
+    const SEED_KEY = 'rickPortalGun.megaSeeds';
+    const collectedSeeds = new Set((() => { try { return JSON.parse(localStorage.getItem(SEED_KEY) || '[]'); } catch (e) { return []; } })());
+    let megaSeed = null;
+    const hashStr = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+    const SEED_LINES = ['"Bir Mega Tohum! Bunu bir yere sakla Morty... evet, oraya."', '"Tohumlar parlıyorsa olgundur. Kokuyorsa çok olgundur."', '"Gümrük memurlarına bundan bahsetme."', '"Bu tohumla bir hafta dahi olursun, sonra bir hafta salak."'];
+    function placeMegaSeed(u) {
+        megaSeed = null;
+        if (collectedSeeds.has(u.code)) return;
+        const r = mulberry32(hashStr(u.code));
+        const sp = u.spawn || [0, 4.2, 0];
+        const B = Math.min(worldBounds - 2, 70);
+        for (let k = 0; k < 300; k++) {
+            const x = (r() * 2 - 1) * B, z = (r() * 2 - 1) * B;
+            if (Math.hypot(x - sp[0], z - sp[1]) < 14) continue;
+            if (worldRadius && Math.hypot(x, z) > worldRadius - 2) continue;
+            const fy = floorFn ? floorFn(x, z) : getFloorHeightAt(x, z, baseFloorY + 0.7);
+            let ok = true;
+            for (let i = 0; i < colliders.length; i++) { const c = colliders[i]; if (c.active && c.maxY > fy + 0.4 && (c.minY === undefined || c.minY < fy + 2.6) && x > c.minX - 1.4 && x < c.maxX + 1.4 && z > c.minZ - 1.4 && z < c.maxZ + 1.4) { ok = false; break; } }
+            if (!ok) continue;
+            if (fy < -20 || (!floorFn && fy < baseFloorY - 0.2) || fy + 1.8 > ceilingY - 0.4) continue;
+            const g = new THREE.Group(); g.position.set(x, fy + 1.3, z); worldGroup.add(g);
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.45, 0), std(0xa8ff3a, { emissive: 0x4a9a10, emissiveIntensity: 1.2, roughness: 0.2, metalness: 0.3 })); gem.scale.set(0.8, 1.6, 0.8); g.add(gem);
+            const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow(), color: 0xb8ff4a, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false })); halo.scale.set(2.6, 2.6, 1); g.add(halo);
+            const beam = new THREE.Mesh(GEO.cyl, bas(0xb8ff4a, { transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false })); beam.scale.set(0.15, Math.min(30, ceilingY - fy - 1), 0.15); beam.position.y = Math.min(30, ceilingY - fy - 1) / 2; g.add(beam);
+            megaSeed = { g, gem, code: u.code };
+            addAnim((dt, t) => {
+                if (!megaSeed || megaSeed.g !== g) return;
+                gem.rotation.y = t * 2; g.position.y = fy + 1.3 + Math.sin(t * 2) * 0.15;
+                if (!cruiserState.active && Math.hypot(player.pos.x - x, player.pos.z - z) < 1.7 && Math.abs(player.pos.y - 1.1 - g.position.y) < 2) collectSeed();
+            });
+            return;
+        }
+    }
+    function collectSeed() {
+        if (!megaSeed) return;
+        const code = megaSeed.code;
+        worldGroup.remove(megaSeed.g); megaSeed = null;
+        collectedSeeds.add(code);
+        try { localStorage.setItem(SEED_KEY, JSON.stringify([...collectedSeeds])); } catch (e) {}
+        const n = collectedSeeds.size, total = UNIVERSES.length;
+        [523, 784, 1046, 1568].forEach((f, i) => audio.tone('triangle', f, f * 1.01, 0.2, 0.09, i * 0.08));
+        showToast(`MEGA TOHUM ${n}/${total}`, SEED_LINES[n % SEED_LINES.length], '#b8ff4a', 3600);
+        if (n === 10 || n === 20 || n === total) setTimeout(() => showToast('BAŞARIM AÇILDI', n === total ? '🏆 Tüm Mega Tohumlar! Rick sonunda gümrükten geçebilir.' : `🌱 ${n} Mega Tohum toplandı!`, '#ffd21a', 4000), 3700);
+        if (typeof MP !== 'undefined' && MP.connected) MP.sendEvent({ t: 'chat', sys: true, text: `${MP.name} bir Mega Tohum buldu! (${n}/${total})` });
+        updateHUD();
+    }
+
+    // ---------------------------------------------------------------- Radar (HUD minimap)
+    let radarCtx = null, radarTick = 0;
+    function updateRadar() {
+        if (++radarTick % 5) return;
+        const cv = $('radar'); if (!cv || cv.offsetParent === null) return;
+        if (!radarCtx) radarCtx = cv.getContext('2d');
+        const c = radarCtx, W = cv.width, R = W / 2 - 4, range = 60, sc = R / range;
+        c.clearRect(0, 0, W, W);
+        c.fillStyle = 'rgba(6,12,20,0.55)'; c.beginPath(); c.arc(W / 2, W / 2, R, 0, 7); c.fill();
+        c.strokeStyle = 'rgba(77,255,106,0.25)'; c.lineWidth = 1; [R, R * 0.5].forEach(rr => { c.beginPath(); c.arc(W / 2, W / 2, rr, 0, 7); c.stroke(); });
+        const yaw = cruiserState.active ? cruiserState.yaw : player.yaw, cs = Math.cos(yaw), sn = Math.sin(yaw);
+        const P = cruiserState.active ? cruiserState.pos : player.pos;
+        const toScreen = (x, z, clampEdge) => {
+            const dx = x - P.x, dz = z - P.z;
+            let rx = (dx * cs - dz * sn) * sc, fy = (-dx * sn - dz * cs) * sc;
+            const d = Math.hypot(rx, fy);
+            if (d > R - 5) { if (!clampEdge) return null; rx *= (R - 5) / d; fy *= (R - 5) / d; }
+            return [W / 2 + rx, W / 2 - fy];
+        };
+        const dot = (pt, col, r) => { if (!pt) return; c.fillStyle = col; c.beginPath(); c.arc(pt[0], pt[1], r, 0, 7); c.fill(); };
+        if (portal.phase !== 'idle') dot(toScreen(portalGroup.position.x, portalGroup.position.z, true), '#3ce8ff', 4);
+        if (megaSeed) { const pt = toScreen(megaSeed.g.position.x, megaSeed.g.position.z, true); if (pt) { const pulse = 3 + Math.sin(performance.now() * 0.008) * 1.5; c.fillStyle = '#b8ff4a'; c.beginPath(); c.moveTo(pt[0], pt[1] - pulse - 2); c.lineTo(pt[0] + pulse, pt[1]); c.lineTo(pt[0], pt[1] + pulse + 2); c.lineTo(pt[0] - pulse, pt[1]); c.fill(); } }
+        if (typeof MP !== 'undefined') MP.players.forEach(p => { if (p.u === currentUniverseIndex && p.avatar) dot(toScreen(p.cur.x, p.cur.z, true), p.color, 4); });
+        c.fillStyle = '#ffffff'; c.beginPath(); c.moveTo(W / 2, W / 2 - 6); c.lineTo(W / 2 + 4.5, W / 2 + 4); c.lineTo(W / 2 - 4.5, W / 2 + 4); c.fill();
+    }
+
     const BUILDERS = [buildC137, buildCitadel, buildBlips, buildCronenberg, buildFroopy, buildAnatomy, buildBackrooms, buildPoolrooms, buildCyber, buildSynth, buildVoxel, buildTorii, buildAbyss, buildGargantua, buildSketch,
-        buildPrison, buildSewer, buildSquanch, buildLevel1, buildLevel2, buildLevelFun, buildAperture, buildMushroom, buildPacman, buildHalo];
+        buildPrison, buildSewer, buildSquanch, buildLevel1, buildLevel2, buildLevelFun, buildAperture, buildMushroom, buildPacman, buildHalo,
+        buildJerryboree, buildCustoms, buildBirdWorld, buildGearWorld, buildHiveCity, buildMegaForest, buildPluto, buildGazorp, buildDeadMall, buildRainbowRoad];
 
     function buildUniverse(index) {
         clearCurrentWorld();
         const u = UNIVERSES[index];
-        maxStepUp = 0.62; gravityScale = 1; ceilingY = 200;
+        maxStepUp = 0.62; gravityScale = 1; ceilingY = 200; groundFriction = 1; speedBoostTimer = 0;
         applySky(u);
         worldBounds = u.bounds || 85; worldRadius = u.radius || 0; baseFloorY = u.baseFloor || 0;
         worldGroup.add(new THREE.HemisphereLight(u.hemi[0], u.hemi[1], u.hemi[2]));
         if (u.sun) { const d = new THREE.DirectionalLight(u.sun.color, u.sun.intensity); d.position.set(...u.sun.pos); worldGroup.add(d); }
         BUILDERS[index](u);
+        enrichWorld(u);
+        placeMegaSeed(u);
         audio.setAmbience(u.amb);
     }
 
@@ -4449,7 +5373,16 @@
     // ============================================================================
     // 13. TELEPORT (warp overlay hides the rebuild + shader warm-up)
     // ============================================================================
+    const ARRIVAL_LINES = [
+        'Rick: "Yeni bir boyut, aynı ben. Dokunduğun her şeye dokunma."',
+        'Rick: "Burası Merkez Sonlu Eğri\'nin içinde mi dışında mı? Önemli değil, içki var mı?"',
+        'Rick: "Portal sıvısı %12 azaldı. Hızlı ol."',
+        'Rick: "Bu evrenin Rick\'i muhtemelen ölü ya da kongrede. İkisi de iyi."',
+        'Rick: "Kimseye adını söyleme. Özellikle de kendine."',
+        'Rick: "Federasyon burada da var mı? Var. Her yerde var. Sinir bozucu."'
+    ];
     function teleportToUniverse(index) {
+        if (MP.connected) MP.sendEvent({ t: 'pclose' });
         if (teleporting) return;
         teleporting = true;
         const ov = $('warp-overlay');
@@ -4461,7 +5394,8 @@
             currentUniverseIndex = index;
             if (targetUniverseIndex === currentUniverseIndex) targetUniverseIndex = (index + 1) % UNIVERSES.length;
             buildUniverse(index);
-            const [sx, sz, syaw] = UNIVERSES[index].spawn || [0, 4.2, 0];
+            let [sx, sz, syaw] = UNIVERSES[index].spawn || [0, 4.2, 0];
+            if (MP.pendingSpawn) { sx = MP.pendingSpawn.x + 2; sz = MP.pendingSpawn.z + 2; MP.pendingSpawn = null; }
             const bx = Math.sin(syaw), bz = Math.cos(syaw);
             if (cruiserState.active) {
                 cruiserState.pos.set(sx + bx * 8, Math.min(getFloorHeightAt(sx, sz) + 6.5, ceilingY - 1.8), sz + bz * 8);
@@ -4492,7 +5426,9 @@
                 ov.classList.remove('on');
                 teleporting = false;
                 const u = UNIVERSES[index];
-                showToast(u.code + ' · ' + u.tag, u.name, CATEGORY_INFO[u.cat].badge, 2600);
+                const seedNote = collectedSeeds.has(u.code) ? '✓ Mega Tohum toplandı' : '🌱 Bu evrende bir Mega Tohum saklı (radara bak)';
+                showToast(u.code + ' · ' + u.tag, u.name + '\n' + ARRIVAL_LINES[(Math.random() * ARRIVAL_LINES.length) | 0] + '\n' + seedNote, CATEGORY_INFO[u.cat].badge, 3800);
+                if (MP.connected) MP.rawSend(MP.stateMsg());
             }));
         }, 170);
     }
@@ -4566,6 +5502,7 @@
                 shot.active = false; projectile.visible = false;
                 hidePortal();
                 openPortal(shot.to, shot.face, { big: shot.big });
+                if (MP.connected) MP.sendEvent({ t: 'portal', u: currentUniverseIndex, x: +shot.to.x.toFixed(2), y: +shot.to.y.toFixed(2), z: +shot.to.z.toFixed(2), fx: +shot.face.x.toFixed(2), fz: +shot.face.z.toFixed(2), tgt: targetUniverseIndex, big: shot.big ? 1 : 0 });
             }
         }
         if (shot.beam > 0) {
@@ -4745,6 +5682,8 @@
                     ${here ? '<span class="here">BURADASIN</span>' : ''}
                     <span class="badge" style="color:${cc};border-color:${cc}66">${u.tag}</span>
                     <span class="code">${u.code}</span>
+                    <span class="seedmark ${collectedSeeds.has(u.code) ? 'got' : ''}" title="Mega Tohum">${collectedSeeds.has(u.code) ? '🌱✓' : '🌱'}</span>
+                    ${(() => { const n = [...MP.players.values()].filter(p => p.u === u.id && p.named).length; return n ? `<span class="mpmark">👥 ${n}</span>` : ''; })()}
                 </div>
                 <div class="body">
                     <div class="name">${u.name}</div>
@@ -4817,8 +5756,12 @@
         stepTarget(e.deltaY > 0 ? 1 : -1);
     }, { passive: true });
     window.addEventListener('keydown', e => {
+        // Never treat typing in a text field (name, room code, chat) as game input
+        const ae = document.activeElement;
+        if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA') && ae.type !== 'range' && ae.type !== 'checkbox') return;
         if (e.code === 'Tab') e.preventDefault();
         if (!started) { if (e.code === 'Enter' || e.code === 'Space') startGame(true); return; }
+        if (isPlaying && !e.repeat && (e.code === 'KeyT' || e.code === 'Enter')) { e.preventDefault(); openChat(); return; }
         if (e.code === 'Tab' || (e.code === 'KeyE' && !e.repeat)) {
             if (isMapOpen) closeMap(true); else openMap();
             return;
@@ -4920,7 +5863,8 @@
         'tab-game': ['Oyun & Kamera', 'Bakış hassasiyeti, görüş alanı ve arayüz'],
         'tab-gfx': ['Grafik & Performans', 'Kalite, çözünürlük ve efektler — ayarlar otomatik kaydedilir'],
         'tab-audio': ['Ses', 'Prosedürel Web Audio mikseri'],
-        'tab-keys': ['Kontroller', 'Klavye, fare, kruvazör ve dokunmatik kontroller']
+        'tab-keys': ['Kontroller', 'Klavye, fare, kruvazör ve dokunmatik kontroller'],
+        'tab-mp': ['Çok Oyunculu', 'Oda kur veya bir koda katıl — arkadaşlarını, portallarını ve sohbeti gör']
     };
     document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', () => {
         document.querySelectorAll('.nav-btn').forEach(x => x.classList.toggle('active', x === b));
@@ -5080,7 +6024,7 @@
         const speed = u.speed * (sprint ? 1.55 : 1) * (speedBoostTimer > 0 ? 2 : 1);
         if (mag > 0.05) {
             _vM.set(0, 0, 0).addScaledVector(_vF, iz).addScaledVector(_vR, ix).normalize().multiplyScalar(speed * mag);
-            const accel = player.onGround ? 14 : 4;
+            const accel = player.onGround ? 14 * groundFriction + 0.5 * (1 - groundFriction) : 4;
             player.vel.x = lerp(player.vel.x, _vM.x, Math.min(1, dt * accel));
             player.vel.z = lerp(player.vel.z, _vM.z, Math.min(1, dt * accel));
             if (player.onGround) {
@@ -5089,7 +6033,7 @@
                 if (player.stepAcc >= 1) { player.stepAcc = 0; audio.playFootstep(u.floor); }
             }
         } else {
-            const damp = Math.pow(player.onGround ? 0.0008 : 0.3, dt);
+            const damp = Math.pow(player.onGround ? (groundFriction < 1 ? 0.6 : 0.0008) : 0.3, dt);
             player.vel.x *= damp; player.vel.z *= damp;
         }
         if (keys['Space'] && player.onGround && isPlaying) { player.vel.y = u.jump; player.onGround = false; }
@@ -5347,6 +6291,8 @@
         if (portalCooldown > 0) portalCooldown -= dt;
 
         for (let i = 0; i < animatedProps.length; i++) animatedProps[i](dt, t);
+        MP.update(dt, t);
+        updateRadar();
         for (let i = 0; i < particleSystems.length; i++) particleSystems[i].material.uniforms.uTime.value = t;
         skyDome.position.copy(camera.position);
         skyUniforms.uTime.value = t;
@@ -5357,6 +6303,360 @@
     // ============================================================================
     // 22. BOOT
     // ============================================================================
+    // ============================================================================
+    // 21B. MULTIPLAYER — PeerJS/WebRTC rooms (online) + BroadcastChannel (same browser)
+    //   Star topology: the host relays every message to all other peers.
+    //   Messages: hi (profile) · st (state, 10 Hz) · portal / pclose · chat · bye
+    // ============================================================================
+    const MP_PREFIX = 'rickportal8-';
+    const MP_COLORS = ['#4dff6a', '#3ce8ff', '#ff4fd8', '#ffc53d', '#ff5a5a', '#a78bfa', '#ffffff', '#ff8a3a'];
+    const MP_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const PEER_OPTS = {
+        debug: 0,
+        config: { iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }, { urls: 'stun:global.stun.twilio.com:3478' },
+            { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+            { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+            { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+        ] }
+    };
+    const MP = {
+        mode: 'peer', connected: false, connecting: false, isHost: false, room: '',
+        id: Math.random().toString(36).slice(2, 10),
+        name: (() => { try { return localStorage.getItem('rickPortalGun.mpName') || ''; } catch (e) { return ''; } })() || ('Rick-' + (100 + Math.random() * 900 | 0)),
+        color: (() => { try { return localStorage.getItem('rickPortalGun.mpColor') || ''; } catch (e) { return ''; } })() || MP_COLORS[(Math.random() * MP_COLORS.length) | 0],
+        peer: null, conns: new Map(), hostConn: null, bc: null,
+        players: new Map(), sendAcc: 0, hiAcc: 0, lastState: '', pendingSpawn: null, connectTimer: null
+    };
+
+    function mpStatus(text, kind = '') {
+        const el = $('mp-status'); el.textContent = text; el.className = 'mp-status ' + kind;
+    }
+    function mpSaveProfile() { try { localStorage.setItem('rickPortalGun.mpName', MP.name); localStorage.setItem('rickPortalGun.mpColor', MP.color); } catch (e) {} }
+    function mpCode() { let s = ''; for (let i = 0; i < 4; i++) s += MP_CODE_CHARS[(Math.random() * MP_CODE_CHARS.length) | 0]; return s; }
+
+    // ---- transport
+    MP.rawSend = function (msg, exceptPeer) {
+        if (this.mode === 'local') { if (this.bc) this.bc.postMessage(msg); return; }
+        if (this.isHost) this.conns.forEach((c, pid) => { if (pid !== exceptPeer && c.open) { try { c.send(msg); } catch (e) {} } });
+        else if (this.hostConn && this.hostConn.open) { try { this.hostConn.send(msg); } catch (e) {} }
+    };
+    MP.sendEvent = function (msg) { if (!this.connected) return; msg.id = msg.id || this.id; this.rawSend(msg); };
+    MP.helloMsg = function () { return { t: 'hi', id: this.id, name: this.name, color: this.color }; };
+    MP.stateMsg = function () {
+        const c = cruiserState.active;
+        const P = c ? cruiserState.pos : player.pos;
+        return { t: 'st', id: this.id, u: currentUniverseIndex, x: +P.x.toFixed(2), y: +P.y.toFixed(2), z: +P.z.toFixed(2), yw: +(c ? cruiserState.yaw : player.yaw).toFixed(3), c: c ? 1 : 0, r: +cruiserState.roll.toFixed(2) };
+    };
+
+    MP.start = function (asHost, code) {
+        if (this.connected || this.connecting) this.leave(true);
+        mpSaveProfile();
+        this.isHost = asHost;
+        this.room = (code || mpCode()).toUpperCase();
+        if (this.mode === 'local') {
+            if (!('BroadcastChannel' in window)) { mpStatus('Bu tarayıcı yerel modu desteklemiyor.', 'err'); return; }
+            this.bc = new BroadcastChannel(MP_PREFIX + 'local-' + this.room);
+            this.bc.onmessage = (e) => this.handle(e.data, null);
+            this.connected = true;
+            this.onConnected();
+            this.rawSend(this.helloMsg()); this.rawSend(this.stateMsg());
+            return;
+        }
+        if (typeof Peer === 'undefined') { mpStatus('Online kitaplığı yüklenemedi (internet yok?). "Yerel" modu deneyebilirsin.', 'err'); return; }
+        this.connecting = true;
+        mpStatus(asHost ? 'Oda oluşturuluyor…' : `${this.room} odasına bağlanılıyor…`, 'wait');
+        clearTimeout(this.connectTimer);
+        this.connectTimer = setTimeout(() => { if (this.connecting) { mpStatus('Bağlantı zaman aşımına uğradı. Kodu kontrol et veya tekrar dene.', 'err'); this.leave(true); } }, 15000);
+        try {
+            this.peer = asHost ? new Peer(MP_PREFIX + this.room, PEER_OPTS) : new Peer(PEER_OPTS);
+        } catch (e) { mpStatus('WebRTC başlatılamadı: ' + e.message, 'err'); this.connecting = false; return; }
+        this.peer.on('open', () => {
+            if (asHost) { this.connecting = false; this.connected = true; clearTimeout(this.connectTimer); this.onConnected(); return; }
+            const conn = this.peer.connect(MP_PREFIX + this.room, { reliable: true, serialization: 'json' });
+            this.hostConn = conn;
+            conn.on('open', () => {
+                this.connecting = false; this.connected = true; clearTimeout(this.connectTimer);
+                this.onConnected();
+                conn.send(this.helloMsg()); conn.send(this.stateMsg());
+            });
+            conn.on('data', (d) => this.handle(d, conn));
+            conn.on('close', () => { if (this.connected) { this.leave(true); mpStatus('Oda kapandı (oda sahibi ayrıldı).', 'err'); showToast('ÇOK OYUNCULU', 'Odayla bağlantı koptu.', '#ff5a5a'); } });
+        });
+        this.peer.on('connection', (conn) => {
+            conn.on('open', () => {
+                this.conns.set(conn.peer, conn);
+                conn.send(this.helloMsg()); conn.send(this.stateMsg());
+                this.players.forEach(p => { conn.send({ t: 'hi', id: p.id, name: p.name, color: p.color }); if (p.lastSt) conn.send(p.lastSt); });
+            });
+            conn.on('data', (d) => this.handle(d, conn));
+            conn.on('close', () => {
+                this.conns.delete(conn.peer);
+                this.players.forEach(p => { if (p.via === conn.peer) { this.removePlayer(p.id, true); this.rawSend({ t: 'bye', id: p.id }); } });
+            });
+        });
+        this.peer.on('error', (err) => {
+            const t = err && err.type;
+            if (t === 'unavailable-id' && asHost) { this.leave(true); this.start(true); return; }
+            if (t === 'peer-unavailable') mpStatus(`"${this.room}" kodlu oda bulunamadı.`, 'err');
+            else mpStatus('Bağlantı hatası: ' + (t || err), 'err');
+            if (!this.connected) this.leave(true);
+        });
+        this.peer.on('disconnected', () => { if (this.peer && !this.peer.destroyed) try { this.peer.reconnect(); } catch (e) {} });
+    };
+    MP.onConnected = function () {
+        mpStatus(this.mode === 'local' ? `Yerel odaya bağlandın (${this.room}). Aynı tarayıcıda başka sekmeler de bu kodla katılabilir.` : (this.isHost ? 'Oda hazır! Kodu arkadaşlarınla paylaş.' : 'Odaya bağlandın!'), 'ok');
+        $('mp-room').classList.remove('hidden');
+        $('mp-room-code').textContent = this.room;
+        $('mp-chip').classList.remove('hidden');
+        refreshMpUI();
+        showToast('ÇOK OYUNCULU', `Oda ${this.room} — ${this.mode === 'local' ? 'yerel' : 'online'} bağlantı kuruldu. Sohbet: T`, '#3ce8ff');
+        sysChat(`${this.room} odasına katıldın.`);
+    };
+    MP.leave = function (silent) {
+        if (this.connected) this.rawSend({ t: 'bye', id: this.id });
+        clearTimeout(this.connectTimer);
+        try { this.bc && this.bc.close(); } catch (e) {}
+        try { this.peer && this.peer.destroy(); } catch (e) {}
+        this.bc = null; this.peer = null; this.hostConn = null; this.conns.clear();
+        this.connected = false; this.connecting = false;
+        [...this.players.keys()].forEach(id => this.removePlayer(id, true));
+        $('mp-room').classList.add('hidden'); $('mp-chip').classList.add('hidden');
+        if (!silent) mpStatus('Bağlı değil');
+        refreshMpUI();
+    };
+
+    // ---- incoming messages
+    MP.handle = function (msg, conn) {
+        if (!msg || typeof msg !== 'object' || !msg.id || msg.id === this.id) return;
+        if (this.isHost && conn && this.mode !== 'local') this.rawSend(msg, conn.peer);
+        let p = this.players.get(msg.id);
+        if (!p && msg.t !== 'bye') p = this.addPlayer(msg.id, conn ? conn.peer : null);
+        if (p) p.last = performance.now();
+        switch (msg.t) {
+            case 'hi': {
+                const fresh = !p.named; p.named = true;
+                if (p.name !== msg.name || p.color !== msg.color) { p.name = String(msg.name || '???').slice(0, 16); p.color = msg.color || '#ffffff'; rebuildAvatar(p); }
+                if (fresh) { sysChat(`${p.name} odaya katıldı.`); this.rawSend(this.helloMsg()); this.rawSend(this.stateMsg()); }
+                refreshMpUI();
+                break;
+            }
+            case 'st': {
+                const uChanged = p.u !== msg.u;
+                p.u = msg.u; p.tgt.set(msg.x, msg.y, msg.z); p.yaw = msg.yw; p.cruiser = !!msg.c; p.roll = msg.r || 0; p.lastSt = msg;
+                if (uChanged || !p.hasPos) { p.cur.copy(p.tgt); p.hasPos = true; refreshMpUI(); }
+                break;
+            }
+            case 'portal': openRemotePortal(p, msg); break;
+            case 'pclose': if (p.portal) p.portal.closing = true; break;
+            case 'chat': addChat(msg.sys ? null : (p.name || msg.name), msg.text, msg.sys ? '#9aa6bd' : p.color); break;
+            case 'bye': if (p) { sysChat(`${p.name} ayrıldı.`); this.removePlayer(msg.id); } break;
+        }
+    };
+
+    // ---- remote players
+    function makeNameTag(name, color) {
+        const c = document.createElement('canvas'); c.width = 256; c.height = 64;
+        const x = c.getContext('2d');
+        x.fillStyle = 'rgba(8,12,22,0.78)'; x.beginPath(); x.moveTo(16, 6); x.arcTo(250, 6, 250, 58, 14); x.arcTo(250, 58, 6, 58, 14); x.arcTo(6, 58, 6, 6, 14); x.arcTo(6, 6, 250, 6, 14); x.fill();
+        x.fillStyle = color; x.fillRect(14, 18, 8, 28);
+        x.font = 'bold 30px Inter, sans-serif'; x.textBaseline = 'middle'; x.fillStyle = '#ffffff'; x.fillText(name, 34, 33);
+        const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+        s.scale.set(2.4, 0.6, 1);
+        return s;
+    }
+    function rebuildAvatar(p) {
+        if (p.avatar) { scene.remove(p.avatar); p.avatar.traverse(o => { if (o.geometry && !SHARED_GEOS.has(o.geometry)) o.geometry.dispose(); if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); } }); }
+        // Original character: an interdimensional traveller in a lab coat with a team-coloured beanie, visor and backpack tank
+        const g = new THREE.Group();
+        const col = new THREE.Color(p.color);
+        const coat = std(0xeef2f6, { roughness: 0.6 }), dark = std(0x23262e, { roughness: 0.7 }), team = std(col, { roughness: 0.45 }), glow = bas(col);
+        const add = (geo, mat, x, y, z, sx, sy, sz, parent = g) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); parent.add(m); return m; };
+        const legs = [-0.14, 0.14].map(lx => { const piv = new THREE.Group(); piv.position.set(lx, 0.95, 0); g.add(piv); add(GEO.cyl8, dark, 0, -0.47, 0, 0.11, 0.95, 0.11, piv); add(GEO.box, dark, 0, -0.95, 0.07, 0.2, 0.1, 0.32, piv); return piv; });
+        add(GEO.cyl, coat, 0, 1.55, 0, 0.38, 1.2, 0.3);
+        add(GEO.box, team, 0, 1.6, 0.27, 0.32, 0.85, 0.04);
+        const arms = [-0.46, 0.46].map(ax => { const piv = new THREE.Group(); piv.position.set(ax, 2.05, 0); g.add(piv); add(GEO.cyl8, coat, 0, -0.42, 0, 0.09, 0.85, 0.09, piv); return piv; });
+        add(GEO.sphere, std(0xf0d0b0, { roughness: 0.6 }), 0, 2.45, 0, 0.32, 0.34, 0.32);
+        add(GEO.sphere, team, 0, 2.62, 0, 0.34, 0.2, 0.34);
+        add(GEO.box, glow, 0, 2.47, 0.27, 0.5, 0.11, 0.08);
+        add(GEO.box, std(0x8a929a, { metalness: 0.7, roughness: 0.35 }), 0, 1.65, -0.33, 0.42, 0.62, 0.22);
+        add(GEO.cyl, glow, 0, 1.65, -0.46, 0.08, 0.5, 0.08);
+        const gun = add(GEO.box, std(0xdfe4ea, { roughness: 0.3 }), 0, -0.85, 0.2, 0.12, 0.14, 0.5, arms[1]);
+        add(GEO.sphere, bas(0x39ff14), 0, -0.85, 0.47, 0.06, 0.06, 0.06, arms[1]);
+        const tag = makeNameTag(p.name, p.color); tag.position.y = 3.15; g.add(tag);
+        // Simplified cruiser shown while the remote player is flying
+        const cr = new THREE.Group();
+        add(new THREE.CylinderGeometry(3.25, 3.65, 1.08, 24), std(0xa3adbb, { metalness: 0.75, roughness: 0.28 }), 0, 0, 0, 1, 1, 1, cr);
+        add(new THREE.SphereGeometry(2.38, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), std(col, { transparent: true, opacity: 0.3, roughness: 0.05, depthWrite: false }), 0, 0.42, 0, 1, 1, 1, cr);
+        const crGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: TEX.glow(), color: col, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false })); crGlow.position.y = -0.9; crGlow.scale.set(6, 2, 1); cr.add(crGlow);
+        const crTag = makeNameTag(p.name, p.color); crTag.position.y = 3.4; crTag.scale.set(3.2, 0.8, 1); cr.add(crTag);
+        cr.visible = false;
+        const root = new THREE.Group(); root.add(g, cr); scene.add(root);
+        p.avatar = root; p.body = g; p.legs = legs; p.arms = arms; p.cruiserMesh = cr;
+    }
+    MP.addPlayer = function (id, via) {
+        const p = { id, via, name: '…', color: '#ffffff', u: -1, tgt: new THREE.Vector3(), cur: new THREE.Vector3(), yaw: 0, curYaw: 0, cruiser: false, roll: 0, last: performance.now(), walk: 0, named: false, hasPos: false };
+        this.players.set(id, p);
+        rebuildAvatar(p);
+        return p;
+    };
+    MP.removePlayer = function (id, silent) {
+        const p = this.players.get(id); if (!p) return;
+        if (p.avatar) { scene.remove(p.avatar); p.avatar.traverse(o => { if (o.geometry && !SHARED_GEOS.has(o.geometry)) o.geometry.dispose(); if (o.material) { if (o.material.map && o.material.map !== TEX.glow()) o.material.map.dispose(); o.material.dispose(); } }); }
+        if (p.portal) { scene.remove(p.portal.mesh); p.portal.mesh.material.dispose(); }
+        this.players.delete(id);
+        if (!silent) refreshMpUI(); else refreshMpUI();
+    };
+
+    // ---- remote portals (each player keeps one), walk-through follows them to their target
+    function openRemotePortal(p, m) {
+        if (!p.portal) {
+            const mat = portalMat.clone();
+            mat.uniforms.uTime = { value: 0 }; mat.uniforms.uOpen = { value: 0 };
+            const mesh = new THREE.Mesh(portalQuad.geometry, mat);
+            mesh.scale.set(m.big ? 2 : 1, m.big ? 2.6 : 1.3, 1);
+            scene.add(mesh);
+            p.portal = { mesh, open: 0, t: 0, closing: false };
+        }
+        const P = p.portal;
+        P.u = m.u; P.tgt = m.tgt; P.big = !!m.big; P.t = 0; P.open = 0; P.closing = false; P.life = 45;
+        P.mesh.position.set(m.x, m.y, m.z);
+        P.mesh.lookAt(m.fx, m.y, m.fz);
+        P.mesh.scale.set(m.big ? 2 : 1, m.big ? 2.6 : 1.3, 1);
+        P.mesh.visible = m.u === currentUniverseIndex;
+        if (P.mesh.visible && player.pos.distanceTo(P.mesh.position) < 40) audio.playPortalOpen();
+    }
+
+    // ---- per-frame update: send my state, interpolate others
+    const _mpV = new THREE.Vector3();
+    MP.update = function (dt, t) {
+        if (!this.connected) return;
+        this.sendAcc += dt; this.hiAcc += dt;
+        if (this.sendAcc >= 0.1) {
+            this.sendAcc = 0;
+            const s = this.stateMsg(), key = JSON.stringify(s);
+            if (key !== this.lastState || this.hiAcc > 1) { this.rawSend(s); this.lastState = key; }
+        }
+        if (this.hiAcc > 5) { this.hiAcc = 0; this.rawSend(this.helloMsg()); }
+        const now = performance.now();
+        let dirty = false;
+        this.players.forEach(p => {
+            if (now - p.last > 9000) { sysChat(`${p.name} zaman aşımına uğradı.`); this.removePlayer(p.id); dirty = true; return; }
+            const same = p.u === currentUniverseIndex && p.hasPos;
+            if (p.avatar) p.avatar.visible = same;
+            if (same) {
+                const k = 1 - Math.exp(-12 * dt);
+                const moved = p.cur.distanceTo(p.tgt);
+                p.cur.lerp(p.tgt, k);
+                p.curYaw += Math.atan2(Math.sin(p.yaw - p.curYaw), Math.cos(p.yaw - p.curYaw)) * k;
+                p.avatar.position.copy(p.cur);
+                p.avatar.rotation.y = p.curYaw;
+                p.body.visible = !p.cruiser; p.cruiserMesh.visible = p.cruiser;
+                if (p.cruiser) { p.body.position.y = 0; p.cruiserMesh.rotation.z = p.roll; p.cruiserMesh.position.y = Math.sin(t * 3.2) * 0.1; }
+                else {
+                    p.body.position.y = -player.height;
+                    const speed = moved / Math.max(dt, 1e-3);
+                    p.walk += dt * Math.min(12, speed * 1.6);
+                    const sw = Math.min(1, speed / 4) * 0.7;
+                    p.legs[0].rotation.x = Math.sin(p.walk) * sw; p.legs[1].rotation.x = -Math.sin(p.walk) * sw;
+                    p.arms[0].rotation.x = -Math.sin(p.walk) * sw * 0.8; p.arms[1].rotation.x = -0.9;
+                }
+            }
+            const P = p.portal;
+            if (P) {
+                P.mesh.visible = P.u === currentUniverseIndex;
+                P.t += dt; P.life -= dt;
+                if (P.life <= 0) P.closing = true;
+                P.mesh.material.uniforms.uTime.value += dt;
+                if (P.closing) P.open = Math.max(0, P.open - dt * 2.5); else P.open = easeOutBack(Math.min(1, P.t / 0.45));
+                P.mesh.material.uniforms.uOpen.value = P.open;
+                if (P.open <= 0 && P.closing) P.mesh.visible = false;
+                else if (P.mesh.visible && !cruiserState.active && P.open > 0.6 && portalCooldown <= 0 && !teleporting && P.tgt !== currentUniverseIndex) {
+                    if (player.pos.distanceTo(P.mesh.position) < (P.big ? 4 : 1.9)) {
+                        portalCooldown = 1.2;
+                        showToast('ARKADAŞ PORTALI', `${p.name} adlı oyuncunun portalından geçtin!`, p.color, 2200);
+                        targetUniverseIndex = P.tgt; teleportToUniverse(P.tgt);
+                    }
+                }
+            }
+        });
+        if (dirty) refreshMpUI();
+        const n = this.players.size + 1;
+        const chip = $('mp-chip-text'); const txt = `${n} oyuncu · ${this.room}`; if (chip.textContent !== txt) chip.textContent = txt;
+    };
+    window.addEventListener('beforeunload', () => { if (MP.connected) MP.rawSend({ t: 'bye', id: MP.id }); });
+
+    // ---- chat
+    let chatOpen = false;
+    function addChat(name, text, color) {
+        const feed = $('chat-feed');
+        const row = document.createElement('div'); row.className = 'chat-row';
+        if (name) { const b = document.createElement('b'); b.textContent = name + ': '; b.style.color = color; row.appendChild(b); }
+        else row.classList.add('sys');
+        row.appendChild(document.createTextNode(String(text).slice(0, 160)));
+        feed.appendChild(row);
+        while (feed.children.length > 7) feed.removeChild(feed.firstChild);
+        setTimeout(() => row.classList.add('old'), 9000);
+        if (name) audio.tone('sine', 1200, 1500, 0.05, 0.05);
+    }
+    function sysChat(text) { addChat(null, text, '#9aa6bd'); }
+    function openChat() {
+        chatOpen = true;
+        Object.keys(keys).forEach(k => { keys[k] = false; });
+        const w = $('chat-input-wrap'); w.classList.remove('hidden');
+        const inp = $('chat-input'); inp.value = ''; setTimeout(() => inp.focus(), 0);
+    }
+    function closeChat() { chatOpen = false; $('chat-input-wrap').classList.add('hidden'); $('chat-input').blur(); }
+    function sendChat() {
+        const text = $('chat-input').value.trim();
+        if (text) {
+            addChat(MP.name, text, MP.color);
+            if (MP.connected) MP.sendEvent({ t: 'chat', name: MP.name, text });
+            else sysChat('Kimse duymadı — çok oyunculu bir odaya bağlı değilsin (ESC > Çok Oyunculu).');
+        }
+        closeChat();
+    }
+    $('chat-input').addEventListener('keydown', e => {
+        e.stopPropagation();
+        if (e.key === 'Enter') { e.preventDefault(); sendChat(); }
+        else if (e.key === 'Escape') { e.preventDefault(); closeChat(); }
+    });
+    $('btn-touch-chat').addEventListener('click', () => { if (chatOpen) closeChat(); else openChat(); });
+
+    // ---- lobby UI
+    function refreshMpUI() {
+        const list = $('mp-list');
+        if (!MP.connected && !MP.players.size) { list.innerHTML = '<div class="kv"><span class="mut">Bağlan veya bir oda kur — oyuncular burada görünecek.</span></div>'; return; }
+        const rows = [{ id: MP.id, name: MP.name + ' (sen)', color: MP.color, u: currentUniverseIndex, me: true }].concat([...MP.players.values()].filter(p => p.named));
+        list.innerHTML = rows.map(p => `<div class="kv mp-row"><span><i class="dot" style="background:${p.color}"></i>${escapeHtml(p.name)}</span><span class="mp-where">${p.u >= 0 && UNIVERSES[p.u] ? UNIVERSES[p.u].code : '…'}${p.me ? '' : ` <button class="btn btn-sm" data-goto="${p.id}">Yanına git</button>`}</span></div>`).join('');
+        if (isMapOpen) renderMap();
+    }
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    $('mp-list').addEventListener('click', e => {
+        const b = e.target.closest('[data-goto]'); if (!b) return;
+        const p = MP.players.get(b.dataset.goto); if (!p || p.u < 0) return;
+        if (p.u === currentUniverseIndex) { player.pos.set(p.cur.x + 2, p.cur.y, p.cur.z + 2); player.vel.set(0, 0, 0); resumeGame(); }
+        else { MP.pendingSpawn = { x: p.cur.x, z: p.cur.z }; targetUniverseIndex = p.u; resumeGame(); teleportToUniverse(p.u); }
+    });
+    function initMpUI() {
+        const nameInp = $('mp-name'); nameInp.value = MP.name;
+        nameInp.addEventListener('change', () => { MP.name = (nameInp.value.trim() || MP.name).slice(0, 16); nameInp.value = MP.name; mpSaveProfile(); if (MP.connected) MP.rawSend(MP.helloMsg()); refreshMpUI(); });
+        const sw = $('mp-colors');
+        sw.innerHTML = MP_COLORS.map(c => `<button class="swatch${c === MP.color ? ' active' : ''}" data-c="${c}" style="background:${c}" aria-label="Renk ${c}"></button>`).join('');
+        sw.addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (!b) return; MP.color = b.dataset.c; sw.querySelectorAll('.swatch').forEach(x => x.classList.toggle('active', x === b)); mpSaveProfile(); if (MP.connected) MP.rawSend(MP.helloMsg()); refreshMpUI(); });
+        $('seg-mpmode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b || MP.connected) return; MP.mode = b.dataset.v; $('seg-mpmode').querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b)); audio.playUi(); });
+        $('mp-host').addEventListener('click', () => { audio.init(); MP.start(true); });
+        $('mp-join').addEventListener('click', () => { const code = $('mp-code').value.trim().toUpperCase(); if (code.length < 4) { mpStatus('4 haneli oda kodunu gir.', 'err'); return; } audio.init(); MP.start(false, code); });
+        $('mp-code').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') $('mp-join').click(); });
+        nameInp.addEventListener('keydown', e => e.stopPropagation());
+        $('mp-leave').addEventListener('click', () => { MP.leave(); sysChat('Odadan ayrıldın.'); });
+        $('mp-copy').addEventListener('click', () => { const t = MP.room; try { navigator.clipboard.writeText(t); mpStatus(`"${t}" kopyalandı. Arkadaşın Çok Oyunculu > Odaya katıl'a yazsın.`, 'ok'); } catch (e) { mpStatus('Kod: ' + t, 'ok'); } });
+        $('btn-start-mp').addEventListener('click', () => { startGame(false); pauseGame(); document.querySelector('.nav-btn[data-tab="tab-mp"]').click(); });
+        if (typeof Peer === 'undefined') mpStatus('Online kitaplığı yüklenemedi; Yerel modu kullanabilirsin.', 'err');
+        refreshMpUI();
+    }
+    initMpUI();
+
     function boot() {
         applyFluid(gameSettings.fluid || 0);
         syncSettingsUI();

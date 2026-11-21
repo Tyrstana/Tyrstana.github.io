@@ -20,7 +20,7 @@ Merhaba, ben Emir. Tarayıcıda çalışan oyunlar ve simülasyonlar, Minecraft 
 
 En çok **atmosferle** uğraşmayı seviyorum. Işık, ses ve mekân tasarımıyla oyuncuya bir his yaşatmaya çalışıyorum. Bir projeyi yayınlamak benim için işin başlangıcı; Backrooms oyunum 16 güncelleme aldı. Projelerimin hepsi **Türkçe**, arayüzden eşya isimlerine kadar.
 
-Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 20 Kasım 2026 arasında, 38 günde 113 sürüm olarak yayınlandı.
+Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu portfolyodaki her şey 14 Ekim ile 21 Kasım 2026 arasında, 39 günde 116 sürüm olarak yayınlandı.
 
 ### Projeler
 
@@ -34,7 +34,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 | **AeroSim 3D PRO** | Uçuş, hava trafik kontrolü ve havayolu simülatörü | PC · Mobil |
 | **Aetheria** | Mini oyunlar, eğlence araçları ve müzik stüdyosu olan web deneyimi | PC · Mobil |
 | **Küllerin Saltanatı** | Birinci şahıs, co-op oynanabilen açık dünya dark fantasy RPG | PC · Mobil |
-| **Portal Silahı: Çoklu Evren** | Evrenler arası 3D keşif oyunu | PC · Mobil |
+| **Portal Silahı: Çoklu Evren** | 35 evrenli, çevrim içi oynanabilen 3D keşif oyunu | PC · Mobil |
 
 - **Skin Stealer:** Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on iki kabus, Kabusların Efendisi ile final savaşı, görevli bulmacalarıyla Backrooms seviyeleri (Level Fun+, The Hub kapılar tüneli, Kararmış Banliyö, Kütüphane, rüya zinciri ve daha fazlası) ve üç gizli son: Merdivenin Dibi, Pembe Ev ve Boş Şehir.
 - **ZENİT:** Akışı bozmadan koşmaya dayalı birinci şahıs parkur: duvar koşusu, duvardan sekme, kayma ve tırmanma. Sekiz bölüm, gizli kristaller, madalyalar, hayalet koşu ve arkadaşlarınla 8 kişilik çevrim içi yarış.
@@ -44,7 +44,7 @@ Bu depo kişisel sitemi ve projelerimin en güncel hallerini barındırıyor. Bu
 - **AeroSim 3D PRO:** Mega bir havalimanı, gerçekçi hava trafik kontrolü ve havayolu yönetimi: hat aç, kapı kur, filonu büyüt.
 - **Aetheria:** Sıkılmanın yasak olduğu bir dijital evren: 11 mini oyun, çark ve emoji bulmacası gibi eğlence araçları, seçimli hikâyeler, ritim kurabildiğin bir müzik stüdyosu ve nefes, pomodoro ve notlarla zen modu.
 - **Küllerin Saltanatı:** Ebedi gecenin altında, istersen arkadaşlarınla birlikte: Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, sis kapılı arenalarda boss savaşları, hedefe kilitlenmeli dövüş, büyü kitabı, Kayıp Sayfalar ve gizli bir son.
-- **Portal Silahı: Çoklu Evren:** Portal silahını al ve evrenler arasında zıpla; skor sistemi ve shader efektleri.
+- **Portal Silahı: Çoklu Evren:** Portal silahını al ve 35 paralel evren arasında zıpla, istersen arkadaşlarınla birlikte: Jerryboree, Boyutlar Arası Gümrük, Kuş Dünyası, Gazorpazorp, Ölü AVM ve daha fazlası; her evrende saklı Mega Tohumlar.
 
 ### Nasıl oynanır / indirilir?
 
@@ -70,7 +70,7 @@ Hi, I'm Emir. I build browser games and simulations, Minecraft mods and desktop 
 
 What I enjoy most is **atmosphere**: using light, sound and level design to make the player feel something. For me, releasing a project is only the beginning; my Backrooms game has had 16 updates. All of my projects are in **Turkish**, from the interface to the item names.
 
-This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 20, 2026: 113 releases in 38 days.
+This repository hosts my personal website and the latest version of each project. Everything in this portfolio was released between October 14 and November 21, 2026: 116 releases in 39 days.
 
 ### Projects
 
@@ -84,7 +84,7 @@ This repository hosts my personal website and the latest version of each project
 | **AeroSim 3D PRO** | Flight, air traffic control and airline simulator | PC · Mobile |
 | **Aetheria** | Web experience with mini games, fun tools and a music studio | PC · Mobile |
 | **Küllerin Saltanatı** | First-person open-world dark fantasy RPG with co-op | PC · Mobile |
-| **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game | PC · Mobile |
+| **Portal Silahı: Çoklu Evren** | 3D multiverse exploration game with 35 universes and online play | PC · Mobile |
 
 - **Skin Stealer:** A horror mod inspired by the Skin Stealer from Escape the Backrooms. A creature that disguises itself as the players it kills, a sanity system, twelve nightmares, a final fight against the Lord of Nightmares, Backrooms levels with puzzle quests (Level Fun+, The Hub tunnel of doors, a darkened suburb, a library, a chain of dreams and more) and three secret endings.
 - **ZENİT:** A first-person parkour game about keeping your flow: wall runs, wall jumps, slides and ledge climbs. Eight levels, hidden crystals, medals, a ghost of your best run and online races for up to 8 friends.
@@ -94,7 +94,7 @@ This repository hosts my personal website and the latest version of each project
 - **AeroSim 3D PRO:** A mega airport, realistic air traffic control and airline management: open routes, build gates and grow your fleet.
 - **Aetheria:** A digital world where boredom is not allowed: 11 mini games, fun tools like a spin wheel and emoji puzzles, choose-your-path stories, a music studio with a step sequencer and a zen corner with breathing, pomodoro and notes.
 - **Küllerin Saltanatı:** An eternal night you can now share with friends in co-op: three new regions, boss fights in fog-gated arenas, lock-on combat, a spellbook, lost pages and a secret ending.
-- **Portal Silahı: Çoklu Evren:** Grab the portal gun and jump between universes, with a scoring system and shader effects.
+- **Portal Silahı: Çoklu Evren:** Grab the portal gun and jump between 35 parallel universes, alone or online with friends, hunting for the Mega Seed hidden in each one.
 
 ### How to play / download
 

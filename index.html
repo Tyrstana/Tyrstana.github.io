@@ -488,13 +488,13 @@ html.nocursor a,html.nocursor button{cursor:pointer}
 /* ---------- log (activity) ---------- */
 .log-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:60px}
 .log-head p{max-width:40ch;color:var(--text2);font-size:17px}
-.log-chart{display:grid;grid-template-columns:repeat(38,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
+.log-chart{display:grid;grid-template-columns:repeat(39,1fr);gap:clamp(4px,1vw,14px);align-items:end;height:340px;border-bottom:1px solid var(--line);position:relative}
 .log-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;position:relative;cursor:default}
 .log-bar{border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,var(--acc),rgba(138,107,255,.65));transform-origin:bottom;position:relative;min-height:4px;transition:filter .3s}
 .log-bar.zero{background:var(--tint2)}
 .log-col:hover .log-bar,.log-col.tap .log-bar{filter:brightness(1.25)}
 .log-bar em{position:absolute;top:-28px;left:0;right:0;text-align:center;font:500 14px/1 var(--mono);font-style:normal;color:var(--fg)}
-.log-days{display:grid;grid-template-columns:repeat(38,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
+.log-days{display:grid;grid-template-columns:repeat(39,1fr);gap:clamp(4px,1vw,14px);margin-top:12px;font:400 11px/1.3 var(--mono);color:var(--mute);text-align:center;text-transform:uppercase}
 .log-days b{font-weight:400}
 .log-tip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,8px);width:max-content;max-width:min(260px,80vw);padding:16px;border-radius:14px;background:var(--fg);color:var(--on-fg);font-size:13px;line-height:1.45;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:5;box-shadow:var(--shadow)}
 .log-tip b{display:block;font:700 15px/1.2 var(--display);margin-bottom:6px}
@@ -885,7 +885,7 @@ footer a{color:var(--fg)}
   <div class="stats" data-morph="1" data-gx="0">
     <div class="stat"><div class="stat-num"><span class="count" data-to="9">0</span></div><p>Büyük proje, beş farklı alanda</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="48">0</span><sup>+</sup></div><p>Yayınlanmış sürüm</p></div>
-    <div class="stat"><div class="stat-num"><span class="count" data-to="38">0</span></div><p>Günde çıkan tüm bu iş</p></div>
+    <div class="stat"><div class="stat-num"><span class="count" data-to="39">0</span></div><p>Günde çıkan tüm bu iş</p></div>
     <div class="stat"><div class="stat-num"><span class="count" data-to="16">0</span></div><p>Tek bir oyuna gelen güncelleme</p></div>
   </div>
 
@@ -911,9 +911,9 @@ footer a{color:var(--fg)}
     <div class="log-head">
       <div>
         <div class="eyebrow">Üretim Günlüğü — 03</div>
-        <h2 class="h2 split-lines">38 Gün, <em>113</em><br>Çıkış</h2>
+        <h2 class="h2 split-lines">39 Gün, <em>116</em><br>Çıkış</h2>
       </div>
-      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 20 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
+      <p class="fade-up">Bu portfolyodaki her şey 14 Ekim – 21 Kasım arasında ortaya çıktı. Her çubuk bir gün; üzerine gel, o gün neyin yayınlandığını gör.</p>
     </div>
     <div class="log-chart" id="logChart"></div>
     <div class="log-days" id="logDays"></div>
@@ -983,7 +983,8 @@ footer a{color:var(--fg)}
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 18 · 17 Kasım</div><h4>Skin Stealer 7.1</h4><p>İki günde on sürüm: Backrooms seviyeleri görevli bulmacalara dönüştü, The Hub kapılar tüneli açıldı, Level Fun+ dört bölgeye ayrıldı. Yeni ana menü, seviye müzikleri ve her yaratığa kendi jumpscare'i.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 19 · 19 Kasım</div><h4>Aetheria, Yeniden</h4><p>Aetheria baştan yazıldı: on bir mini oyun, eğlence araçları, seçimli hikâyeler, bir müzik stüdyosu ve zen modu. Sıkılmak artık gerçekten yasak.</p></div></div>
       <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 20 · 20 Kasım</div><h4>Skin Stealer 7.5</h4><p>Üç gizli son: Pembe Ev'in perdesinin ardı, Kat 11'deki boş şehir ve merdivenin dibi. Seviye 94'ün çukurundan düşülen rüyalar ve her yaratığın tek vuruşta öldürdüğü seviyeler.</p></div></div>
-      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 21 · 20 Kasım — Şimdi</div><h4>Aero Drift'te Birlikte</h4><p>Aero Drift artık yalnız gezilmiyor: arkadaşlarınla aynı çayırlarda süzül, gökkuşağı raylarında kay, Melodi Taşları'nda birlikte nota çal. Ve hikâye devam ediyor…</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 21 · 20 Kasım</div><h4>Aero Drift'te Birlikte</h4><p>Aero Drift artık yalnız gezilmiyor: arkadaşlarınla aynı çayırlarda süzül, gökkuşağı raylarında kay, Melodi Taşları'nda birlikte nota çal.</p></div></div>
+      <div class="j-item"><span class="j-dot"></span><div class="j-card"><div class="j-chap">Bölüm 22 · 21 Kasım — Şimdi</div><h4>Portal Silahı 8</h4><p>Portal Silahı yeni bir güncellemeyle döndü: on yeni evren, Mega Tohum avı ve arkadaşlarla çoklu evren. Skin Stealer'ın Pembe Ev'ine de bakınca donan bir Uzun Gölge taşındı. Ve hikâye devam ediyor…</p></div></div>
     </div>
   </section>
 
@@ -1044,11 +1045,11 @@ footer a{color:var(--fg)}
       <div class="install mod-panel" id="plInstall">
         <div class="mp-head">
           <div>
-            <span class="mp-k">Minecraft 1.20.1 · Forge · v7.5.0</span>
+            <span class="mp-k">Minecraft 1.20.1 · Forge · v8.0.0</span>
             <h3>Skin Stealer</h3>
             <p>Escape the Backrooms'taki Deri Hırsızı'ndan ilham alan bir korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on iki kabus, bir final savaşı, görevli Backrooms seviyeleri ve üç gizli son.</p>
           </div>
-          <a class="btn solid" href="projeler/skin-stealer/skinstealer-7.5.0.jar" download data-cursor="link"><span>.jar indir · 51 MB</span></a>
+          <a class="btn solid" href="projeler/skin-stealer/skinstealer-8.0.0.jar" download data-cursor="link"><span>.jar indir · 51 MB</span></a>
         </div>
         <div class="mp-tabs" role="tablist">
           <button class="on" role="tab" aria-selected="true" data-tab="features">Özellikler</button>
@@ -1112,7 +1113,7 @@ footer a{color:var(--fg)}
                 <li><b>The End · Kütüphane:</b> raflara saklanmış 20 video kasetini topla, bilgisayarla çıkış kapısını aç. Beş dakika sonra ışıklar söner; zil çalarak Dinleyici'yi başka yöne çekebilirsin.</li>
                 <li><b>Seviye 94 · Hareket:</b> öğle güneşi altında rüya gibi bir kasaba. Beş dakikada bir güneş on saniyede batar ve bir dakikalık zifiri karanlık gece başlar. Evlerdeki Saklanma Dolaplarına girip panjurdan dışarıyı izleyebilirsin. Çıkışı yok: evlerden birindeki kapkara çukura atlarsan rüya zinciri başlar.</li>
                 <li><b>Rüya zinciri:</b> pastel evli, bitmeyen bir öğleden sonranın Rüya Mahallesi; içe kıvrılan beyaz halkalarıyla Menekşeli Koridor; yüzlerce pencereli Avlu Oteli. Servis kapılarından yalnızca biri gerçek çıkış.</li>
-                <li><b>Seviye 974 · Pembe Ev:</b> pembe gün batımında bahçeli bir ev. Eve ve bahçeye saklanmış sekiz oyuncak ayıyı bodrumdaki tiyatronun rafına diz; perde açılınca gizli son başlar.</li>
+                <li><b>Seviye 974 · Pembe Ev:</b> pembe gün batımında bahçeli bir ev. Eve ve bahçeye saklanmış sekiz oyuncak ayıyı bodrumdaki tiyatronun rafına diz; perde açılınca gizli son başlar. Evde Uzun Gölge dolaşır.</li>
                 <li><b>Sonsuz Merdiven:</b> bütün seviyelerden kaçmadan End portalı açılmaz. Açınca ejderhanın adası yerine sonsuz bir merdivene düşersin; 94 kat çıkıp boşluğa atlayan gizli sonu görür.</li>
               </ul>
             </section>
@@ -1129,6 +1130,7 @@ footer a{color:var(--fg)}
                 <li><b>Dev Güve</b> (Mağara): ışığa çekilen, üzerine dalan üç blokluk güve.</li>
                 <li><b>Dinleyici</b> (Kütüphane): insandan iki kat büyük, gözleri karanlıkta kırmızı parlayan bir şey. Görmez, duyar; yakınındayken eğilerek ilerle.</li>
                 <li><b>Kukla</b> (Seviye 94): geceleri karanlıktan çıkan, diz boyu bir tahta kukla. Açıkta kalanı tek seferde öldürür, dolaba saklananı bulamaz; güneş doğunca talaş tozuna döner.</li>
+                <li><b>Uzun Gölge</b> (Pembe Ev): üç bloğa yakın boylu, yüzsüz, kapkara bir siluet. Ona bakıldığı sürece taş gibi durur, arkanı dönünce sessizce yaklaşır; dokunduğu an öldürür ve öldürülemez.</li>
               </ul>
             </section>
             <section class="mp-group">
@@ -1173,7 +1175,7 @@ footer a{color:var(--fg)}
         <div class="mp-pane" data-pane="install" hidden>
           <div class="steps">
             <div class="step"><b>01</b><h4>Forge'u kur</h4><p>Minecraft <code>1.20.1</code> için Forge yükleyicisini indir ve "Install client" ile kur.</p></div>
-            <div class="step"><b>02</b><h4>Modu ekle</h4><p>İndirdiğin <code>skinstealer-7.5.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
+            <div class="step"><b>02</b><h4>Modu ekle</h4><p>İndirdiğin <code>skinstealer-8.0.0.jar</code> dosyasını <code>.minecraft/mods</code> klasörüne koy.</p></div>
             <div class="step"><b>03</b><h4>Oyuna gir</h4><p>Launcher'dan Forge profilini seç ve oyunu başlat. Rehber oyun içinden açılır.</p></div>
           </div>
         </div>
@@ -1216,9 +1218,9 @@ const EMAIL = 'yalcinemir234@gmail.com';
    PROJECT DATA — files live in ./projeler so the folder works anywhere
    ====================================================== */
 const PROJECTS = [
-  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On iki kabus ve üç gizli son','Görevli Backrooms seviyeleri'], cat:'Minecraft Forge Modu', ver:'v7.5.0', draw:'mc', mod:true,
+  { title:'Skin Stealer', accent:'#5fd35f', plat:'Java · Minecraft', feats:['Kılık değiştiren yaratık','On iki kabus ve üç gizli son','Görevli Backrooms seviyeleri'], cat:'Minecraft Forge Modu', ver:'v8.0.0', draw:'mc', mod:true, isNew:true,
     desc:'Escape the Backrooms\'taki Deri Hırsızı\'ndan ilham alan korku modu. Öldürdüğü oyuncunun kılığına giren bir yaratık, akıl sağlığı sistemi, on iki kabus, bir final savaşı, görevli Backrooms seviyeleri ve üç gizli son.',
-    chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-7.5.0.jar' },
+    chips:['Java','Forge 1.20.1','Minecraft'], file:'projeler/skin-stealer/skinstealer-8.0.0.jar' },
   { title:'ZENİT', accent:'#3ef6ff', plat:'PC', feats:['Duvar koşusu ve kayma','Sekiz bölüm, hayalet koşu','8 kişilik çevrim içi yarış'], cat:'3D Parkur Oyunu', ver:'Sürüm 1', draw:'zenit',
     desc:'Akışı bozmadan koşmaya dayalı birinci şahıs parkur oyunu: duvar koşusu, duvardan sekme, kayma ve kenarlara tırmanma. Neon Izgara\'dan Fırtına Kulesi\'ne sekiz bölüm, gizli kristaller, madalyalar, en iyi koşunun hayaleti ve arkadaşlarınla 8 kişilik gerçek zamanlı yarış.',
     chips:['Three.js','Parkur','Çok oyunculu'], file:'projeler/zenit.html' },
@@ -1226,7 +1228,7 @@ const PROJECTS = [
     desc:'Alt+Space ile açılan, Türkçe komut anlayan Windows asistanı. Ekranın üstünde dinamik ada olarak yaşar: müzik, hatırlatıcı, hava, döviz, WhatsApp mesajı ve "Hey Pardux" sesli komutları.',
     chips:['C#','WPF','Whisper','Vosk'], file:'https://github.com/Tyrstana/Tyrstana.github.io/releases/download/pardux-v1.0/Pardux.zip',
     source:'https://github.com/Tyrstana/Tyrstana.github.io/tree/main/projeler/pardux' },
-  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Arkadaşlarınla çevrim içi','Gökkuşağı rayları ve melodi taşları','Gece ve gündüz'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 6', draw:'frutiger', isNew:true,
+  { title:'Aero Drift', accent:'#29b0ff', plat:'PC · Mobil', feats:['Arkadaşlarınla çevrim içi','Gökkuşağı rayları ve melodi taşları','Gece ve gündüz'], cat:'3D Keşif Oyunu · Frutiger Aero', ver:'Güncelleme 6', draw:'frutiger',
     desc:'Frutiger Aero estetiğinde çayırlarda süzül, cam bir şehri keşfet; artık arkadaşlarınla birlikte, sohbet ederek. Gökkuşağı raylarında kay, Melodi Taşları\'nda nota çal, fotoğraf safarisinde yunusları ve deniz fenerini çek. Gece ve gündüz, AVM, dönme dolap, sahil, Kristal Vadisi ve kendi film müziği.',
     chips:['Three.js','Çok oyunculu','Müzik'], file:'projeler/aero-drift.html' },
   { title:'Backrooms: Kaset #1994', accent:'#e3c75a', plat:'PC · Mobil', feats:['VHS kaset atmosferi','Mobil ve PC kontrol','Özel müzikler'], cat:'3D Korku Oyunu', ver:'Update 16', draw:'backrooms',
@@ -1241,9 +1243,9 @@ const PROJECTS = [
   { title:'Küllerin Saltanatı', accent:'#ff7a3d', plat:'PC · Mobil', feats:['Arkadaşlarınla co-op','Üç yeni bölge ve boss','Kilitlenmeli dövüş ve büyüler'], cat:'Açık Dünya RPG', ver:'Final 3', draw:'fantasy',
     desc:'Ebedi gecenin altında birinci şahıs dark fantasy dünyası, artık arkadaşlarınla birlikte oynanabiliyor. Kor Yarığı, Kemik Çölü ve Solgun Mantar Korusu bölgeleri, üç yeni boss, sis kapılı arenalar, hedefe kilitlenme ve infaz, büyü kitabı, Kayıp Sayfalar ve gizli bir son.',
     chips:['Three.js','RPG','Co-op'], file:'projeler/kullerin-saltanati.html' },
-  { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['Evrenler arası yolculuk','Skor sistemi','Shader efektleri'], cat:'Keşif Oyunu', ver:'Update 7', draw:'portal',
-    desc:'Rick Sanchez\'in portal silahını al ve evrenler arasında zıpla. Yenilenen evrenler, skor sistemi ve bolca kaos.',
-    chips:['Three.js','Shader','Keşif'], file:'projeler/portal-silahi.html' },
+  { title:'Portal Silahı: Çoklu Evren', accent:'#7cff5a', plat:'PC · Mobil', feats:['35 paralel evren','Arkadaşlarınla çevrim içi','Mega Tohum avı'], cat:'Keşif Oyunu', ver:'Update 8', draw:'portal', isNew:true,
+    desc:'Rick Sanchez\'in portal silahını al ve 35 paralel evren arasında zıpla; artık arkadaşlarınla birlikte. Jerryboree, Boyutlar Arası Gümrük, Kuş Dünyası, Dişli Dünyası, Gazorpazorp ve Ölü AVM gibi yeni evrenler, kalabalık sokaklar, her evrende saklı Mega Tohumlar ve bolca kaos.',
+    chips:['Three.js','Çok oyunculu','Shader'], file:'projeler/portal-silahi.html' },
 ];
 
 const track = $('#projTrack');
@@ -1325,9 +1327,10 @@ const LOG = [
   ['17 Kas', ['Skin Stealer — v6.8.0, v6.9.0, v7.0.0, v7.1.0']],
   ['18 Kas', ['Kişisel site — Update 24']],
   ['19 Kas', ['Aetheria — Update 2', 'Skin Stealer — v7.2.0', 'Kişisel site — Update 25']],
-  ['20 Kas', ['Skin Stealer — v7.3.0, v7.4.0, v7.5.0', 'Aero Drift — Güncelleme 6', 'Kişisel site — Update 26, 27']]
+  ['20 Kas', ['Skin Stealer — v7.3.0, v7.4.0, v7.5.0', 'Aero Drift — Güncelleme 6', 'Kişisel site — Update 26, 27']],
+  ['21 Kas', ['Skin Stealer — v8.0.0', 'Portal Silahı — Update 8', 'Kişisel site — Update 28']]
 ];
-const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2, 2, 3, 0, 6, 4, 1, 3, 6];
+const LOG_COUNTS = [1, 7, 0, 2, 9, 4, 0, 4, 1, 0, 2, 4, 4, 5, 10, 0, 0, 0, 0, 0, 3, 1, 6, 5, 4, 6, 1, 6, 1, 2, 2, 3, 0, 6, 4, 1, 3, 6, 3];
 const logChart = $('#logChart'), logDays = $('#logDays');
 const maxC = Math.max(...LOG_COUNTS);
 LOG.forEach(([day, items], i) => {
